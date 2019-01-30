@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Concept Model</title>
+	</head>
+	<body>
+		<h1>Concept Model</h1>
+		<h2>Entities and Attributes</h2>
+		<h3>Lover</h3>
+		<ul>
+			<li>loverId (primary key)</li>
+			<li>loverActivationToken (for account verification)</li>
+			<li>loverAge</li>
+			<li>loverAvatarUrl</li>
+			<li>loverEmail</li>
+			<li>loverGender</li>
+			<li>loverHandle</li>
+			<li>loverHash (for account password)</li>
+			<li>loverLocation</li>
+		</ul>
+		<h3>Personality</h3>
+		<ul>
+			<li>personalityId (primary key)</li>
+			<li>personalityLoverId (foreign key)</li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+		<h3>Deal Breaker</h3>
+		<ul>
+			<li>dealBreakerId (primary key)</li>
+			<li>dealBreakerLoverId (foreign key)</li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+		<h3>Match</h3>
+		<ul>
+			<li>matchFromProfileId (foreign key)</li>
+			<li>matchToProfileId (foreign key)</li>
+		</ul>
+		<h2>Relationships</h2>
+		<ul>
+			<li>One Lover has one Deal Breaker</li>
+			<li>One Lover can have many Personalities</li>
+			<li>One Lover can have many Matches</li>
+		</ul>
+	</body>
+</html>
