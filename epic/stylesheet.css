@@ -1,10 +1,12 @@
+.adrien {
+	height: 33em;
+	display: inline-block;
+	float:right;
+	margin-right: 10em;
+}
 .chrisPic {
 	 height: 33em;
 	 display: inline-block;
 	 float:right;
 	 margin-right: 10em;
  }
-
-.adrien {
-	height: 10em;
-}
