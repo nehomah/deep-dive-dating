@@ -1,6 +1,7 @@
 .chrisPic {
 	height: 33em;
-	display: inline;
-	float: right;
+	display: inline-block;
+	float:right;
+	margin-right: 10em;
 }
 
