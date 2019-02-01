@@ -5,6 +5,10 @@ body {
 ul {
 	width: 40em;
 }
+p {
+	width: 40em;
+}
+
 .adrien {
 	height: 33em;
 	display: inline-block;

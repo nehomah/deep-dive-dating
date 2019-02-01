@@ -29,25 +29,26 @@
 		<p><strong>Description:</strong> Adrien gets on the site to find love</p>
 		<p><strong>Name of the User and Their Role:</strong> Adrien Baca-Garcia is the potential love match</p>
 		<p><strong>Usage Preconditions:</strong> Internet capable device, must be logged into account</p>
-		<p><strong>Usage Post-conditions:</strong> Website matches Adrien with her possible love interest</p>
+		<p><strong>Usage Post-conditions:</strong> Server saves two instances to the Match entity and sends an email notification to Adrien's love interest.</p>
 		<p><strong>Interaction Flow: </strong></p>
 		<ul>
-			<li>Adrien enters the URL on her laptop using Chrome browser.</li>
-			<li>Server receives requested site and returns landing page of the site.</li>
-			<li>Adrien is logged in from previous session and wants to check her likes list.</li>
-			<li>She clicks on likes.</li>
-			<li>Server responds with the list of likes.</li>
-			<li>She clicks the first user with the heart icon.</li>
-			<li>Server responds with the users profile.</li>
-			<li>She notices the message box and sends a message.</li>
-			<li>Server accepts request and generates email to send to matched user.</li>
-			<li>She clicks on her home button to view other users.</li>
-			<li>Server responds and displays her home page showing all the users.</li>
-			<li>She clicks on the user who catches her eye.</li>
-			<li>Server responds with the users profile.</li>
-			<li>She reads the profile and decides to tap on the heart to indicate she likes him.</li>
-			<li>Server records new instance in like table.</li>
-			<li>She's done browsing, she closes the window.</li>
+			<li>Adrien enters blamedandatedan.online on her laptop using Chrome browser.</li>
+			<li>Server receives requested site and, since she is logged in, returns her profile page.</li>
+			<li>Adrien looks to the menu on the left and clicks the link for the Browse page.</li>
+			<li>Server receives the request and returns the page with an array of Adrien's randomized suggested matches.</li>
+			<li>She scrolls through some of the suggestions and sees a really cute guy. Adrien clicks the link for his profile page.</li>
+			<li>Server receives the request and returns the users profile page.</li>
+			<li>Adrien begins to read the profile and is impressed. He has Dan rating of B and she wants to know more so she clicks the "like button".</li>
+			<li>Server receives the request and saves the "like" to the Match entity. Server checks if the inverse of the most recent Match row is true. If true the hearts are made red and hidden content is revealed, if false nothing happens.</li>
+			<li>Nothing happens. Dissatisfied with this, Adrien wants to keep searching her suggestions, so she clicks on the menu link for her browse section.</li>
+			<li>Server receives request and returns the page with an array of Adrien's randomized suggested matches.</li>
+			<li>Adrien scrolls through the suggestions once again noticing that her recent "like" is not visible on this page anymore. However she does see a profile picture of a handsome man cooking. She immediately clicks on his link.</li>
+			<li>Server receives request and returns this new profile page.</li>
+			<li>Adrien begins reading and is amazed. Not only does this man know how to cook, he can speak three languages, he is also a Tech Recruiter, but his Dan Rating is an A+! Adrien expediently clicks the "like button".</li>
+			<li>Server receives the request and saves the "like" to the Match entity. Server checks if the inverse of the most recent Match row is true. If true the hearts are made red and hidden content is revealed, if false nothing happens.</li>
+			<li>Adrien sees that a number of things have changed on the man's profile including the heart at the top of the page is now red and that there is message box she can use, indicating that it's a match. Adrien composes a message to send to the man and clicks submit.</li>
+			<li>Server receives request and sends an email notification to Adrien's match's email account.</li>
+			<li>Adrien is now content with her search effort today, she closes the window but doesn't log out of blamedandatedan.com</li>
 		</ul>
 		<p><strong>Frequency of Use:</strong> Three to four times a week.</p>
 	</body>
