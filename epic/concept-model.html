@@ -12,68 +12,52 @@
 		<ul>
 			<li>userId (primary key)</li>
 			<li>userActivationToken (for account verification)</li>
+			<li>userAboutMe</li>
 			<li>userAge</li>
 			<li>userAvatarUrl</li>
 			<li>userEmail</li>
 			<li>userGender</li>
 			<li>userHandle</li>
 			<li>userHash (for account password)</li>
-			<li>userLocation</li>
 			<li>userRace</li>
 		</ul>
-		<h3>User Question (Dan Questions)</h3>
+		<h3>Questionnaire (Dan Questions)</h3>
 		<ul>
-			<li>userQuestionId (primary key)</li>
-			<li>userQuestionUserId (foreign key)</li>
-			<li>userQuestionAge</li>
-			<li>userQuestionDrinker</li>
-			<li>userQuestionDrugs</li>
-			<li>userQuestionEducation</li>
-			<li>userQuestionGender</li>
-			<li>userQuestionKidsFuture</li>
-			<li>userQuestionKidsNow</li>
-			<li>userQuestionRace</li>
-			<li>userQuestionReligious</li>
-			<li>userQuestionSmoker</li>
-		</ul>
-		<h3>About</h3>
-		<ul>
-			<li>aboutId (primary key)</li>
-			<li>aboutUserId (foreign key)</li>
-			<li>aboutAboutMe</li>
-			<li>aboutCareer</li>
-			<li>aboutCulture</li>
-			<li>aboutDietaryPreferences</li>
-			<li>aboutEducation</li>
-			<li>aboutGender</li>
-			<li>aboutHobbies</li>
-			<li>aboutKids</li>
-			<li>aboutMovies</li>
-			<li>aboutMusic</li>
-			<li>aboutPets</li>
-			<li>aboutReligion</li>
-			<li>aboutTravel</li>
-			<li>aboutWorkout</li>
+			<li>questionnaireId (primary key)</li>
+			<li>questionnaireUserId (foreign key)</li>
+			<li>questionnaireDrinker</li>
+			<li>questionnaireDrugs</li>
+			<li>questionnaireEducation</li>
+			<li>questionnaireKidsFuture</li>
+			<li>questionnaireKidsNow</li>
+			<li>questionnaireReligious</li>
+			<li>questionnaireSmoker</li>
 		</ul>
 		<h3>Solo Match</h3>
 		<ul>
-			<li>soloMatchId (primary key)</li>
 			<li>soloMatchUserId (foreign key)</li>
 			<li>soloMatchToUserId (foreign key)</li>
-			<li>soloMatchResult</li>
 		</ul>
-		<h3>Group Match</h3>
+		<h3>Pair Match</h3>
 		<ul>
-			<li>groupMatchId (primary key)</li>
-			<li>groupMatchFirstUserId (foreign key)</li>
-			<li>groupMatchSecondUserId (foreign key)</li>
-			<li>groupMatchResult</li>
+			<li>pairMatchId (primary key)</li>
+			<li>pairMatchFirstUserId (foreign key)</li>
+			<li>pairMatchSecondUserId (foreign key)</li>
+			<li>pairMatchResult</li>
+		</ul>
+		<h3>Report</h3>
+		<ul>
+			<li>reportId (primary key)</li>
+			<li>reportUserId (foreign key)</li>
+			<li>reportAbuserID (foreign key)</li>
+			<li>reportContent</li>
 		</ul>
 		<h2>Relationships</h2>
 		<ul>
-			<li>One User has one User Question</li>
-			<li>One User can have many Questions</li>
-			<li>One User can have many Likes</li>
+			<li>One User has one Questionnaire</li>
+			<li>One User can have many Solo Matches</li>
+			<li>One User can have many Pair Matches</li>
+			<li>One User can have many reports</li>
 		</ul>
 	</body>
 </html>
