@@ -21,6 +21,14 @@
 			<li>userHash (for account password)</li>
 			<li>userRace</li>
 		</ul>
+		<h3>User Detail</h3>
+		<ul>
+			<li>userDetailId (primary key)</li>
+			<li>userDetailUserId (foreign key)</li>
+			<li>userDetailIpAddress</li>
+			<li>userDetailUserAgent</li>
+			<li>userDetailDisplayEmail</li>
+		</ul>
 		<h3>Questionnaire (Dan Questions)</h3>
 		<ul>
 			<li>questionnaireId (primary key)</li>
@@ -33,31 +41,32 @@
 			<li>questionnaireReligious</li>
 			<li>questionnaireSmoker</li>
 		</ul>
-		<h3>Solo Match</h3>
+		<h3>Question</h3>
 		<ul>
-			<li>soloMatchUserId (foreign key)</li>
-			<li>soloMatchToUserId (foreign key)</li>
+			<li>questionUserId (foreign key)</li>
+			<li>questionQuestionnaireId (foreign key)</li>
+			<li>questionResult</li>
 		</ul>
-		<h3>Pair Match</h3>
+		<h3>Match</h3>
 		<ul>
-			<li>pairMatchId (primary key)</li>
-			<li>pairMatchFirstUserId (foreign key)</li>
-			<li>pairMatchSecondUserId (foreign key)</li>
-			<li>pairMatchResult</li>
+			<li>matchUserId (foreign key)</li>
+			<li>matchToUserId (foreign key)</li>
+			<li>matchApproved</li>
 		</ul>
 		<h3>Report</h3>
 		<ul>
-			<li>reportId (primary key)</li>
 			<li>reportUserId (foreign key)</li>
 			<li>reportAbuserID (foreign key)</li>
 			<li>reportContent</li>
+			<li>reportDate</li>
 		</ul>
 		<h2>Relationships</h2>
 		<ul>
+			<li>One User has one User Detail</li>
 			<li>One User has one Questionnaire</li>
-			<li>One User can have many Solo Matches</li>
-			<li>One User can have many Pair Matches</li>
-			<li>One User can have many reports</li>
+			<li>One User has one Question</li>
+			<li>Many Users can match with many Users</li>
+			<li>Many Users can report many Users</li>
 		</ul>
 	</body>
 </html>
