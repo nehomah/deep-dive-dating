@@ -12,37 +12,43 @@
 		<ul>
 			<li>userId (primary key)</li>
 			<li>userActivationToken (for account verification)</li>
-			<li>userAboutMe</li>
-			<li>userAge</li>
+			<li>userAgent</li>
 			<li>userAvatarUrl</li>
+			<li>userBlocked</li>
 			<li>userEmail</li>
-			<li>userGender</li>
 			<li>userHandle</li>
 			<li>userHash (for account password)</li>
-			<li>userRace</li>
-			<li>userBlocked</li>
+			<li>userIpAddress</li>
+
+
 		</ul>
 		<h3>User Detail</h3>
 		<ul>
 			<li>userDetailId (primary key)</li>
 			<li>userDetailUserId (foreign key)</li>
-			<li>userDetailIpAddress</li>
-			<li>userDetailUserAgent</li>
+			<li>userDetailAboutMe</li>
+			<li>userDetailAge</li>
+			<li>userDetailCareer</li>
 			<li>userDetailDisplayEmail</li>
+			<li>userDetailEducation</li>
+			<li>userDetailGender</li>
+			<li>userDetailInterests</li>
+			<li>userDetailRace</li>
+			<li>userDetailReligion</li>
 		</ul>
-		<h3>Questionnaire (Dan Questions)</h3>
+		<h3>Question (Dan Questions)</h3>
 		<ul>
-			<li>questionnaireId (primary key)</li>
-			<li>questionnaireUserId (foreign key)</li>
-			<li>questionnaireContent</li>
-			<li>questionnaireValue</li>
-		</ul>
-		<h3>Question</h3>
-		<ul>
+			<li>questionId (primary key)</li>
 			<li>questionUserId (foreign key)</li>
-			<li>questionQuestionnaireId (foreign key)</li>
-			<li>questionResult</li>
-			<li>questionScore</li>
+			<li>questionContent</li>
+			<li>questionValue</li>
+		</ul>
+		<h3>Answer</h3>
+		<ul>
+			<li>AnswerUserId (foreign key)</li>
+			<li>AnswerQuestionId (foreign key)</li>
+			<li>AnswerResult</li>
+			<li>AnswerScore</li>
 		</ul>
 		<h3>Match</h3>
 		<ul>
@@ -54,10 +60,10 @@
 		<ul>
 			<li>reportUserId (foreign key)</li>
 			<li>reportAbuserID (foreign key)</li>
+			<li>reportAgent</li>
 			<li>reportContent</li>
 			<li>reportDate</li>
 			<li>reportIp</li>
-			<li>reportAgent</li>
 		</ul>
 		<h2>Relationships</h2>
 		<ul>
