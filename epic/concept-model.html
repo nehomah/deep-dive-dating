@@ -20,6 +20,7 @@
 			<li>userHandle</li>
 			<li>userHash (for account password)</li>
 			<li>userRace</li>
+			<li>userBlocked</li>
 		</ul>
 		<h3>User Detail</h3>
 		<ul>
@@ -33,19 +34,15 @@
 		<ul>
 			<li>questionnaireId (primary key)</li>
 			<li>questionnaireUserId (foreign key)</li>
-			<li>questionnaireDrinker</li>
-			<li>questionnaireDrugs</li>
-			<li>questionnaireEducation</li>
-			<li>questionnaireKidsFuture</li>
-			<li>questionnaireKidsNow</li>
-			<li>questionnaireReligious</li>
-			<li>questionnaireSmoker</li>
+			<li>questionnaireContent</li>
+			<li>questionnaireValue</li>
 		</ul>
 		<h3>Question</h3>
 		<ul>
 			<li>questionUserId (foreign key)</li>
 			<li>questionQuestionnaireId (foreign key)</li>
 			<li>questionResult</li>
+			<li>questionScore</li>
 		</ul>
 		<h3>Match</h3>
 		<ul>
@@ -59,12 +56,13 @@
 			<li>reportAbuserID (foreign key)</li>
 			<li>reportContent</li>
 			<li>reportDate</li>
+			<li>reportIp</li>
+			<li>reportAgent</li>
 		</ul>
 		<h2>Relationships</h2>
 		<ul>
 			<li>One User has one User Detail</li>
-			<li>One User has one Questionnaire</li>
-			<li>One User has one Question</li>
+			<li>Many Users answer many Questions</li>
 			<li>Many Users can match with many Users</li>
 			<li>Many Users can report many Users</li>
 		</ul>
