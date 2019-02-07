@@ -27,4 +27,5 @@ require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
  * *NOTE*: Tables must be added in the order they were created in step (2).
  *
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
+ * referenced from: https://bootcamp-coders.cnm.edu/class-materials/unit-testing/phpunit/
  **/
