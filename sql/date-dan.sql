@@ -12,6 +12,19 @@ CREATE TABLE user (
 );
 
 CREATE TABLE userDetail (
+	userDetailId(16) NOT NULL,
+	userDetailUserId(16) NOT NULL,
+	userDetailAboutMe VARCHAR(144),
+	userDetailAge INT NOT NULL,
+	userDetailCareer VARCHAR(32),
+	userDetailDisplayEmail VARCHAR(128),
+	userDetailEducation VARCHAR(144),
+	userDetailGender VARCHAR(144),
+	userDetailInterests VARCHAR(),
+	userDetailRace VARCHAR(),
+	userDetailReligion VARCHAR(),
+	FOREIGN KEY(userDetailUserId),
+	PRIMARY KEY(userDetailId)
 
 );
 
