@@ -8,6 +8,19 @@ DROP TABLE IF EXISTS match;
 DROP TABLE IF EXISTS report;
 
 CREATE TABLE user (
+	userId BINARY(16) NOT NULL,
+	userActivationToken CHAR(32),
+	userAgent VARCHAR(255),
+	userAvatarUrl VARCHAR(255),
+	userBlocked TINYINT,
+	userEmail VARCHAR(128) NOT NULL,
+	userHandle VARCHAR(32) NOT NULL,
+	userHash CHAR(97) NOT NULL,
+	userIpAddress ,
+	UNIQUE (userHandle),
+	UNIQUE (userEmail),
+	INDEX (userHandle),   ---
+	PRIMARY KEY(userId)
 
 );
 
