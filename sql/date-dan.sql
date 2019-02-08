@@ -25,8 +25,8 @@ CREATE TABLE user (
 );
 
 CREATE TABLE userDetail (
-	userDetailId(16) NOT NULL,
-	userDetailUserId(16) NOT NULL,
+	userDetailId BINARY(16) NOT NULL,
+	userDetailUserId BINARY(16) NOT NULL,
 	userDetailAboutMe VARCHAR(144),
 	userDetailAge INT NOT NULL,
 	userDetailCareer VARCHAR(32),
@@ -42,11 +42,22 @@ CREATE TABLE userDetail (
 );
 
 CREATE TABLE question (
-
+	questionId BINARY(16) NOT NULL,
+	questionUserId BINARY(16) NOT NULL,
+	questionContent VARCHAR (128) NOT NULL,
+	questionValue TINYINT (1) NOT NULL,
+	FOREIGN KEY(questionUserId) REFERENCES user(userId),
+	PRIMARY KEY(questionId)
 );
 
 CREATE TABLE answer (
-
+	answerUserId BINARY(16) NOT NULL,
+	answerQuestionId BINARY(16) NOT NULL,
+	answerResult TINYINT(1) NOT NULL,
+	answerScore TINYINT(1) NOT NULL,
+	FOREIGN KEY (answerUserId) REFERENCES user(userId),
+	FOREIGN KEY (answerQuestionId) REFERENCES question(questionId),
+	INDEX answer(userId, questionId)
 );
 
 CREATE TABLE match (
