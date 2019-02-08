@@ -31,7 +31,7 @@ CREATE TABLE userDetail (
 CREATE TABLE question (
 	questionId BINARY(16) NOT NULL,
 	questionUserId BINARY(16) NOT NULL,
-	questionContent VARCHAR (255) NOT NULL,
+	questionContent VARCHAR (128) NOT NULL,
 	questionValue SMALLINT (1) NOT NULL,
 	FOREIGN KEY(questionUserId) REFERENCES user(userId),
 	PRIMARY KEY(questionId)
