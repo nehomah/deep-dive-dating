@@ -32,7 +32,7 @@ CREATE TABLE question (
 	questionId BINARY(16) NOT NULL,
 	questionUserId BINARY(16) NOT NULL,
 	questionContent VARCHAR (128) NOT NULL,
-	questionValue SMALLINT (1) NOT NULL,
+	questionValue TINYINT (1) NOT NULL,
 	FOREIGN KEY(questionUserId) REFERENCES user(userId),
 	PRIMARY KEY(questionId)
 );
@@ -40,8 +40,8 @@ CREATE TABLE question (
 CREATE TABLE answer (
 	answerUserId BINARY(16) NOT NULL,
 	answerQuestionId BINARY(16) NOT NULL,
-	answerResult SMALLINT(1) NOT NULL,
-	answerScore SMALLINT(1) NOT NULL,
+	answerResult TINYINT(1) NOT NULL,
+	answerScore TINYINT(1) NOT NULL,
 	FOREIGN KEY (answerUserId) REFERENCES user(userId),
 	FOREIGN KEY (answerQuestionId) REFERENCES question(questionId),
 	INDEX answer(userId, questionId)
