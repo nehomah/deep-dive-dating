@@ -77,7 +77,7 @@ CREATE TABLE report (
 	reportAgent VARCHAR(255) NOT NULL,
 	reportContent VARCHAR(255) NOT NULL,
 	reportDate DATETIME(6) NOT NULL,
-	reportIp INT (32) NOT NULL,
+	reportIp BINARY (16) NOT NULL,
 	INDEX (reportUserId),
 	INDEX (reportAbuserId),
 	FOREIGN KEY (reportUserId) REFERENCES user(userId),
