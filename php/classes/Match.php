@@ -35,9 +35,9 @@ class Match implements \JsonSerializable {
 	/**
 	 * Constructor for this Match
 	 *
-	 * @param string|Uuid $matchUserId id of the user who liked a profile
-	 * @param string|Uuid $matchToUserId id of the user who's profile was liked
-	 * @param int $matchApproved value representing match reciprocity
+	 * @param string|Uuid $newMatchUserId id of the user who liked a profile
+	 * @param string|Uuid $newMatchToUserId id of the user who's profile was liked
+	 * @param int $newMatchApproved value representing match reciprocity
 	 * @throws \InvalidArgumentException if data types are invalid
 	 * @throws \RangeException if values are too long or negative
 	 * @throws \TypeError if data types violate provided hints
