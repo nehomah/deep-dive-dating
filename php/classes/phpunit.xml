@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit>
+	<testsuites>
+		<testsuite name="date-dan">
+			<!--file>UserTest.php</file-->
+			<!--file>UserDetailTest.php</file-->
+			<!--file>QuestionTest.php</file-->
+			<!--file>AnswerTest.php</file-->
+			<!--file>MatchTest.php</file-->
+			<!--file>ReportTest.php</file-->
+		</testsuite>
+	</testsuites>
+	<filter>
+		<whitelist processUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">..</directory>
+		</whitelist>
+	</filter>
+</phpunit>

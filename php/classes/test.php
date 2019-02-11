@@ -1,5 +1,5 @@
 <?php
-namespace Edu\Cnm\DataDesign\Test;
+namespace Edu\Cnm\DateDan\Test;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\DbUnit\TestCaseTrait;
