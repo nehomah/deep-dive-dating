@@ -75,7 +75,22 @@ class user implements \JsonSerializable {
 	 */
 	public function __construct($newUserId, $newUserActivationToken, $newUserAgent, $newUserAvatarUrl, $newUserBlocked, $newUserEmail, $newUserHandle, $newUserHash, $newUserIpAddress) {
 		try {
-
+			$this->setUserId($newUserId);
+			$this->setUserActivationToken($newUserActivationToken);
+			$this->setUserAgent($newUserAgent);
+			$this->setUserAvatarUrl($newUserAvatarUrl);
+			$this->setUserBlocked($newUserBlocked);
+			$this->setUserEmail($newUserEmail);
+			$this->setUserHandle($newUserHandle);
+			$this->setUserHash($newUserHash);
+			$this->setUserIpAddress($newUserIpAddress);
+ 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+					// determine what type of error was thrown
+					$exceptionType = get_class($exception);
+					throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 	}
+	/**
+	 * accessor method for user id
+	 */
 }
