@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS userDetail;
 DROP TABLE IF EXISTS question;
 DROP TABLE IF EXISTS answer;
-DROP TABLE IF EXISTS match;
+DROP TABLE IF EXISTS `match`;
 DROP TABLE IF EXISTS report;
 
 CREATE TABLE user (
@@ -60,12 +60,27 @@ CREATE TABLE answer (
 	INDEX answer(userId, questionId)
 );
 
-CREATE TABLE match (
-
+CREATE TABLE `match` (
+	matchUserId BINARY(16) NOT NULL,
+	matchToUserId BINARY(16) NOT NULL,
+	matchApproved TINYINT(1) NOT NULL,
+	INDEX (matchUserId),
+	INDEX (matchToUserId),
+	FOREIGN KEY (matchUserId) REFERENCES user(userId),
+	FOREIGN KEY (matchToUserId) REFERENCES user(userId),
+	PRIMARY KEY (matchUserId, matchToUserId)
 );
 
 CREATE TABLE report (
-
+	reportUserId BINARY(16) NOT NULL,
+	reportAbuserId BINARY(16) NOT NULL,
+	reportAgent VARCHAR(255) NOT NULL,
+	reportContent VARCHAR(255) NOT NULL,
+	reportDate DATETIME(6) NOT NULL,
+	reportIp INT (32) NOT NULL,
+	INDEX (reportUserId),
+	INDEX (reportAbuserId),
+	FOREIGN KEY (reportUserId) REFERENCES user(userId),
+	FOREIGN KEY (reportAbuserId) REFERENCES user(userId),
+	PRIMARY KEY (reportUserId, reportAbuserId)
 );
-
-.
