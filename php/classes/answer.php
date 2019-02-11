@@ -86,3 +86,32 @@ public function setAnswerUserId($newAnswerUserId): void {
 	//convert and store answer user id
 	$this->answerUserId = $uuid;
 }
+/**
+ * accessor method for answer question id
+ *
+ * @return string value for answer question id
+ **/
+
+public function getAnswerQuestionId(): string {
+	return ($this->answerQuestionId);
+}
+
+/**
+ * mutator method for answer question id
+ *
+ * @param string $newAnswerQuestionId new value answer question id
+ * @throws \InvalidArgumentException if the answer question id is empty
+ * @throws \RangeException if the answer question id is longer than 16 characters
+ **/
+
+public function setAnswerQuestionId(string $newAnswerQuestionId) {
+	if(empty($newAnswerQuestionId) == true){
+		throw(new \InvalidArgumentException("This URL is empty."));
+	}
+	//verify the URL is no longer than 255 characters
+	if(strlen($newAnswerQuestionId)>16) {
+		throw(new \RangeException("This URL is too long. It must be no longer than 16 characters."));
+	}
+	//Store the author avatar URL
+	$this->answerQuestionId = $newAnswerQuestionId;
+}
