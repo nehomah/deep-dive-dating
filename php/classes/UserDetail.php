@@ -130,3 +130,11 @@ public function setUserDetailId($newUserDetailId): void {
 	//convert and store the profile id
 	$this->userDetailId = $uuid;
 }
+
+	/******Accessor method for user detail user id***************/
+
+	public function getUserDetailUserId(): Uuid {
+		return ($this->userDetailUserId);
+	}
+
+	/*********Mutator method for user detail user id************/

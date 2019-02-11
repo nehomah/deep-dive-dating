@@ -1,6 +1,6 @@
 <?php
 namespace DeepDiveDatingApp\DeepDiveDating;
-require_once("autoload.php");
+require_once("test.php");
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 
@@ -85,33 +85,4 @@ public function setQuestionId($newQuestionId): void {
 
 	//convert and store question id
 	$this->questionId = $uuid;
-}
-/**
- * accessor method for author avatar url
- *
- * @return string value of author avatar url
- **/
-
-public function getAuthorAvatarUrl(): string {
-	return ($this->authorAvatarUrl);
-}
-
-/**
- * mutator method for author avatar url
- *
- * @param string $newAuthorAvatarUrl new value author avatar url
- * @throws \InvalidArgumentException if the author url is empty
- * @throws \RangeException if the url is longer than 255 characters
- **/
-
-public function setAuthorAvatarUrl(string $newAuthorAvatarUrl) {
-	if(empty($newAuthorAvatarUrl) == true){
-		throw(new \InvalidArgumentException("This URL is empty."));
-	}
-	//verify the URL is no longer than 255 characters
-	if(strlen($newAuthorAvatarUrl)>255) {
-		throw(new \RangeException("This URL is too long. It must be no longer than 255 characters."));
-	}
-	//Store the author avatar URL
-	$this->authorAvatarUrl = $newAuthorAvatarUrl;
 }
