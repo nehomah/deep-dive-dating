@@ -67,3 +67,22 @@ class answer implements \JsonSerializable {
 public function getAnswerUserId(): string {
 	return ($this->answerUserId);
 }
+/**
+ * mutator method for question id
+ *
+ * @param Uuid|string $newAnswerUserId is not positive
+ * @throws \InvalidArgumentException if the id is not a string or is insecure
+ * @throws \RangeException if $newAnswerUserId is not positive
+ * @throws \TypeError if $newAnswerUserId is not a uuid or string
+ **/
+public function setAnswerUserId($newAnswerUserId): void {
+	try {
+		$uuid = self::validateUuid($newAnswerUserId);
+	} catch(InvalidArguementException | \RangeException |Exception |\TypeError $exception) {
+		$exceptionType = get_class($exception);
+		throw(new $exceptionType ($exception->getMessage(), 0, $exception));
+	}
+
+	//convert and store answer user id
+	$this->answerUserId = $uuid;
+}

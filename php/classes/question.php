@@ -83,6 +83,6 @@ public function setQuestionId($newQuestionId): void {
 		throw(new $exceptionType ($exception->getMessage(), 0, $exception));
 	}
 
-	//convert and store author id
+	//convert and store question id
 	$this->questionId = $uuid;
 }
