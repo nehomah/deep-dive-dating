@@ -35,9 +35,9 @@ class Match implements \JsonSerializable {
 	/**
 	 * Constructor for this Match
 	 *
-	 * @param string|Uuid $matchUserId id of the user who liked a profile
-	 * @param string|Uuid $matchToUserId id of the user who's profile was liked
-	 * @param int $matchApproved value representing match reciprocity
+	 * @param string|Uuid $newMatchUserId id of the user who liked a profile
+	 * @param string|Uuid $newMatchToUserId id of the user who's profile was liked
+	 * @param int $newMatchApproved value representing match reciprocity
 	 * @throws \InvalidArgumentException if data types are invalid
 	 * @throws \RangeException if values are too long or negative
 	 * @throws \TypeError if data types violate provided hints
@@ -109,7 +109,7 @@ class Match implements \JsonSerializable {
 		$query = "INSERT INTO `match` (matchUserId, matchToUserId, matchApproved) VALUES (:matchUserId, :matchToUserId, :matchApproved)";
 		$statement = $pdo->prepare($query);
 		//then bind member variables to placeholders in the template
-		$parameters = ["matchUserId" => $this->matchUserId->getBytes(),  "matchToUserId" => $this->matchToUserId->getBytes(), "matchApproved" => $this->macthApproved];
+		$parameters = ["matchUserId" => $this->matchUserId->getBytes(),  "matchToUserId" => $this->matchToUserId->getBytes(), "matchApproved" => $this->matchApproved];
 		$statement->execute($parameters);
 	}
 
@@ -128,4 +128,22 @@ class Match implements \JsonSerializable {
 		$parameters = ["matchUserId" => $this->matchUserId->getBytes()];
 		$statement->execute($parameters);
 	}
+
+	/**
+	 * updates this match in mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 */
+	public function update(\PDO $pdo) : void {
+		//first create query template
+		$query = "UPDATE `match` SET matchApproved = :matchApproved WHERE matchUserId = :matchUserId";
+		$statement = $pdo->prepare($query);
+		//then bind member variables to the placeholder in the template
+		$parameters = ["matchApproved" => $this->matchApproved];
+		$statement->execute($parameters);
+	}
+
+
 }
