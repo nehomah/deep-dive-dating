@@ -81,5 +81,19 @@ class Match implements \JsonSerializable {
 		return ($this->matchApproved);
 	}
 
-
+	/**
+	 * mutator method for Match Approved
+	 *
+	 * @param INT new Match Approved Value
+	 * @throws \InvalidArgumentException if input is not a valid type
+	 * @throws \RangeException if integer is not 0 or 1
+	 */
+	public function setMatchApproved(INT $newMatchApproved) : INT {
+		// check if input is valid
+		if ($newMatchApproved !== 1 | $newMatchApproved !==0) {
+			throw(new \RangeException("Match Approved Value is invalid"));
+		}
+		//store new value on server
+		$this->matchApproved = $newMatchApproved;
+	}
 }
