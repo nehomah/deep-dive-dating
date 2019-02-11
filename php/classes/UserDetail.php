@@ -1,5 +1,5 @@
 <?php
-namespace unsure;
+namespace DeepDiveDatingApp\DeepDiveDating;
 require_once("autoload.php");
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
@@ -88,7 +88,7 @@ class UserDetail implements \JsonSerializable {
 *@throws \TypeError if data types violate type hints
 *
 ************************************************************/
-
+public function __construct()
 /******Accessor method for user detail id***************/
 
 public function getUserDetailId(): Uuid {
