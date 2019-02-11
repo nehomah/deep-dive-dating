@@ -96,4 +96,21 @@ class Match implements \JsonSerializable {
 		//store new value on server
 		$this->matchApproved = $newMatchApproved;
 	}
+
+	/**
+	 * inserts match into mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 */
+	public function insert(\PDO $pdo) : void {
+		//first create query template
+		$query = "INSERT INTO `match` (matchUserId, matchToUserId, matchApproved) VALUES (:matchUserId, :matchToUserId, :matchApproved)";
+		$statement = $pdo->prepare($query);
+		//then bind member variables to placeholders in template
+		$parameters = ["matchUserId" => $this->matchUserId->getBytes(),  "matchToUserId" => $this->matchToUserId->getBytes(), "matchApproved" => $this->macthApproved];
+		$statement->execute($parameters);
+	}
+
 }
