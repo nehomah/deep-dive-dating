@@ -60,6 +60,22 @@ class user implements \JsonSerializable {
 	 *
 	 * @param string|Uuid $newUserId id of this user or null if a new user account
 	 * @param string $newUserActivationToken activation token to safe guard against malicious accounts
-	 * @param string $newUserAgent  the recorded info about the browser and system to assist with blocking/reporting
+	 * @param string $newUserAgent string recorded info about the browser and system to assist with blocking/reporting
+	 * @param string $newUserAvatarUrl string url to the user's avatar image
+	 * @param string $newUserBlocked tinyint info on the blocked status of the user
+	 * @param string $newUserEmail string containing the user email
+	 * @param string $newUserHandle string conatining the handle/username of the user
+	 * @param string $newUserHash string containing the password hash
+	 * @param string $newUserIpAddress binary, requiring some conversion of the ip address
+	 * @throws \InvalidArguementException if the data types are not valid
+	 * @throws \RangeException if the data values are out of bounds (e.g. strings too long, negative integers)
+	 * @throws \TypeError if the data type violates the data hint
+	 * @throws \Exception if some other exception occurs
+	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
+	public function __construct($newUserId, $newUserActivationToken, $newUserAgent, $newUserAvatarUrl, $newUserBlocked, $newUserEmail, $newUserHandle, $newUserHash, $newUserIpAddress) {
+		try {
+
+		}
+	}
 }
