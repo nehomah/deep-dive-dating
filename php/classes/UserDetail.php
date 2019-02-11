@@ -67,11 +67,10 @@ class UserDetail implements \JsonSerializable {
 	 * @var string $userDetailReligion
 	 **/
 	private $userDetailReligion;
-}
 
 /*******Constructor for UserDetail class************
 *
-*@param string|Uuid $newUserDetailId id for new user detail ________*
+*@param string|Uuid $newUserDetailId id for new user detail
 *@param string|Uuid $newUserDetailUserId id that links the details to the user?*
 *@param string $newUserDetailAboutMe string showing users about me section
 *@param int $newUserDetailAge number depicting users age
@@ -108,7 +107,7 @@ public function __construct($newUserDetailId, $newUserDetailUserId, $newUserDeta
 		throw(new $exceptionType($exception->getMessage(), 0, $exception));
 	}
 }
-/******Accessor method for user detail id***************/
+/******Accessor method for user detail id`***************/
 
 public function getUserDetailId(): Uuid {
 	return ($this->userDetailId);
