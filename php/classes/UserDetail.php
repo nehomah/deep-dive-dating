@@ -13,17 +13,17 @@ class UserDetail implements \JsonSerializable {
 	use ValidateUuid;
 	/**
 	 * Id for for this users details, this is the primary key
-	 * @var Uuid $userDetailId
+	 * @var string|Uuid $userDetailId
 	 **/
 	private $userDetailId;
 	/**
 	 * Id to link user details to correct user, this is a foreign key
-	 * @var Uuid $userDetailUserId
+	 * @var string|Uuid $userDetailUserId
 	 **/
 	private $userDetailUserId;
 	/**
 	 * space for user to type in information they choose about themselves
-	 * @var $userDetailAboutMe
+	 * @var string|Uuid $userDetailAboutMe
 	 **/
 	private $userDetailAboutMe;
 	/**
@@ -33,7 +33,7 @@ class UserDetail implements \JsonSerializable {
 	private $userDetailAge;
 	/**
 	 * Information about users career
-	 * @var $userDetailCareer
+	 * @var string $userDetailCareer
 	 **/
 	private $userDetailCareer;
 	/**
@@ -43,27 +43,47 @@ class UserDetail implements \JsonSerializable {
 	private $userDetailDisplayEmail;
 	/**
 	 * Education level of user
-	 * @var $userDetailEducation
+	 * @var string $userDetailEducation
 	 **/
 	private $userDetailEducation;
 	/**
 	 * Gender for user
-	 * @var $userDetailGender
+	 * @var string $userDetailGender
 	 **/
 	private $userDetailGender;
 	/**
 	 * Users interests
-	 * @var $userDetailInterests
+	 * @var string $userDetailInterests
 	 **/
 	private $userDetailInterests;
 	/**
 	 * Users race
-	 * @var $userDetailRace
+	 * @var string $userDetailRace
 	 **/
 	private $userDetailRace;
 	/**
 	 * Users religion
-	 * @var $userDetailReligion
+	 * @var string $userDetailReligion
 	 **/
 	private $userDetailReligion;
 }
+
+/*******Constructor for UserDetail class************
+*
+*@param string|Uuid $newUserDetailId id for new user detail ________*
+*@param string|Uuid $newUserDetailUserId id that links the details to the user?*
+*@param string $newUserDetailAboutMe string showing users about me section
+*@param int $newUserDetailAge number depicting users age
+*@param string $newUserIdCareer string showing users career information
+*@param string $newUserDetailDisplayEmail string showing users display email
+*@param string $newUserDetailEducation string showing users education
+*@param string $newUserDetailGender string showing users gender
+*@param string $newUserDetailInterests string showing users interests
+*@param string $newUserDetailRace string showing users race
+*@param string $newUserDetailReligion string showing users religion
+*@throws \InvalidArgumentException if data types are not valid
+*@throws \RangeException if data values are out of bounds
+*@throws \Exception for when an exception is thrown
+*@throws \TypeError if data types violate type hints
+*
+************************************************************/
