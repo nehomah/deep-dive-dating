@@ -67,3 +67,10 @@ class UserDetail implements \JsonSerializable {
 	 **/
 	private $userDetailReligion;
 }
+
+/*******Constructor for UserDetail class************
+*
+*@param string|Uuid $newUserDetailId id for new user detail ________*
+*@param string|Uuid $newUserDetailUserId id that links the details to the user?*
+*@param string $newUserDetailAboutMe when section is filled out initially or edited?*
+*@param
