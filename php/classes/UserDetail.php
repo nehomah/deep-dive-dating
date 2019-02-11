@@ -2,6 +2,7 @@
 namespace unsure;
 require_once("autoload.php");
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
+
 use Ramsey\Uuid\Uuid;
 /**
  * The userDetail class that will be used for each of the users that want to add more
@@ -87,3 +88,27 @@ class UserDetail implements \JsonSerializable {
 *@throws \TypeError if data types violate type hints
 *
 ************************************************************/
+
+/******Accessor method for user detail id***************/
+
+public function getUserDetailId(): Uuid {
+	return ($this->userDetailId);
+}
+
+/**********Mutator method for user detail id***************
+
+ * @param Uuid| string $newUserDetailId value of new user detail id
+ * @throws \RangeException if $newUserDetailId is not positive
+ * @throws \TypeError if the user detail id is not correct type
+**/
+
+public function setUserDetailId($newUserDetailId): void {
+	try{
+		$uuid = self::validateUuid($newUserDetailId);
+	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+		$exceptionType = get_class($exception);
+		throw(new $exceptionType($exception->getMessage(), 0, $exception));
+	}
+	//convert and store the profile id
+	$this->userDetailId = $uuid;
+}
