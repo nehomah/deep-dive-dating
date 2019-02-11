@@ -1,6 +1,6 @@
 <?php
-namespace unsure;
-require_once("autoload.php");
+namespace Edu\Cnm\DateDan\Test;
+require_once("test.php");
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 
@@ -35,7 +35,7 @@ private $questionValue;
 /**
 
 
-/*******Constructor for UserDetail class************
+/*******Constructor for question class************
  *
  *@param string|Uuid $newQuestionId id for question set
 *@param string $newQuestionUserId id for new user to answer questions
