@@ -92,5 +92,49 @@ class user implements \JsonSerializable {
 	}
 	/**
 	 * accessor method for user id
+	 *
+	 * @return string value of user id
 	 */
+	public function getUserId(): string {
+		return($this->userId);
+	}
+
+	/**
+	 * Mutator method for user Id
+	 *
+	 * @param string | string $newUserId new value of user id
+	 * @throws \RangeException if $newUserId is not positive
+	 * @throws \TypeError if the user id is not the correct type
+	 */
+	public function setUserId($newUserId): void {
+		try{
+					$uuid = self::validateUuid($newUserId);
+		} catch(\InvalidArgumentException | \RangeException |\Exception | \TypeError $exception) {
+					$exceptionType = get_class($exception);
+					throw( new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		// convert and store user Id
+		$this->userId = $uuid;
+	}
+	/**
+	 * accessor method for user activation token
+	 *
+	 * @return string value of the user activation token
+	 */
+	public function getUserActivationToken(): ?string {
+			return ($this->userActivationToken);
+	}
+	/**
+	 * @param string $newUserActivationToken
+	 * @throws \InvalidArgumentException if the url is not a string or is insecure
+	 * @throws \RangeException if the url is over 255 characters
+	 * @throws \TypeError if the url is not a string
+	 */
+	public function setUserActivationToken(?string $newUserActivationToken): void {
+		if($newUserActivationToken === null) {
+			$this->userActivationToken = null;
+			return;
+		}
+
+	}
 }
