@@ -16,7 +16,7 @@ CREATE TABLE user (
 	userEmail VARCHAR(128) NOT NULL,
 	userHandle VARCHAR(32) NOT NULL,
 	userHash CHAR(97) NOT NULL,
-	userIpAddress ,    <----- NEEDS DATA TYPE AND SIZE
+	userIpAddress BINARY(16) NOT NULL,
 	UNIQUE (userHandle),
 	UNIQUE (userEmail),
 	INDEX (userHandle),

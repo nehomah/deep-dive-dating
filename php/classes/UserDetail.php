@@ -88,7 +88,26 @@ class UserDetail implements \JsonSerializable {
 *@throws \TypeError if data types violate type hints
 *
 ************************************************************/
-public function __construct()
+public function __construct($newUserDetailId, $newUserDetailUserId, $newUserDetailAboutMe, $newUserDetailAge, $newUserDetailCareer, $newUserDetailDisplayEmail, $newUserDetailEducation, $newUserDetailGender, $newUserDetailInterests, $newUserDetailRace, $newUserDetailReligion) {
+	try {
+		$this->setUserDetailId($newUserDetailId);
+		$this->setUserDetailUserId($newUserDetailUserId);
+		$this->setUserDetailAboutMe($newUserDetailAboutMe);
+		$this->setUserDetailAge($newUserDetailAge);
+		$this->setUserDetailCareer($newUserDetailCareer);
+		$this->setUserDetailDisplayEmail($newUserDetailDisplayEmail);
+		$this->setUserDetailEducation($newUserDetailEducation);
+		$this->setUserDetailGender($newUserDetailGender);
+		$this->setUserDetailInterests($newUserDetailInterests);
+		$this->setUserDetailRace($newUserDetailRace);
+		$this->setUserDetailReligion($newUserDetailReligion);
+	}
+	//determine the exception that was thrown
+	catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+		$exceptionType = get_class($exception);
+		throw(new $exceptionType($exception->getMessage(), 0, $exception));
+	}
+}
 /******Accessor method for user detail id***************/
 
 public function getUserDetailId(): Uuid {
