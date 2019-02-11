@@ -135,6 +135,13 @@ class user implements \JsonSerializable {
 			$this->userActivationToken = null;
 			return;
 		}
-
+		$newUserActivationToken = strtolower(trim($newUserActivationToken));
+		if(ctype_xdigit($newUserActivationToken) === false) {
+				throw(new\InvalidArgumentException("user activation token is not valid"));
+		}
+		// make sure the user activation token is only 32 characters
+		if(strlen($newUserActivationToken) !== 32) {
+							throw (new\RangeException)
+		}
 	}
 }
