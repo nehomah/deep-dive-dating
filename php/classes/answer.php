@@ -58,13 +58,7 @@ class answer implements \JsonSerializable {
 		throw(new $exceptionType ($exception->getMessage(), 0, $exception));
 	}
 }
-/**
- * accessor method for author id
- *
- * @return string value of question id (null if it is a new question id)
- **/
-public function getQuestionId(): string {
-	return ($this->questionId);
+
 /**
  * accessor method for answer user id
  *

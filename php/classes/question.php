@@ -34,7 +34,7 @@ private $questionValue;
 }
 /**
 
-/*******Constructor for question class************
+/**Constructor for question class
  *
  *@param string|Uuid $newQuestionId id for question set
  *@param string $newQuestionUserId id for new user to answer questions
@@ -59,4 +59,30 @@ public function __construct($newQuestionId, $newQuestionUserId, $newQuestionCont
 	}
 }
 
+/**
+ * accessor method for question id
+ *
+ * @return string value of question id (null if it is a new question id)
+ **/
+public function getQuestionId(): string {
+	return ($this->questionId);
+}
+/**
+ * mutator method for question id
+ *
+ * @param Uuid|string $newQuestionId is not positive
+ * @throws \InvalidArgumentException if the id is not a string or is insecure
+ * @throws \RangeException if $newQuestionId is not positive
+ * @throws \TypeError if $newQuestionId is not a uuid or string
+ **/
+public function setQuestionId($newQuestionId): void {
+	try {
+		$uuid = self::validateUuid($newQuestionId);
+	} catch(InvalidArguementException | \RangeException |Exception |\TypeError $exception) {
+		$exceptionType = get_class($exception);
+		throw(new $exceptionType ($exception->getMessage(), 0, $exception));
+	}
+
+	//convert and store author id
+	$this->questionId = $uuid;
 }
