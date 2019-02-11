@@ -59,6 +59,13 @@ class answer implements \JsonSerializable {
 	}
 }
 /**
+ * accessor method for author id
+ *
+ * @return string value of question id (null if it is a new question id)
+ **/
+public function getQuestionId(): string {
+	return ($this->questionId);
+/**
  * accessor method for answer user id
  *
  * @return string value of answer id (null if new user)
