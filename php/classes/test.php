@@ -31,7 +31,7 @@ require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
  **/
 abstract class DateDanTest extends TestCase {
 
-	use TestCaseTrain;
+	use TestCaseTrait;
 
 	/**
 	 * PHPUnit database connection interface
@@ -44,10 +44,10 @@ abstract class DateDanTest extends TestCase {
 	 *
 	 * @return QueryDataSet assembled schema for PHPUnit
 	 **/
-	public final function getDataSet() {
+	public final function getDataSet() : QueryDataSet {
 		$dataset = new QueryDataSet($this->getConnection());
 
-		// add al the tables for the project here
+		// add all the tables for the project here
 		//These TABLES *MUST* BE LISTED IN THE SAME ORDER THEY WERE CREATED!!!!!
 		$dataset->addTable(user);
 		$dataset->addTable(userDetail);
@@ -56,7 +56,7 @@ abstract class DateDanTest extends TestCase {
 		$dataset->addTable(match);
 		$dataset->addTable(report);
 		return ($dataset);
-
+	}
 		/**
 		 * templates the setUp method that runs before each test; this method expunges the database before each run
 		 *
@@ -64,9 +64,7 @@ abstract class DateDanTest extends TestCase {
 		 * @see https://github.com/sebastianbergmann/dbunit/issues/37 TRUNCATE fails on tables which have foreign key constraints
 		 * @return Composite array containing delete and insert commands
 		 **/
-		public
-
-		final function getSetUpOperation(): Composite {
+		public final function getSetUpOperation(): Composite {
 			return new Composite([
 				Factory::DELETE_ALL(),
 				Factory::INSERT()
@@ -90,9 +88,9 @@ abstract class DateDanTest extends TestCase {
 			// if the connection hasn't been established, create it
 			if($this->connection === null) {
 				// connect to mySQL and provide the interface to PHPUnit
-				$config = readConfig("/etc/apache2/capstone-mysql/beer.ini");
-				$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/beer.ini");
-				$this->connection = $this->createDefaultDBConnection($pdo, $config["database"]);
+				$secrets = new Secrets("/etc/apache2/capstone-mysql/UNKNOWN.ini");
+				$pdo = $secrets->getPdoObject();
+				$this->connection = $this->createDefaultDBConnection($pdo, $secrets->getDatabase());
 			}
 			return ($this->connection);
 	}
