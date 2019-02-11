@@ -1,5 +1,5 @@
 <?php
-namespace Edu\Cnm\DateDan\Test;
+namespace DeepDiveDatingApp\DeepDiveDating;
 require_once("autoload.php");
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
@@ -28,7 +28,7 @@ class Match implements \JsonSerializable {
 	private $matchToUserId;
 	/**
 	 * value of match; 1 = true, both users are matched; 0 = false, at least one user has not matched
-	 * @var $matchApproved
+	 * @var Int $matchApproved
 	 */
 	private $matchApproved;
 
@@ -39,6 +39,7 @@ class Match implements \JsonSerializable {
 	 * @param string|Uuid $matchToUserId id of the user who's profile was liked
 	 * @param int $matchApproved value representing match reciprocity
 	 * @throws \InvalidArgumentException if data types are invalid
+	 * @throws \RangeException if values are too long or negative
 	 * @throws \TypeError if data types violate provided hints
 	 * @throws \Exception for other exceptions
 	 */
@@ -49,9 +50,36 @@ class Match implements \JsonSerializable {
 			$this->setMatchApproved($newMatchApproved);
 		}
 
-		catch (\InvalidArgumentException | \TypeError | \Exception) {
+		catch (\InvalidArgumentException | \TypeError | \RangeException | \Exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 	}
+
+	/**
+	 * accessor method for Match User Id
+	 *
+	 * @return Uuid value of User Id for the person who liked a profile
+	 */
+	public function getMatchUserId() : Uuid {
+		return ($this->matchUserId);
+	}
+	/**
+	 * accessor method for Match To User Id
+	 *
+	 * @return Uuid value of the Id for the person who;s page was liked
+	 */
+	public function getMatchToUserId() : Uuid {
+		return ($this->matchToUserId);
+	}
+	/**
+	 * accessor method for Match Approved
+	 *
+	 * @return INT value 1 or 0 representing if a match is mutual or not
+	 */
+	public function getMatchApproved() : INT {
+		return ($this->matchApproved);
+	}
+
+
 }
