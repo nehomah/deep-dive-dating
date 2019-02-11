@@ -1,5 +1,5 @@
 <?php
-namespace Edu\Cnm\DateDan\Test;
+namespace DeepDiveDatingApp\DeepDiveDating;
 require_once("test.php");
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
@@ -45,5 +45,31 @@ class answer implements \JsonSerializable {
  *@throws \RangeException if data values are out of bounds
  *@throws \Exception for when an exception is thrown
  *@throws \TypeError if data types violate type hints
+ **/
+	public function __construct($newAnswerUserId, $newAnswerQuestionId, $newAnswerResult, $newAnswerScore) {
+	try {
+		$this->setAnswerUserId($newAnswerUserId);
+		$this->setAnswerQuestionId($newAnswerQuestionId);
+		$this->setAnswerResult($newAnswerResult);
+		$this->setAnswerScore($newAnswerScore);
+		//determine what exception type was thrown
+	} catch(\InvalidArgumentException | \RangeException | \TypeError $exception) {
+		$exceptionType = get_class($exception);
+		throw(new $exceptionType ($exception->getMessage(), 0, $exception));
+	}
+}
+/**
+ * accessor method for author id
  *
- ************************************************************/
+ * @return string value of question id (null if it is a new question id)
+ **/
+public function getQuestionId(): string {
+	return ($this->questionId);
+/**
+ * accessor method for answer user id
+ *
+ * @return string value of answer id (null if new user)
+ **/
+public function getAnswerUserId(): string {
+	return ($this->answerUserId);
+}
