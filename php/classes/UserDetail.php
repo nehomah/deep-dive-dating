@@ -130,3 +130,50 @@ public function setUserDetailId($newUserDetailId): void {
 	//convert and store the profile id
 	$this->userDetailId = $uuid;
 }
+
+	/******Accessor method for user detail user id***************/
+
+	public function getUserDetailUserId(): Uuid {
+		return ($this->userDetailUserId);
+	}
+
+	/*********Mutator method for user detail user id************
+* @param Uuid| string $newUserDetailUserId value of new user detail user id
+* @throws \RangeException if $newUserDetailUserId is not positive
+* @throws \TypeError if the user detail user id is not correct type
+**/
+	public function setUserDetailUserId($newUserDetailUserId): void {
+		try {
+			$uuid = self::validateUuid($newUserDetailUserId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		//convert and store the user detail user id
+		$this->userDetailUserId = $uuid;
+	}
+
+	/************Accessor method for user detail about me **************/
+
+	public function getUserDetailAboutMe(): string {
+		return ($this->userDetailAboutMe);
+	}
+
+	/***********Mutator method for user detail about me ****************
+	*
+	** @param string $newUserDetailAboutMe value of new user detail about me
+	 * @throws \InvalidArgumentException when about me is too big
+	 **/
+	public function setUserDetailAboutMe(?string $newUserDetailAboutMe): void {
+		if($newUserDetailAboutMe === null) {
+			$this->userDetailAboutMe = null;
+		}
+		$newUserDetailAboutMe = trim($newUserDetailAboutMe);
+		$newUserDetailAboutMe = filter_var($newUserDetailAboutMe, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+		if(strlen($newUserDetailAboutMe) > 1024) {
+				throw(new \InvalidArgumentException("About Me is too large"));
+		}
+		//convert and store the about me section
+		$this->userDetailAboutMe = $newUserDetailAboutMe;
+}

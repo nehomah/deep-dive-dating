@@ -1,6 +1,6 @@
 <?php
 namespace DeepDiveDatingApp\DeepDiveDating;
-require_once("autoload.php");
+require_once("test.php");
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 
@@ -85,91 +85,4 @@ public function setAnswerUserId($newAnswerUserId): void {
 
 	//convert and store answer user id
 	$this->answerUserId = $uuid;
-}
-/**
- * accessor method for answer question id
- *
- * @return string value for answer question id
- **/
-
-public function getAnswerQuestionId(): string {
-	return ($this->answerQuestionId);
-}
-
-/**
- * mutator method for answer question id
- *
- * @param string $newAnswerQuestionId new value answer question id
- * @throws \InvalidArgumentException if the answer question id is empty
- * @throws \RangeException if the answer question id is longer than 16 characters
- **/
-
-public function setAnswerQuestionId(string $newAnswerQuestionId) {
-	if(empty($newAnswerQuestionId) == true){
-		throw(new \InvalidArgumentException("This answer question id is empty."));
-	}
-	//verify the answer question id is no longer than 16 characters
-	if(strlen($newAnswerQuestionId)>16) {
-		throw(new \RangeException("This URL is too long. It must be no longer than 16 characters."));
-	}
-	//Store the answer question id
-	$this->answerQuestionId = $newAnswerQuestionId;
-}
-/**
- * accessor method for answer result
- *
- * @return tinyint value of answer result
- **/
-
-public function getAnswerResult(): tinyint {
-	return ($this->answerResult);
-}
-
-/**
- * mutator method for answer result
- *
- * @param tinyint $newAnswerResult new value answer result
- * @throws \InvalidArgumentException if the answer result is empty
- * @throws \RangeException if the answer is result is longer than 1
- **/
-
-public function setAnswerResult(tinyint $newAnswerResult) {
-	if(empty($newAnswerResult) == true){
-		throw(new \InvalidArgumentException("This answer result is empty."));
-	}
-	//verify the answer result is no longer than 1 integer.
-	if(tinyint($newAnswerResult)>1) {
-		throw(new \RangeException("This URL is too long. It must be no longer than 1 character."));
-	}
-	//Store the answer result
-	$this->answerResult = $newAnswerResult;
-}
-/**
- * accessor method for answer score
- *
- * @return tinyint value of answer score
- **/
-
-public function getAuthorAvatarUrl(): tinyint {
-	return ($this->answerScore);
-}
-
-/**
- * mutator method foranswer score
- *
- * @param tinyint $newAnswerScore new value answer score
- * @throws \InvalidArgumentException if the answer score is empty
- * @throws \RangeException if the answer score is longer than one integer
- **/
-
-public function setAnswerScore(tinyint $newAnswerScore) {
-	if(empty($newAnswerScore) == true){
-		throw(new \InvalidArgumentException("This score is empty."));
-	}
-	//verify the URL is no longer than 255 characters
-	if(strlen($newAnswerScore)>1) {
-		throw(new \RangeException("This URL is too long. It must be no longer than 1 character."));
-	}
-	//Store the answer score
-	$this->answerScore = $newAnswerScore;
 }
