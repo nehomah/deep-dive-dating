@@ -6,7 +6,7 @@ use Ramsey\Uuid\Uuid;
 
 
 /**
- * Match
+ * Match Class
  *
  * This class will be used to store and monitor when a user likes or matches with another user
  *
