@@ -168,5 +168,36 @@ class user implements \JsonSerializable {
 		if(empty($newUserAgent) === true) {
 					throw (new \InvalidArgumentException("user agent is empty or insecure"));
 		}
+		//verify the user agent will fit in the database
+		if(strlen($newUserAgent) > 255) {
+					throw(new \RangeException("user agent is too large"));
+		}
+		//store the user agent
+		$this->userAgent = $newUserAgent;
+	}
+	/**
+	 * accessor method for user avatar url
+	 *
+	 * @return string value of user avatar url
+	 */
+	public function getUserAvatarUrl(): string {
+		return ($this->userAvatarUrl);
+	}
+	/**
+	 * mutator method for the user avatar url
+	 *
+	 * @param string $newUserAvatarUrl new value of the user avatar
+	 * @throws \InvalidArgumentException if $newUserAvatarUrl is not a string or is insecure
+	 * @throws \RangeException if $newUserAvatarUrl is > 255 characters
+	 * @throws \TypeError if the $newUserAvatarUrl is not a string
+	 */
+	public function setUserAvatarUrl (string $newUserAvatarUrl) : void {
+		//verify the user Avatar url is secure
+		$newAuthorAvatarUrl = trim($newUserAvatarUrl);
+		$newUserAvatarUrl = filter_var($newUserAvatarUrl, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newUserAvatarUrl) === true) {
+					throw(new \InvalidArgumentException("user avatar url is empty or insecure"));
+		}
+		//verify the user avatar url is secure
 	}
 }
