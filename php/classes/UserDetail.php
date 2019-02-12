@@ -177,3 +177,109 @@ public function setUserDetailId($newUserDetailId): void {
 		//convert and store the about me section
 		$this->userDetailAboutMe = $newUserDetailAboutMe;
 }
+/************Accessor method for user detail age*******************/
+
+public function getUserDetailAge(): int {
+	return $this->userDetailAge;
+}
+
+/**********Mutator method for user detail age*****************
+*
+*@param int $userDetailAge range is 18-120
+* @throws \RangeException when input is out of range
+* */
+
+public function setUserDetailAge(int $newUserDetailAge): void {
+	if($newUserDetailAge < 18 || $newUserDetailAge > 120 {
+		throw(new \RangeException("Age specified is not allowed"));
+	}
+	//convert and store user detail age
+	$this->userDetailAge = $newUserDetailAge;
+	}
+
+/***********Accessor method for user detail career**********/
+
+public function getUserDetailCareer(): string {
+	return $this->userDetailCareer;
+	}
+
+
+/*********Mutator method for user detail career ***********
+*
+*@param string $userDetailCareer can be various characters
+*@throws \RangeException when input is out of range
+**/
+
+public function setUserDetailCareer(string $newUserDetailCareer): void {
+	if($newUserDetailCareer === null) {
+		$this->userDetailCareer = null;
+	}
+	$newUserDetailCareer = trim($newUserDetailCareer);
+	$newUserDetailCareer = filter_var($newUserDetailCareer, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+	if(strlen($newUserDetailCareer) > 1024) {
+		throw(new \InvalidArgumentException("Career is too large"));
+	}
+	//convert and store the career section
+	$this->userDetailAboutMe = $newUserDetailCareer;
+
+/*************Accessor method for user detail display email**************/
+
+public function getUserDetailDisplayEmail() {
+	return $this->userDetailDisplayEmail;
+	}
+
+/********Mutator method for user detail display email ***********
+ *
+ * @param string $newUserDetailDisplayEmail can be various characters
+ * @throws \InvalidArgumentException if $newUserDetailDisplayEmail is not a valid email or insecure
+ * @throws \RangeException if $newUserDetailDisplayEmail is > 128 characters
+ * @throws \TypeError if $newUserDetailDisplayEmail is not a string
+ * */
+
+public function setUserDetailDisplayEmail(string $newUserDetailDisplayEmail): void {
+//verify the email is secure//
+		$newUserDetailDisplayEmail = trim($newProfileEmail);
+		$newUserDetailDisplayEmail = filter_var($newUserDetailDisplayEmail, FILTER_VALIDATE_EMAIL);
+		if(empty($newUserDetailDisplayEmail) === true) {
+				throw(new \RangeException("Display email is too large"));
+		}
+		//store the email
+		$this->userDetailDisplayEmail = $newUserDetailDisplayEmail;
+}
+
+/************Accessor method for user detail education****************/
+
+public function getUserDetailEducation() {
+		return $this->userDetailEducation;
+}
+
+/********************Mutator method for user detail education************
+*
+* @param string $newUserDetailEducation new information about education
+ *@throws \InvalidArgumentException if $newUserDetailEducation is not a string or insecure
+ *@throws \RangeException if $newUserDetailEducation is > 256 characters
+ *@throws \TypeError if $newUserDetailEducation is not a string
+**/
+
+public function setUserDetailEducation(?string $newUserDetailEducation); void {
+//if $userDetailEducation is null return it right away
+		if($newUserDetailEducation === null) {
+				$this->userDetailEducation = null;
+				return;
+		}
+		//verify the education is secure
+		$newUserDetailEducation = trim($newUserDetailEducation);
+		$newUserDetailEducation = filter_var($newUserDetailEducation, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newUserDetailEducation) === true) {
+			throw(new \InvalidArgumentException(("Education is empty or insecure"));
+		}
+		//verify the education will fit in the database
+		if(strlen(@$newUserDetailEducation) > 256){
+					throw(new \RangeException("Education is too large"));
+		}
+		//store the education
+		$this->userDetailEducation = $newUserDetailEducation;
+	}
+}
+}
