@@ -141,7 +141,32 @@ class user implements \JsonSerializable {
 		}
 		// make sure the user activation token is only 32 characters
 		if(strlen($newUserActivationToken) !== 32) {
-							throw (new\RangeException)
+							throw (new\RangeException("user token needs to be 32 characters"));
+		}
+		$this->userActivationToken = $newUserActivationToken;
+	}
+	/**
+	 * accessor method for user agent
+	 *
+	 * @return string value for user agent
+	 */
+	public function getUserAgent(): string {
+				return ($this->userAgent);
+	}
+	/**
+	 * mutator method for the user agent
+	 *
+	 * @param string $newUserAgent new value of the user agent
+	 * @throws \InvalidArgumentException if $newUserAgent is not a string or insecure
+	 * @throws \RangeException if $newUserAgent is > 255 characters
+	 * @throws \TypeError if $newUserAgent is not a string
+	 */
+	public function setUserAgent (string $newUserAgent) : void {
+		//verify the the user agent is secure
+		$newUserAgent = trim($newUserAgent);
+		$newUserAgent = filter_var($newUserAgent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newUserAgent) === true) {
+					throw (new \InvalidArgumentException(user agent is empty or insecure))
 		}
 	}
 }
