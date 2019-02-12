@@ -281,5 +281,17 @@ public function setUserDetailEducation(?string $newUserDetailEducation); void {
 		//store the education
 		$this->userDetailEducation = $newUserDetailEducation;
 	}
-}
-}
+
+	/**************Accessor for user detail gender *********************/
+
+public function getUserDetailGender() {
+		return $this->userDetailGender;
+	}
+
+	/*************************Mutator for user detail gender**********
+	*
+	*@param string $newUserDetailGender for gender of user
+	*@throws \InvalidArgumentException if $newUserDetailGender is not a string or insecure
+	*@throws \RangeException if $newUserDetailGender is > 32 characters
+	*@throws \TypeError if $newUserDetailGender is not a string
+	**/
