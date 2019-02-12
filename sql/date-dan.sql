@@ -32,7 +32,7 @@ CREATE TABLE userDetail (
 	userDetailCareer VARCHAR(32),
 	userDetailDisplayEmail VARCHAR(128),
 	userDetailEducation VARCHAR(144),
-	userDetailGender VARCHAR(144),
+	userDetailGender VARCHAR(32) NOT NULL,
 	userDetailInterests VARCHAR(255),
 	userDetailRace VARCHAR(128),
 	userDetailReligion VARCHAR(128),
