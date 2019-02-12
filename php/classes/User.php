@@ -166,7 +166,7 @@ class user implements \JsonSerializable {
 		$newUserAgent = trim($newUserAgent);
 		$newUserAgent = filter_var($newUserAgent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserAgent) === true) {
-					throw (new \InvalidArgumentException(user agent is empty or insecure))
+					throw (new \InvalidArgumentException("user agent is empty or insecure"));
 		}
 	}
 }
