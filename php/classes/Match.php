@@ -57,21 +57,57 @@ class Match implements \JsonSerializable {
 	}
 
 	/**
-	 * accessor method for Match User Id
+	 * Accessor Method for Match User Id
 	 *
 	 * @return Uuid value of User Id for the person who liked a profile
 	 */
 	public function getMatchUserId() : Uuid {
 		return ($this->matchUserId);
 	}
+
 	/**
-	 * accessor method for Match To User Id
+	 * Mutator Method for Match User Id
+	 *
+	 * @param Uuid|string new value of Report User Id
+	 * @throws \RangeException if $newReportUserId is not positive
+	 * @throws \TypeError if $newReportUserId is not a Uuid or string
+	 **/
+	public function setMatchUserId($newMatchUserId) : void {
+		try {
+			$uuid = self::validateUuid($newMatchUserId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		$this->matchUserId = $uuid;
+	}
+
+	/**
+	 * Accessor Method for Match To User Id
 	 *
 	 * @return Uuid value of the Id for the person who;s page was liked
 	 */
 	public function getMatchToUserId() : Uuid {
 		return ($this->matchToUserId);
 	}
+
+	/**
+	 * Mutator Method for Match To User Id
+	 *
+	 * @param Uuid|string new value of Report User Id
+	 * @throws \RangeException if $newReportUserId is not positive
+	 * @throws \TypeError if $newReportUserId is not a Uuid or string
+	 **/
+	public function setMatchToUserId($newMatchToUserId) : void {
+		try {
+			$uuid = self::validateUuid($newMatchToUserId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		$this->matchToUserId = $uuid;
+	}
+
 	/**
 	 * accessor method for Match Approved
 	 *
