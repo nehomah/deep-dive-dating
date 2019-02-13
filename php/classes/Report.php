@@ -242,7 +242,7 @@ class Report implements \JsonSerializable {
 	 * Inserts report into mySQL
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \PDOException when mySQL errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function insert(\PDO $pdo) : void {
@@ -255,6 +255,21 @@ class Report implements \JsonSerializable {
 		$statment->execute($parameters);
 	}
 
+	/**
+	 * Deletes report from mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function delete(\PDO $pdo) : void {
+		//query template
+		$query = "DELETE FROM report WHERE reportUserId = :reportUserId";
+		$statement = $pdo->prepare($query);
+		//bind variables to the template
+		$parameters = ["reportUserId" => $this->reportUserId->getBytes()];
+		$statement->execute($parameters);
+	}
 }
 
 /**
