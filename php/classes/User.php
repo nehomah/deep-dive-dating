@@ -279,4 +279,53 @@ class user implements \JsonSerializable {
 		//store the username
 		$this->userHandle = $newUserHandle;
 	}
+	/**
+	 * accessor method for user hash
+	 *
+	 * @return string value of hash
+	 */
+	public function getUserhash(): string {
+				return $this->userHash;
+	}
+
+	/**
+	 * mutator method for the user hash password
+	 *
+	 * @param string $newUserHash
+	 * @throws \InvalidArgumentException if the hash is not secure
+	 * @throws \RangeException if the hash is not 97 characters
+	 * @throws \TypeError if the user hash is not a string
+	 */
+	public function setUserHash(string $newUserHash): void {
+		//enforce that the hash is properly formatted
+		$newUserHash = trim($newUserHash);
+		if(empty($newUserHash) === true) {
+					throw(new \InvalidArgumentException("user password hash is empty or insecure"));
+		}
+		//enforce this hash is really an argon hash
+		$userHashInfor = password_get_info($newUserHash);
+		if($authorHashInfo["algoname"] !== "argon2i") {
+					throw(new \InvalidArgumentException("user hash must be 97 characters"));
+		}
+		//enforce the hash is exactly 97 characters
+		if(strlen($newUserHash) !== 97) {
+			throw(new \RangeException("user hash must be 97 characters"));
+		}
+		//store the hash
+		$this->userHash = $newUserHash;
+	}
+	/**
+	 * accessor method for the ip address
+	 *
+	 * @return string value for the ip address
+	 */
+	public function getUserIpAddress(): string {
+				return ($this->userIpAddress);
+	}
+	/**
+	 * mutator method for user Ip Address
+	 *
+	 * @param string $newUserIpAddress
+	 * @throws \InvalidArgumentException
+	 */
 }
