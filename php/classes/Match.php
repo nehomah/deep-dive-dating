@@ -12,24 +12,24 @@ use Ramsey\Uuid\Uuid;
  *
  * @author Taylor Smith
  * @version 1
- */
+ **/
 
 class Match implements \JsonSerializable {
 	use ValidateUuid;
 	/**
 	 * id for the user who liked a profile; this is a foreign key
 	 * @var Uuid $matchUserId
-	 */
+	 **/
 	private $matchUserId;
 	/**
 	 * id for the user who's profile was liked; this is a foreign key
 	 * @var Uuid $matchToUserId
-	 */
+	 **/
 	private $matchToUserId;
 	/**
 	 * value of match; 1 = true, both users are matched; 0 = false, at least one user has not matched
 	 * @var Int $matchApproved
-	 */
+	 **/
 	private $matchApproved;
 
 	/**
@@ -42,7 +42,7 @@ class Match implements \JsonSerializable {
 	 * @throws \RangeException if values are too long or negative
 	 * @throws \TypeError if data types violate provided hints
 	 * @throws \Exception for other exceptions
-	 */
+	 **/
 	public function __construct($newMatchUserId, $newMatchToUserId, $newMatchApproved) {
 		try {
 			$this->setMatchUserId($newMatchUserId);
@@ -60,7 +60,7 @@ class Match implements \JsonSerializable {
 	 * Accessor Method for Match User Id
 	 *
 	 * @return Uuid value of User Id for the person who liked a profile
-	 */
+	 **/
 	public function getMatchUserId() : Uuid {
 		return ($this->matchUserId);
 	}
@@ -86,7 +86,7 @@ class Match implements \JsonSerializable {
 	 * Accessor Method for Match To User Id
 	 *
 	 * @return Uuid value of the Id for the person who;s page was liked
-	 */
+	 **/
 	public function getMatchToUserId() : Uuid {
 		return ($this->matchToUserId);
 	}
@@ -112,7 +112,7 @@ class Match implements \JsonSerializable {
 	 * accessor method for Match Approved
 	 *
 	 * @return INT value 1 or 0 representing if a match is mutual or not
-	 */
+	 **/
 	public function getMatchApproved() : INT {
 		return ($this->matchApproved);
 	}
@@ -123,7 +123,7 @@ class Match implements \JsonSerializable {
 	 * @param INT new Match Approved Value
 	 * @throws \InvalidArgumentException if input is not a valid type
 	 * @throws \RangeException if integer is not 0 or 1
-	 */
+	 **/
 	public function setMatchApproved(INT $newMatchApproved) : INT {
 		// check if input is valid
 		if ($newMatchApproved !== 1 | $newMatchApproved !==0) {
@@ -139,7 +139,7 @@ class Match implements \JsonSerializable {
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
-	 */
+	 **/
 	public function insert(\PDO $pdo) : void {
 		//first create query template
 		$query = "INSERT INTO `match` (matchUserId, matchToUserId, matchApproved) VALUES (:matchUserId, :matchToUserId, :matchApproved)";
@@ -150,12 +150,12 @@ class Match implements \JsonSerializable {
 	}
 
 	/**
-	 * deletes this match from mySQL
+	 * Deletes Match from mySQL
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
-	 */
+	 **/
 	public function delete(\PDO $pdo) : void {
 		//first create query template
 		$query = "DELETE FROM `match` WHERE matchUserId = :matchUserId";
@@ -166,12 +166,12 @@ class Match implements \JsonSerializable {
 	}
 
 	/**
-	 * updates this match in mySQL
+	 * Updates Match in mySQL
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
-	 */
+	 **/
 	public function update(\PDO $pdo) : void {
 		//first create query template
 		$query = "UPDATE `match` SET matchApproved = :matchApproved WHERE matchUserId = :matchUserId";
@@ -182,14 +182,14 @@ class Match implements \JsonSerializable {
 	}
 
 	/**
-	 * gets all matches from User Id
+	 * Gets Matches by User Id
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @param Uuid|string $matchUserId to search by/with
 	 * @return \SplFixedArray SPl Fixed Array of matches found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
-	 */
+	 **/
 	public static function getMatchesByMatchUserId(\PDO $pdo, $matchUserId) : \SplFixedArray {
 		//sanitize the Uuid
 		try {
@@ -204,6 +204,38 @@ class Match implements \JsonSerializable {
 		$parameters = ["matchUserId" => $matchUserId->getBytes()];
 		$statement->execute($parameters);
 		//build array
+		$matches = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$match = new Match($row["matchUserId"], $row["matchToUserId"], $row["matchApproved"]);
+				$matches[$matches->key()] = $match;
+				$matches->next();
+			} catch(\Exception $exception) {
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($matches);
+	}
+
+	/**
+	 * Gets Matches by To User Id
+	 **/
+
+	/**
+	 * Gets All Matches
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @return \SplFixedArray collection of reports found or null if none
+	 * @throws \PDOException if mySQL errors occur
+	 * @throws \TypeError if a variable is not of the correct data type
+	 **/
+	public static function getAllMatches(\PDO $pdo): \SplFixedArray {
+		//query template
+		$query = "SELECT matchUserId, matchToUserId, matchApproved FROM `match`";
+		$statement = $pdo->prepare($query);
+		$statement->execute();
+		//build an array of Matches
 		$matches = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
