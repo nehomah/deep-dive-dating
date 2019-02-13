@@ -113,8 +113,21 @@ class Report implements \JsonSerializable {
 	}
 
 	/**
-	 * Mutator Method for
+	 * Mutator Method for Report Abuser Id
+	 *
+	 * @param Uuid|string new value of Report Abuser Id
+	 * @throws \RangeException if $newReportAbuserId is not positive
+	 * @throws \TypeError if $newReportAbuserId is not a Uuid or string
 	 **/
+	public function setReportAbuserId() : void {
+		try {
+			$uuid = self::validateUuid($newReportUserId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exception($exception->getMessage(), 0, $exception));
+		}
+		$this->reportAbuserId = $uuid;
+	}
 
 	/**
 	 * Accessor Method for Report Agent
