@@ -199,5 +199,84 @@ class user implements \JsonSerializable {
 					throw(new \InvalidArgumentException("user avatar url is empty or insecure"));
 		}
 		//verify the user avatar url is secure
+		$newUserAvatarUrl = trim($newUserAvatarUrl);
+		$newUserAvatarUrl = filter_var($newUserAvatarUrl, FILTER_SANITIZE_STRING, FILTER_NO_ENCODE_QUOTES);
+		if(empty($newUserAvatarUrl) === true) {
+					throw (new \InvalidArgumentException("user avatar url is empty or insecure"));
+		}
+		//store the user avatar url
+		$this->userAvatarUrl = $newUserAvatarUrl;
+	}
+	/**
+	 *
+	 *
+	 *
+	 *
+	 *
+	 * userBlocked
+	 *
+	 *
+	 *
+	 *
+	 */
+	/**
+	 * accessor method for user email
+	 *
+	 * @return string value for email
+	 */
+	public function getUserEmail(): string {
+				return $this->userEmail;
+	}
+	/**
+	 * mutator method for email
+	 *
+	 *@param string $newUserEmail new value of email
+	 *@throws \InvalidArgumentException if $newUserEmail is not valid or is insecure
+	 *@throws \RangeException if $newUserEmail is > 128 characters
+	 *@throws \TypeError if $newUserEmail is not a string
+	 */
+	public function setUserEmail(string $newUserEmail): void {
+		//verify the email is secure
+		$newUserEmail = trim($newUserEmail);
+		$newUserEmail = filter_var($newUserEmail, FILTER_VALIDATE_EMAIL);
+		if(empty($newUserEmail) === true) {
+					throw(new \InvalidArgumentException("user email may be invalid or insecure"));
+		}
+		// verify the email will fit in the database
+		if(strlen($newUserEmail) > 128) {
+					throw(new \RangeException("user email is too large"));
+		}
+		//store the email
+		$this->userEmail = $newUserEmail;
+	}
+	/**
+	 * accessor method for the user handle
+	 *
+	 * @return string value for userHandle
+	 */
+	public function getUserHandle(): string {
+				return ($this->userHandle);
+	}
+	/**
+	 * mutator method for user handle
+	 *
+	 * @param string $newUserHandle new value of the user handle
+	 * @throws \InvalidArgumentException if $newUserHandle is not a string or is insecure
+	 * @throws \RangeException if $newUserHandle is > 32 characters
+	 * @throws \TypeError if $newUserHandle is not a string
+	 */
+	public function setUserHandle(string $newUserHandle): void {
+		//verify the handle is secure
+		$newUserHandle = trim($newUserHandle);
+		$newUserHandle = filter_var($newUserHandle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newUserHandle) === true) {
+					throw(new \InvalidArgumentException("user handle is empty or insecure"));
+		}
+		//verify the author username will fit in the database
+		if(strlen($newUserHandle) > 32) {
+					throw(new \InvalidArgumentException("user handle is too large"));
+		}
+		//store the username
+		$this->userHandle = $newUserHandle;
 	}
 }
