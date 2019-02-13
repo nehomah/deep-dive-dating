@@ -329,6 +329,7 @@ class user implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if ip address is empty or insecure
 	 * @throws \TypeError if the ip address is not a string
 	 */
+<<<<<<< Updated upstream
 	public function setUserIpAddress(string $newUserIpAddress) {
 		//detect the Ip's format and assign it in binary mode
 		if(@inet_pton($newUserIpAddress) !== false) {
@@ -397,3 +398,7 @@ class user implements \JsonSerializable {
 		$statement->execute($parameters);
 	}
 }
+=======
+}
+
+>>>>>>> Stashed changes

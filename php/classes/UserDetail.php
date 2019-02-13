@@ -432,3 +432,102 @@ public function setUserDetailReligion(string $newUserDetailReligion): void {
 		//store the religion
 		$this->userDetailReligion = $newUserDetailReligion;
 }
+
+	/**
+	 * inserts this User Detail into mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+public function insert(\PDO $pdo) : void {
+		//create query template
+		$query = "INSERT INTO userDetail(userDetailId, userDetailUserId, userDetailAboutMe, userDetailAge, userDetailCareer, userDetailDisplayEmail, userDetailEducation, userDetailGender, userDetailInterests, userDetailRace, userDetailReligion) VALUES(:userDetailId, :userDetailUserId, :userDetailAboutMe, :userDetailAge, :userDetailCareer, :userDetailDisplayEmail, :userDetailEducation, :userDetailGender, :userDetailInterests, :userDetailRace, :userDetailReligion)";
+		$statement = $pdo->prepare($query);
+
+		//bind the member variables to the place holders in the template
+		$parameters = ["userDetailId" => $this->userDetailId->getBytes(), "userDetailUserId" => $this->userDetailUserId, "userDetailAboutMe" => $this->userDetailAboutMe, "userDetailAge" => $this->userDetailAge, "userDetailCareer" => $this->userDetailCareer, "userDetailDisplayEmail" => $this->userDetailDisplayEmail, "userDetailEducation" => $this->userDetailEducation, "userDetailGender" => $this->userDetailGender, "userDetailInterests" => $this->userDetailInterests, "userDetailRace" => $this->userDetailRace, "userDetailReligion" => $this->userDetailReligion];
+		$statement->execute($paramaters);
+}
+
+	/**
+	 * deletes this user detail from mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 */
+public function delete(\PDO $pdo) : void {
+		// create query template
+		$query = "DELETE FROM userDetail WHERE userDetailId = :userDetailId";
+		$statement = $pdo->prepare($query);
+		// bind the member variables to the place holder in the template
+		$parameters = ["userDetailId" => $this->userDetailId->getBytes()];
+		$statement->execute($parameters);
+}
+
+	/**
+	 * updates this user detail in mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+public function update(\PDO $pdo) : void {
+		// create query template
+		$query = "UPDATE userDetail SET userDetailId = :userDetailId, userDetailUserId = :userDetailUserId, userDetailAboutMe = :userDetailAboutMe, userDetailAge = :userDetailAge, userDetailCareer = :userDetailCareer, userDetailDisplayEmail = :userDetailDisplayEmail, userDetailEducation = :userDetailEducation, userDetailGender = :userDetailGender, userDetailInterests = :userDetailInterests, userDetailRace = :userDetailRace, userDetailReligion = :userDetailReligion WHERE userDetailId = :userDetailId";
+
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["userDetailId" => $this->userDetailId->getBytes(), "userDetailUserId" => $this->userDetailUserId, "userDetailAboutMe" => $this->userDetailAboutMe, "userDetailAge" => $this->userDetailAge, "userDetailCareer" => $this->userDetailCareer, "userDetailDisplayEmail" => $this->userDetailDisplayEmail, "userDetailEducation" => $this->userDetailEducation, "userDetailGender" => $this->userDetailGender, "userDetailInterests" => $this->userDetailInterests, "userDetailRace" => $this->userDetailRace, "userDetailReligion" => $this->userDetailReligion];
+		$statement->execute($parameters);
+}
+
+/**
+	 * gets the userDetail by by userDetailId
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $userDetailId user detail id to search for
+	 * @return UserDetail|null User detail if found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variable are not the correct data type
+	 **/
+public static function getUserDetailByUserDetailId(\PDO $pdo, $userDetailId) : ?UserDetail {
+		// sanitize the userDetailId before searching
+		try {
+			$userDetailId = self::validateUuid($userDetailId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		// create query template
+		$query = "SELECT userDetailId, userDetailUserId, userDetailAboutMe, userDetailAge, userDetailCareer, userDetailDisplayEmail, userDetailEducation, userDetailGender, userDetailInterests, userDetailRace, userDetailReligion 
+					FROM userDetail 
+					WHERE userDetailId = :userDetailId";
+		$statement = $pdo->prepare($query);
+		// bind the user detail id to the place holder in the template
+		$parameters = ["userDetailId" => $userDetailId->getBytes()];
+		$statement->execute($parameters);
+		// grab the profile from mySQL
+		try {
+			$userDetail = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$userDetail = new UserDetail($row["userDetailId"], $row["userDetailUserId"], $row["userDetailAboutMe"], $row["userDetailAge"], $row["userDetailCareer"], $row["userDetailDisplayEmail"], $row["userDetailEducation"], $row["userDetailGender"], $row['userDetailInterests'], $row["userDetailRace"], $row["userDetailReligion"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($userDetail);
+	}
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+public function jsonSerialize() : array {
+	$fields = get_object_vars($this);
+	$fields["userDetailId"] = $this->userDetailId->toString();
+	$fields["userDetailUserId"] = $this->userDetailUserId->toString();
+	return ($fields);
+}
