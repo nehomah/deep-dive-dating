@@ -16,6 +16,7 @@ use Ramsey\Uuid\Uuid;
 
 class Report implements \JsonSerializable {
 	use ValidateUuid;
+	use ValidateDate;
 	/**
 	 * id for the user who submitted the report
 	 * @var \Uuid $reportUserId
@@ -292,12 +293,12 @@ class Report implements \JsonSerializable {
 	 * Gets Reports by User Id
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param Uuid|string $reportUserId User ID to search for
-	 * @return \SplFixedArray reports that were found or null if not found
+	 * @param Uuid|string $reportUserId ID of user who made reports
+	 * @return \SplFixedArray collection of reports that were found or null if not found
 	 * @throws \PDOException if mySQL errors occur
 	 * @throws \TypeError if a variable is not of the correct data type
 	 **/
-	public static function getReportByUserId(\PDO $pdo, $reportUserId) : ?Report {
+	public static function getReportByUserId(\PDO $pdo, $reportUserId) : \SplFixedArray {
 		//sanitize user id before search
 		try {
 			$reportUserId = self::validateUuid($reportUserId);
@@ -316,18 +317,51 @@ class Report implements \JsonSerializable {
 		while (($row = $statement->fetch()) !== false) {
 			try {
 				$report = new Report($row["reportUserId"], $row["reportAbuserId"], $row["reportAgent"], $row["reportContent"], $row["reportDate"], $row["reportIp"]);
-				$reports[$reports->key] = $report;
+				$reports[$reports->key()] = $report;
 				$reports->next();
 			} catch(\Exception $exception) {
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return ($reports);
+		return $reports;
 	}
 
 	/**
 	 * Gets Reports by Abuser Id
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uudi|string $reportAbuserId ID of user who reports are about
+	 * @return \SplFixedArray collection of reports that were found or null if not found
+	 * @throws \PDOException if mySQL errors occur
+	 * @throws \TypeError if a variable is not of the correct data type
 	 **/
+	public static function getReportByAbuserId(\PDO $pdo, $reportAbuserId) : \SplFixedArray {
+		//sanitize string before search
+		try {
+			$reportAbuserId = self::validateUuid($reportAbuserId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		//query template
+		$query = "SELECT reportUserId, reportAbuserId, reportAgent, reportContent, reportDate, reportIp FROM report WHERE reportAbuserId = :reportAbuserId";
+		$statement = $pdo->prepare($query);
+		//bind variables to template
+		$parameters = ["reportAbuserId" => $reportAbuserId->getBytes()];
+		$statement->execute($parameters);
+		//build an array of Reports
+		$reports = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$report = new Report($row["reportUserId"], $row["reportAbuserId"], $row["reportAgent"], $row["reportContent"], $row["reportDate"], $row["reportIp"]);
+				$reports[$reports->key()] = $report;
+				$reports->next();
+			} catch(\Exception $exception) {
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return $reports;
+	}
 
 	/**
 	 * Gets Reports by Content
