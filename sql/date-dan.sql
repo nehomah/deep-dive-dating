@@ -58,6 +58,7 @@ CREATE TABLE answer (
 	FOREIGN KEY (answerUserId) REFERENCES user(userId),
 	FOREIGN KEY (answerQuestionId) REFERENCES question(questionId),
 	INDEX answer(userId, questionId)
+
 );
 
 CREATE TABLE `match` (
