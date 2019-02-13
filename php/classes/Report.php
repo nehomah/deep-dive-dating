@@ -68,10 +68,10 @@ class Report implements \JsonSerializable {
 			$this->setReportAgent($newReportAgent);
 			$this->setReportContent($newReportContent);
 			$this->setReportDate($newReportDate);
-			$this->setReportIp($newReportIp;)
+			$this->setReportIp($newReportIp);
 		}
 
-		catch (\InvalidArgumentException | \TypeError | \RangeException | \Exception) {
+		catch (\InvalidArgumentException | \TypeError | \RangeException | \Exception $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -235,8 +235,25 @@ class Report implements \JsonSerializable {
 	}
 
 	/**
-	 * Mutator Method for
+	 * Mutator Method for Report Ip *************************************************
 	 **/
+
+	/**
+	 * Inserts report into mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function insert(\PDO $pdo) : void {
+		//query template
+		$query = "INSERT INTO report (reportUserId, reportAbuserId, reportAgent, reportContent, reportDate, reportIp) VALUES (:reportUserId, :reportAbuserId, :reportAgent, :reportContent, :reportDate, :reportIp)";
+		$statment = $pdo->prepare($query);
+		//bind variables to the template
+		$formattedDate = $this->reportDate->format("Y-m-d H:i:s.u");
+		$parameters = ["reportUserId" => $this->reportUserId->getBytes(), "reportAbuserId" => $this->reportAbuserId->getBytes(), "reportAgent" => $this->reportAgent, "reportContent" => $this->reportContent, "reportDate" => $formattedDate, "reportIp" => $this->reportIp];
+		$statment->execute($parameters);
+	}
 
 }
 
