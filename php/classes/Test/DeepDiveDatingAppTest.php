@@ -1,5 +1,5 @@
 <?php
-namespace Edu\Cnm\DateDan\Test;
+namespace DeepDiveDatingApp\DeepDiveDating;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\DbUnit\TestCaseTrait;
@@ -29,7 +29,7 @@ require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  * referenced from: https://bootcamp-coders.cnm.edu/class-materials/unit-testing/phpunit/
  **/
-abstract class DateDanTest extends TestCase {
+abstract class DeepDiveDatingAppTest extends TestCase {
 
 	use TestCaseTrait;
 
