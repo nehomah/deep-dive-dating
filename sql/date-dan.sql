@@ -19,7 +19,6 @@ CREATE TABLE user (
 	userIpAddress BINARY(16) NOT NULL,
 	UNIQUE (userHandle),
 	UNIQUE (userEmail),
-	INDEX (userHandle),
 	PRIMARY KEY(userId)
 
 );
@@ -35,29 +34,31 @@ CREATE TABLE userDetail (
 	userDetailGender VARCHAR(32) NOT NULL,
 	userDetailInterests VARCHAR(1024),
 	userDetailRace VARCHAR(32),
-	userDetailReligion VARCHAR(32),
-	FOREIGN KEY(userDetailUserId) REFERENCES user(detailUserId),
+	userDetailReligion VARCHAR(128),
+	INDEX (userDetailUserId),
+	UNIQUE (userDetailUserId),
+	FOREIGN KEY(userDetailUserId) REFERENCES user(userId),
 	PRIMARY KEY(userDetailId)
 
 );
 
 CREATE TABLE question (
 	questionId BINARY(16) NOT NULL,
-	questionUserId BINARY(16) NOT NULL,
 	questionContent VARCHAR (128) NOT NULL,
 	questionValue TINYINT (1) NOT NULL,
-	FOREIGN KEY(questionUserId) REFERENCES user(userId),
 	PRIMARY KEY(questionId)
 );
 
 CREATE TABLE answer (
-	answerUserId BINARY(16) NOT NULL,
 	answerQuestionId BINARY(16) NOT NULL,
-	answerResult TINYINT(1) NOT NULL,
+	answerUserId BINARY(16) NOT NULL,
+	answerResult CHAR(1) NOT NULL,
 	answerScore TINYINT(1) NOT NULL,
+	INDEX (answerQuestionId),
+	INDEX (answerUserId),
 	FOREIGN KEY (answerUserId) REFERENCES user(userId),
 	FOREIGN KEY (answerQuestionId) REFERENCES question(questionId),
-	INDEX answer(userId, questionId)
+	PRIMARY KEY (answerUserId, answerQuestionId)
 
 );
 
@@ -78,7 +79,7 @@ CREATE TABLE report (
 	reportAgent VARCHAR(255) NOT NULL,
 	reportContent VARCHAR(255) NOT NULL,
 	reportDate DATETIME(6) NOT NULL,
-	reportIp BINARY (16) NOT NULL,
+	reportIp VARBINARY (16) NOT NULL,
 	INDEX (reportUserId),
 	INDEX (reportAbuserId),
 	FOREIGN KEY (reportUserId) REFERENCES user(userId),

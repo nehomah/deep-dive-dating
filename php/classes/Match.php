@@ -43,6 +43,7 @@ class Match implements \JsonSerializable {
 	 * @throws \TypeError if data types violate provided hints
 	 * @throws \Exception for other exceptions
 	 **/
+	//todo add type hints
 	public function __construct($newMatchUserId, $newMatchToUserId, $newMatchApproved) {
 		try {
 			$this->setMatchUserId($newMatchUserId);
@@ -124,7 +125,8 @@ class Match implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if input is not a valid type
 	 * @throws \RangeException if integer is not 0 or 1
 	 **/
-	public function setMatchApproved(INT $newMatchApproved) : INT {
+
+	public function setMatchApproved(int $newMatchApproved) : void {
 		// check if input is valid
 		if ($newMatchApproved !== 1 | $newMatchApproved !==0) {
 			throw(new \RangeException("Match Approved Value is invalid"));
@@ -180,6 +182,7 @@ class Match implements \JsonSerializable {
 		$parameters = ["matchApproved" => $this->matchApproved];
 		$statement->execute($parameters);
 	}
+// todo write getMatchByMatchUserIdAndMatchToUserId
 
 	/**
 	 * Gets Matches by User Id
@@ -219,10 +222,6 @@ class Match implements \JsonSerializable {
 	}
 
 	/**
-	 * Gets Matches by To User Id
-	 **/
-
-	/**
 	 * Gets All Matches
 	 *
 	 * @param \PDO $pdo PDO connection object
@@ -230,6 +229,7 @@ class Match implements \JsonSerializable {
 	 * @throws \PDOException if mySQL errors occur
 	 * @throws \TypeError if a variable is not of the correct data type
 	 **/
+	//todo recompose getAllMatches to getMatchesByMatchToUserId
 	public static function getAllMatches(\PDO $pdo): \SplFixedArray {
 		//query template
 		$query = "SELECT matchUserId, matchToUserId, matchApproved FROM `match`";

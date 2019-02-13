@@ -3,7 +3,6 @@ namespace DeepDiveDatingApp\DeepDiveDating;
 require_once("autoload.php");
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
-use MongoDB\BSON\Binary;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -62,6 +61,7 @@ class Report implements \JsonSerializable {
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 **/
+	//todo add type hints
 	public function __construct($newReportUserId, $newReportAbuserId, $newReportAgent, $newReportContent, $newReportDate, $newReportIp) {
 		try {
 			$this->setReportUserId($newReportUserId);
@@ -210,6 +210,7 @@ class Report implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if $newReportDate is not a valid object or string
 	 * @throws \RangeException if $newReportDate is a date that does not exist
 	 **/
+	//todo add all exceptions and throws in doc block and in mutator
 	public function setReportDate( $newReportDate ) : void {
 		//if date time is null use current date and time
 		if($newReportDate === null) {
@@ -229,7 +230,7 @@ class Report implements \JsonSerializable {
 	/**
 	 * Accessor Method for Report Ip
 	 *
-	 * @return string|Binary Ip address of the person making the report
+	 * @return string Ip address of the person making the report
 	 **/
 	public function getReportIp() : string {
 		return($this->reportIp);
@@ -407,33 +408,7 @@ class Report implements \JsonSerializable {
 		return ($reports);
 	}
 
-	/**
-	 * Gets All Reports
-	 *
-	 * @param \PDO $pdo PDO connection object
-	 * @return \SplFixedArray collection of reports found or null if none
-	 * @throws \PDOException if mySQL errors occur
-	 * @throws \TypeError if a variable is not of the correct data type
-	 **/
-	public static function getAllReports(\PDO $pdo): \SplFixedArray {
-		//query template
-		$query = "SELECT reportUserId, reportAbuserId, reportAgent, reportContent, reportDate, reportIp FROM report";
-		$statement = $pdo->prepare($query);
-		$statement->execute();
-		//build an array of Reports
-		$reports = new \SplFixedArray($statement->rowCount());
-		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		while(($row = $statement->fetch()) !== false) {
-			try {
-				$report = new Report($row["reportUserId"], $row["reportAbuserId"], $row["reportAgent"], $row["reportContent"], $row["reportDate"], $row["reportIp"]);
-				$reports[$reports->key()] = $report;
-				$reports->next();
-			} catch(\Exception $exception) {
-				throw(new \PDOException($exception->getMessage(), 0, $exception));
-			}
-		}
-		return ($reports);
-	}
+	//todo write getReportByReportUserIdAndReportAbuserId
 
 	/**
 	 * formats the state variables for JSON serialization

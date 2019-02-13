@@ -1,6 +1,5 @@
 <?php
 namespace DeepDiveDatingApp\DeepDiveDating;
-require_once("DeepDiveDatingAppTest.php");
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 
@@ -46,6 +45,7 @@ class question implements \JsonSerializable {
 	 * @throws \TypeError if data types violate type hints
 	 *
 	 **/
+	// todo add type hints, make sure mutator and accessor doc blocks are correct
 	public function __construct($newQuestionId, $newQuestionUserId, $newQuestionContent, $newQuestionValue) {
 		try {
 			$this->setQuestionId($newQuestionId);
@@ -79,42 +79,13 @@ class question implements \JsonSerializable {
 	public function setQuestionId($newQuestionId): void {
 		try {
 			$uuid = self::validateUuid($newQuestionId);
-		} catch(InvalidArguementException | \RangeException |Exception |\TypeError $exception) {
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType ($exception->getMessage(), 0, $exception));
 		}
 
 		//convert and store question id
 		$this->questionId = $uuid;
-	}
-
-	/**
-	 * accessor method for question user id
-	 *
-	 * @return string value of question user id
-	 **/
-
-	public function getQuestionUserId(): string {
-		return ($this->questionUserId);
-	}
-
-	/**
-	 * mutator method for question user id
-	 * @param string $newQuestionUserId new value question user id
-	 * @throws \InvalidArgumentException if the question user id is empty
-	 * @throws \RangeException if the question user id is too long
-	 **/
-
-	public function setQuestionUserId(string $newQuestionUserId) {
-		if(empty($newQuestionUserId) == true) {
-			throw(new \InvalidArgumentException("This question is empty."));
-		}
-		//verify the question user id is no longer than 16 characters.
-		if(string($newQuestionUserId) > 16) {
-			throw(new \RangeException("This question is too long. It must be no longer than 16 characters."));
-		}
-		//Store the question user id
-		$this->questionUserId = $newQuestionUserId;
 	}
 
 	/**
@@ -152,13 +123,13 @@ class question implements \JsonSerializable {
 	 * @return string value for question value
 	 **/
 
-	public function getQuestionValue(): tinyint {
+	public function getQuestionValue(): int {
 		return ($this->questionValue);
 	}
 	/**
 	 * mutator method for question value
 	 *
-	 * @param Uuid|tinyint $newQuestionValue is not positive
+	 * @param Uuid|int $newQuestionValue is not positive
 	 * @throws \InvalidArgumentException if the id is not a string or is insecure
 	 * @throws \RangeException if $newAnswerUserId is not positive
 	 * @throws \TypeError if $newAnswerUserId is not a uuid or string
@@ -166,7 +137,7 @@ class question implements \JsonSerializable {
 	public function setQuestionValue($newQuestionValue): void {
 		try {
 			$uuid = self::validateUuid($newQuestionValue);
-		} catch(InvalidArguementException | \RangeException |Exception |\TypeError $exception) {
+		} catch(\InvalidArgumentException | \RangeException | \Exception |\TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType ($exception->getMessage(), 0, $exception));
 		}
@@ -186,11 +157,11 @@ class question implements \JsonSerializable {
 
 	public function insert(\PDO $pdo): void {
 		// create query template
-		$query = "INSERT INTO question(questionId, questionUserId, questionContent, questionValue) VALUES(:questionId, :questionUserId, :questionContent, :questionValue)";
+		$query = "INSERT INTO question(questionId, questionContent, questionValue) VALUES(:questionId, :questionContent, :questionValue)";
 		$statement = $pdo->prepare($query);
 
 		//bind the member variables to the place holders in the template
-		$parameters = ["questionId" => $this->questionId->getBytes(), "questionUserId" => $this->questionUserId->getBytes(), "questionContent" => $this->questionContent, "questionValue" => $this->questionValue->getBytes()];
+		$parameters = ["questionId" => $this->questionId->getBytes(), "questionContent" => $this->questionContent, "questionValue" => $this->questionValue];
 		$statement->execute($parameters);
 	}
 
@@ -213,24 +184,6 @@ class question implements \JsonSerializable {
 	}
 
 	/**
-	 * /**
-	 * updates this question in MySQL
-	 *
-	 * @param \PDO $pdo connection object
-	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError if $pdo is not a PDO connection object
-	 */
-	public function update(\PDO $pdo): void {
-
-		//create query template
-		$query = "UPDATE question SET questionId = :questionId, questionUserId = :questionUserId, questionContent = :questionContent, questionValue = :questionValue";
-		$statement = $pdo->prepare($query);
-
-		$parameters = ["questionId" => $this->questionId->getBytes(), "questionUserId" => $this->questionUserId, "questionContent" => $this->questionContent, "questionValue" => $this->questionValue];
-		$statement->execute($parameters);
-	}
-
-	/**
 	 * gets the Question by questionId
 	 *
 	 * @param \PDO $pdo PDO connection object
@@ -242,13 +195,13 @@ class question implements \JsonSerializable {
 	public static function getQuestionByQuestionId(\PDO $pdo, $questionId): ?Question {
 		// sanitize the questionId before searching
 		try {
-			$authorId = self::validateUuid($questionId);
+			$questionId = self::validateUuid($questionId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
 		// create query template
-		$query = "SELECT questionId, questionUserId, questionContent, questionValue FROM question WHERE questionId = :questionId";
+		$query = "SELECT questionId, questionContent, questionValue FROM question WHERE questionId = :questionId";
 		$statement = $pdo->prepare($query);
 
 		// bind the question id to the place holder in the template
@@ -261,7 +214,7 @@ class question implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$question = new Question($row["questionId"], $row["questionUserId"], $row["questionContent"], $row["questionValue"]);
+				$question = new Question($row["questionId"], $row["questionContent"], $row["questionValue"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
@@ -281,7 +234,7 @@ class question implements \JsonSerializable {
 	 **/
 	public static function getAllQuestions(\PDO $pdo): \SPLFixedArray {
 		// create query template
-		$query = "SELECT questionId, questionUserId, questionContent, questionValue FROM question";
+		$query = "SELECT questionId, questionContent, questionValue FROM question";
 		$statement = $pdo->prepare($query);
 		$statement->execute();
 
@@ -290,7 +243,7 @@ class question implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$question = new Question($row["questionId"], $row["questionUserId"], $row["questionContent"], $row["questionValue"]);
+				$question = new Question($row["questionId"], $row["questionContent"], $row["questionValue"]);
 				$question[$question->key()] = $question;
 				$question->next();
 			} catch(\Exception $exception) {
@@ -312,8 +265,6 @@ class question implements \JsonSerializable {
 		$fields["questionId"] = $this->questionId->toString();
 		$fields["questionUserId"] = $this->questionUserId->toString();
 
-		//format the date so that the front end can consume it
-		$fields["questionContent"] = round(floatval($this->questionContent->format("U.u")) * 1000);
 		return ($fields);
 	}
 }
