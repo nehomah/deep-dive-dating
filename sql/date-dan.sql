@@ -28,14 +28,14 @@ CREATE TABLE userDetail (
 	userDetailId BINARY(16) NOT NULL,
 	userDetailUserId BINARY(16) NOT NULL,
 	userDetailAboutMe VARCHAR(144),
-	userDetailAge TINYINT(3) NOT NULL,
+	userDetailAge INT(3) NOT NULL,
 	userDetailCareer VARCHAR(32),
 	userDetailDisplayEmail VARCHAR(128),
 	userDetailEducation VARCHAR(144),
 	userDetailGender VARCHAR(32) NOT NULL,
 	userDetailInterests VARCHAR(144),
-	userDetailRace VARCHAR(128),
-	userDetailReligion VARCHAR(128),
+	userDetailRace VARCHAR(32),
+	userDetailReligion VARCHAR(32),
 	FOREIGN KEY(userDetailUserId) REFERENCES user(detailUserId),
 	PRIMARY KEY(userDetailId)
 

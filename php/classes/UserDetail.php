@@ -127,7 +127,7 @@ public function setUserDetailId($newUserDetailId): void {
 		$exceptionType = get_class($exception);
 		throw(new $exceptionType($exception->getMessage(), 0, $exception));
 	}
-	//convert and store the profile id
+	//convert and store the user detail id
 	$this->userDetailId = $uuid;
 }
 
@@ -139,7 +139,7 @@ public function setUserDetailId($newUserDetailId): void {
 
 	/*********Mutator method for user detail user id************
 * @param Uuid| string $newUserDetailUserId value of new user detail user id
-* @throws \RangeException if $newUserDetailUserId is not positive
+* @throws \RangeException if $newUserDetailUserId is not within range
 * @throws \TypeError if the user detail user id is not correct type
 **/
 	public function setUserDetailUserId($newUserDetailUserId): void {
@@ -162,7 +162,8 @@ public function setUserDetailId($newUserDetailId): void {
 	/***********Mutator method for user detail about me ****************
 	*
 	** @param string $newUserDetailAboutMe value of new user detail about me
-	 * @throws \InvalidArgumentException when about me is too big
+	 * @throws \InvalidArgumentException when about me is not a string or insecure
+	 * @throws \RangeException if $newUserDetailAboutMe is > 144 characters
 	 **/
 	public function setUserDetailAboutMe(?string $newUserDetailAboutMe): void {
 		if($newUserDetailAboutMe === null) {
@@ -171,7 +172,7 @@ public function setUserDetailId($newUserDetailId): void {
 		$newUserDetailAboutMe = trim($newUserDetailAboutMe);
 		$newUserDetailAboutMe = filter_var($newUserDetailAboutMe, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-		if(strlen($newUserDetailAboutMe) > 1024) {
+		if(strlen($newUserDetailAboutMe) > 144) {
 				throw(new \InvalidArgumentException("About Me is too large"));
 		}
 		//convert and store the about me section
@@ -185,15 +186,29 @@ public function getUserDetailAge(): int {
 
 /**********Mutator method for user detail age*****************
 *
-*@param int $userDetailAge range is 18-120
+* @param int $userDetailAge range is 18-120
 * @throws \RangeException when input is out of range
+* @throws \InvalidArgumentException if age is not valid or insecure
+ *@throws \TypeError if incorrect type
 * */
 
 public function setUserDetailAge(int $newUserDetailAge): void {
-	if($newUserDetailAge < 18 || $newUserDetailAge > 120 {
-		throw(new \RangeException("Age specified is not allowed"));
+	//if $userDetailAge is null return it right away
+	if($newUserDetailAge === null) {
+		$this->userDetailAge = null;
+	return;
 	}
-	//convert and store user detail age
+	//verify the age is secure
+	$newUserDetailAge = trim($newUserDetailAge);
+	$newUserDetailAge = filter_var($newUserDetailAge, FILTER_SANITIZE_NUMBER_INT, FILTER_FLAG_NO_ENCODE_QUOTES);
+	if(empty($newUserDetailAge) === true) {
+	throw(new \InvalidArgumentException(("Age is empty or insecure"));
+	}
+	//verify the age will fit in the database
+	if($newUserDetailAge < 18 || $newUserDetailAge > 120 {
+	throw(new \RangeException("Age specified is not allowed"));
+	}
+	//store the age
 	$this->userDetailAge = $newUserDetailAge;
 	}
 
@@ -222,6 +237,7 @@ public function setUserDetailCareer(string $newUserDetailCareer): void {
 	}
 	//convert and store the career section
 	$this->userDetailAboutMe = $newUserDetailCareer;
+}
 
 /*************Accessor method for user detail display email**************/
 
@@ -301,7 +317,7 @@ public function setUserDetailGender(string $newUserDetailGender); void {
 			$this->userDetailGender = null;
 			return;
 		}
-		//verify the education is secure
+		//verify the gender is secure
 		$newUserDetailGender = trim($newUserDetailGender);
 		$newUserDetailGender = filter_var($newUserDetailGender, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserDetailGender) === true) {
@@ -311,7 +327,7 @@ public function setUserDetailGender(string $newUserDetailGender); void {
 		if(strlen(@$newUserDetailGender) > 32){
 			throw(new \RangeException("Gender is too large"));
 		}
-		//store the education
+		//store the gender
 		$this->userDetailGender = $newUserDetailGender;
 	}
 
@@ -325,7 +341,94 @@ public function getUserDetailInterests() {
 	 *
 	 *@param string $newUserDetailGender for interests of user
 	 *@throws \InvalidArgumentException if $newUserDetailInterests is not a string or insecure
-	 *@throws \RangeException if $newUserDetailInterests is > 32 characters
-	 *@throws \TypeError if $newUserDetailGender is not a string
+	 *@throws \RangeException if $newUserDetailInterests is > 144 characters
+	 *@throws \TypeError if $newUserDetailInterests is not a string
 	 **/
 
+public function setUserDetailInterests(string $newUserDetailInterests); void {
+//if $userDetailInterests is null return it right away
+		if($newUserDetailInterests === null) {
+			$this->userDetailInterests = null;
+			return;
+		}
+		//verify the interests is secure
+		$newUserDetailInterests = trim($newUserDetailInterests);
+		$newUserDetailInterests = filter_var($newUserDetailInterests, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newUserDetailInterests) === true) {
+			throw(new \InvalidArgumentException(("Interests is empty or insecure"));
+		}
+		//verify the interests will fit in the database
+		if(strlen(@$newUserDetailInterests) > 144){
+			throw(new \RangeException("Interests is too large"));
+		}
+		//store the interests
+		$this->userDetailInterests = $newUserDetailInterests;
+	}
+
+	/******************Accessor for User Detail Race********************/
+
+public function getUserDetailRace() {
+		return $this->userDetailRace;
+	}
+
+	/***************Mutator for User Detail Race*************************
+	 *
+	 *@param string $newUserDetailRace for interests of user
+	 *@throws \InvalidArgumentException if $newUserDetailRace is not a string or insecure
+	 *@throws \RangeException if $newUserDetailRace is > 32 characters
+	 *@throws \TypeError if $newUserDetailRace is not a string
+	 **/
+
+public function setUserDetailRace(string $newUserDetailRace); void {
+//if $userDetailRace is null return it right away
+		if($newUserDetailRace === null) {
+			$this->userDetailRace = null;
+			return;
+		}
+		//verify the race is secure
+		$newUserDetailRace = trim($newUserDetailRace);
+		$newUserDetailRace = filter_var($newUserDetailRace, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newUserDetailRace) === true) {
+			throw(new \InvalidArgumentException(("Race is empty or insecure"));
+		}
+		//verify the race will fit in the database
+		if(strlen(@$newUserDetailRace) > 32){
+			throw(new \RangeException("Race is too large"));
+		}
+		//store the race
+		$this->userDetailRace = $newUserDetailRace;
+	}
+
+	/******************Accessor for User Detail Religion********************/
+
+public function getUserDetailReligion() {
+		return $this->userDetailReligion;
+	}
+
+	/***************Mutator for User Detail Religion*************************
+	 *
+	 *@param string $newUserDetailReligion for interests of user
+	 *@throws \InvalidArgumentException if $newUserDetailReligion is not a string or insecure
+	 *@throws \RangeException if $newUserDetailReligion is > 32 characters
+	 *@throws \TypeError if $newUserDetailReligion is not a string
+	 **/
+
+public function setUserDetailReligion(string $newUserDetailReligion); void {
+	//if $userDetailReligion is null return it right away
+		if($newUserDetailReligion === null) {
+			$this->userDetailReligion = null;
+			return;
+		}
+		//verify the religion is secure
+		$newUserDetailReligion = trim($newUserDetailReligion);
+		$newUserDetailReligion = filter_var($newUserDetailReligion, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newUserDetailReigion) === true) {
+			throw(new \InvalidArgumentException(("Religion is empty or insecure"));
+		}
+		//verify the religion will fit in the database
+		if(strlen(@$newUserDetailReligion) > 32){
+			throw(new \RangeException("Religion is too large"));
+		}
+		//store the religion
+		$this->userDetailReligion = $newUserDetailReligion;
+	}
