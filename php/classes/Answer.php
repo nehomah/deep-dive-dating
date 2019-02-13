@@ -7,6 +7,9 @@ use Ramsey\Uuid\Uuid;
 /**
  * answer class is where the answers to users questions based on Dan's interests appear. They will be graded on their
  * answers to those questions.
+ *
+ * @author Natalie Woodard
+ * @version 1
  **/
 
 class answer implements \JsonSerializable {
@@ -39,14 +42,13 @@ class answer implements \JsonSerializable {
 	 *
 	 * @param string|Uuid $newAnswerUserId id for new answers linked to user
 	 * @param string $newAnswerQuestionId id for new answers linked to questions
-	 * @param string $newAnswerResult id for result of answer from user
+	 * @param int $newAnswerResult id for result of answer from user
 	 * @param int $newAnswerScore value that gets calculated from answers to questions
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds
 	 * @throws \Exception for when an exception is thrown
 	 * @throws \TypeError if data types violate type hints
 	 **/
-	// todo add type hints and make sure doc blocks are correct for accessors and muttators
 	public function __construct($newAnswerUserId, $newAnswerQuestionId, $newAnswerResult, $newAnswerScore) {
 		try {
 			$this->setAnswerUserId($newAnswerUserId);
@@ -63,9 +65,9 @@ class answer implements \JsonSerializable {
 	/**
 	 * accessor method for answer user id
 	 *
-	 * @return Uuid value of answer id (null if new user)
+	 * @return int value of answer id (null if new user)
 	 **/
-	public function getAnswerUserId(): Uuid {
+	public function getAnswerUserId(): string {
 		return ($this->answerUserId);
 	}
 
@@ -80,7 +82,7 @@ class answer implements \JsonSerializable {
 	public function setAnswerUserId($newAnswerUserId): void {
 		try {
 			$uuid = self::validateUuid($newAnswerUserId);
-		} catch(\InvalidArgumentException | \RangeException | \Exception |\TypeError $exception) {
+		} catch(InvalidArguementException | \RangeException |Exception |\TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType ($exception->getMessage(), 0, $exception));
 		}
@@ -106,7 +108,7 @@ class answer implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if the answer question id is empty
 	 * @throws \RangeException if the answer question id is longer than 16 characters
 	 **/
-// todo update mutator to use validateUuid
+
 	public function setAnswerQuestionId(string $newAnswerQuestionId) {
 		if(empty($newAnswerQuestionId) == true) {
 			throw(new \InvalidArgumentException("This answer question id is empty."));
@@ -122,27 +124,27 @@ class answer implements \JsonSerializable {
 	/**
 	 * accessor method for answer result
 	 *
-	 * @return string value of answer result
+	 * @return int value of answer result
 	 **/
 
-	public function getAnswerResult(): string {
+	public function getAnswerResult(): int {
 		return ($this->answerResult);
 	}
 
 	/**
 	 * mutator method for answer result
 	 *
-	 * @param string $newAnswerResult new value answer result
+	 * @param int $newAnswerResult new value answer result
 	 * @throws \InvalidArgumentException if the answer result is empty
 	 * @throws \RangeException if the answer is result is longer than 1
 	 **/
 
-	public function setAnswerResult(string $newAnswerResult) {
+	public function setAnswerResult(int $newAnswerResult) {
 		if(empty($newAnswerResult) == true) {
 			throw(new \InvalidArgumentException("This answer result is empty."));
 		}
 		//verify the answer result is no longer than 1 integer.
-		if(($newAnswerResult !== "i") || ($newAnswerResult !== "c")) {
+		if(($newAnswerResult) > 1) {
 			throw(new \RangeException("This answer result is too long. It must be no longer than 1 character."));
 		}
 		//Store the answer result
@@ -172,7 +174,7 @@ class answer implements \JsonSerializable {
 			throw(new \InvalidArgumentException("This score is empty."));
 		}
 		//verify the answer score is no longer than one integer
-		if(($newAnswerScore) > 1) {
+		if(($newAnswerScore) !=="c" || ($newAnswerScore !== "i")) {
 			throw(new \RangeException("This answer score is too long. It must be no longer than 1 character."));
 		}
 		//Store the answer score
@@ -193,7 +195,7 @@ class answer implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		//bind the member variables to the place holders in the template
-		$parameters = ["answerUserId" => $this->answerUserId->getBytes(), "answerQuestionId" => $this->answerQuestionId->getBytes(), "answerResult" => $this->answerResult, "answerScore" => $this->answerScore->getBytes()];
+		$parameters = ["answerUserId" => $this->answerUserId->getBytes(), "answerQuestionId" => $this->answerQuestionId->getBytes(), "answerResult" => $this->answerResult, "answerScore" => $this->answerScore];
 		$statement->execute($parameters);
 	}
 
@@ -204,7 +206,6 @@ class answer implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	// todo update where clause to delete answer with both userId and questionId
 	public function delete(\PDO $pdo): void {
 
 		// create query template
@@ -217,11 +218,29 @@ class answer implements \JsonSerializable {
 	}
 
 	/**
+	 * /**
+	 * updates this answer in MySQL
+	 *
+	 * @param \PDO $pdo connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 */
+	public function update(\PDO $pdo): void {
+
+		//create query template
+		$query = "UPDATE answer SET answerUserId = :answerUserId, answerQuestionId = :answerQuestionId, answerResult = :answerResult, answerScore = :answerScore";
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["answerUserId" => $this->answerUserId->getBytes(), "answerQuestionId" => $this->answerQuestionId, "answerResult" => $this->answerResult, "answerScore" => $this->answerScore];
+		$statement->execute($parameters);
+	}
+
+	/**
 	 * gets the Answer by answerUserId
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @param Uuid|string $answerUserId answer user id
-	 * @return Author|null Answer found or null if not found
+	 * @return Answer|null Answer found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
@@ -255,7 +274,37 @@ class answer implements \JsonSerializable {
 		}
 		return ($answer);
 	}
-	// todo add getAnswerByAnswerQuestionId and getAnswerByAnswerQuestionIdAndUserId
+
+	/**
+	 *
+	 * gets all Answers
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @return \SplFixedArray SplFixedArray of Answer found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getAllAnswers(\PDO $pdo): \SPLFixedArray {
+		// create query template
+		$query = "SELECT answerUserId, answerQuestionId, answerResult, answerScore FROM answer";
+		$statement = $pdo->prepare($query);
+		$statement->execute();
+
+		// build an array of answers
+		$answer = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$answer = new Answer($row["answerUserId"], $row["answerQuestionId"], $row["answerResult"], $row["answerScore"]);
+				$answer[$answer->key()] = $answer;
+				$answer->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($answer);
+	}
 
 	/**
 	 * formats the state variables for JSON serialization
@@ -268,6 +317,8 @@ class answer implements \JsonSerializable {
 		$fields["answerUserId"] = $this->answerUserId->toString();
 		$fields["answerQuestionId"] = $this->answerQuestionId->toString();
 
+		//format the date so that the front end can consume it
+		$fields["answerResult"] = round(floatval($this->answerResult->format("U.u")) * 1000);
 		return ($fields);
 	}
 }

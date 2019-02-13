@@ -14,13 +14,7 @@ class question implements \JsonSerializable {
 	/**Id for questions user will be graded by, this is the primary key
 	 * @var string|Uuid $questionId
 	 **/
-
 	private $questionId;
-	/**
-	 * Id to link question to user, this is a foreign key
-	 * @var string|Uuid $questionUserId
-	 **/
-	private $questionUserId;
 	/**
 	 * Space where question content appears
 	 * @var string|Uuid $questionContent
@@ -36,9 +30,8 @@ class question implements \JsonSerializable {
 	 * /**Constructor for question class
 	 *
 	 * @param string|Uuid $newQuestionId id for question set
-	 * @param string $newQuestionUserId id for new user to answer questions
 	 * @param string $newQuestionContent space where question appears
-	 * @param tinyint $newQuestionValue value that gets calculated from answers to questions
+	 * @param int $newQuestionValue value that gets calculated from answers to questions
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds
 	 * @throws \Exception for when an exception is thrown
@@ -46,10 +39,9 @@ class question implements \JsonSerializable {
 	 *
 	 **/
 	// todo add type hints, make sure mutator and accessor doc blocks are correct
-	public function __construct($newQuestionId, $newQuestionUserId, $newQuestionContent, $newQuestionValue) {
+	public function __construct($newQuestionId, $newQuestionContent, $newQuestionValue) {
 		try {
 			$this->setQuestionId($newQuestionId);
-			$this->setQuestionUserId($newQuestionUserId);
 			$this->setQuestionContent($newQuestionContent);
 			$this->setQuestionValue($newQuestionValue);
 			//determine what exception type was thrown
@@ -263,8 +255,6 @@ class question implements \JsonSerializable {
 		$fields = get_object_vars($this);
 
 		$fields["questionId"] = $this->questionId->toString();
-		$fields["questionUserId"] = $this->questionUserId->toString();
-
 		return ($fields);
 	}
 }
