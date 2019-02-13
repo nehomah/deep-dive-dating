@@ -87,6 +87,23 @@ class Report implements \JsonSerializable {
 	}
 
 	/**
+	 * Mutator Method for Report User Id
+	 *
+	 * @param Uuid|string new value of Report User Id
+	 * @throws \RangeException if $newReportUserId is not positive
+	 * @throws \TypeError if $newReportUserId is not a Uuid or string
+	 **/
+	public function setReportUserId() : void {
+		try {
+			$uuid = self::validateUuid($newReportUserId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		$this->reportUserId = $uuid;
+	}
+
+	/**
 	 * Accessor Method for Report Abuser Id
 	 *
 	 * @return Uuid value of User Id for the person who the report is about
@@ -94,6 +111,10 @@ class Report implements \JsonSerializable {
 	public function getReportAbuserId() : Uuid {
 		return($this->reportAbuserId);
 	}
+
+	/**
+	 * Mutator Method for
+	 **/
 
 	/**
 	 * Accessor Method for Report Agent
@@ -105,6 +126,10 @@ class Report implements \JsonSerializable {
 	}
 
 	/**
+	 * Mutator Method for
+	 **/
+
+	/**
 	 * Accessor Method for Report Content
 	 *
 	 * @return string details of incident being reported
@@ -112,6 +137,10 @@ class Report implements \JsonSerializable {
 	public function getReportContent() : string {
 		return($this->reportContent);
 	}
+
+	/**
+	 * Mutator Method for
+	 **/
 
 	/**
 	 * Accessor Method for Report Date
@@ -123,6 +152,10 @@ class Report implements \JsonSerializable {
 	}
 
 	/**
+	 * Mutator Method for
+	 **/
+
+	/**
 	 * Accessor Method for Report Ip
 	 *
 	 * @return string|Binary Ip address of the person making the report
@@ -130,6 +163,10 @@ class Report implements \JsonSerializable {
 	public function getReportIp() : string {
 		return($this->reportIp);
 	}
+
+	/**
+	 * Mutator Method for
+	 **/
 
 }
 
