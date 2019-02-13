@@ -172,7 +172,7 @@ public function setUserDetailId($newUserDetailId): void {
 		$newUserDetailAboutMe = trim($newUserDetailAboutMe);
 		$newUserDetailAboutMe = filter_var($newUserDetailAboutMe, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-		if(strlen($newUserDetailAboutMe) > 144) {
+		if(strlen($newUserDetailAboutMe) > 1024) {
 				throw(new \InvalidArgumentException("About Me is too large"));
 		}
 		//convert and store the about me section
@@ -278,8 +278,8 @@ public function getUserDetailEducation() {
  *@throws \TypeError if $newUserDetailEducation is not a string
 **/
 
-public function setUserDetailEducation(?string $newUserDetailEducation); void {
-//if $userDetailEducation is null return it right away
+public function setUserDetailEducation(?string $newUserDetailEducation): void {
+		//if $userDetailEducation is null return it right away
 		if($newUserDetailEducation === null) {
 				$this->userDetailEducation = null;
 				return;
@@ -311,8 +311,8 @@ public function getUserDetailGender() {
 	*@throws \RangeException if $newUserDetailGender is > 32 characters
 	*@throws \TypeError if $newUserDetailGender is not a string
 	**/
-public function setUserDetailGender(string $newUserDetailGender); void {
-//if $userDetailGender is null return it right away
+public function setUserDetailGender(string $newUserDetailGender): void {
+   	//if $userDetailGender is null return it right away
 		if($newUserDetailGender === null) {
 			$this->userDetailGender = null;
 			return;
@@ -345,8 +345,8 @@ public function getUserDetailInterests() {
 	 *@throws \TypeError if $newUserDetailInterests is not a string
 	 **/
 
-public function setUserDetailInterests(string $newUserDetailInterests); void {
-//if $userDetailInterests is null return it right away
+public function setUserDetailInterests(string $newUserDetailInterests): void {
+		//if $userDetailInterests is null return it right away
 		if($newUserDetailInterests === null) {
 			$this->userDetailInterests = null;
 			return;
@@ -358,7 +358,7 @@ public function setUserDetailInterests(string $newUserDetailInterests); void {
 			throw(new \InvalidArgumentException(("Interests is empty or insecure"));
 		}
 		//verify the interests will fit in the database
-		if(strlen(@$newUserDetailInterests) > 144){
+		if(strlen(@$newUserDetailInterests) > 1024){
 			throw(new \RangeException("Interests is too large"));
 		}
 		//store the interests
@@ -379,7 +379,7 @@ public function getUserDetailRace() {
 	 *@throws \TypeError if $newUserDetailRace is not a string
 	 **/
 
-public function setUserDetailRace(string $newUserDetailRace); void {
+public function setUserDetailRace(string $newUserDetailRace): void {
 //if $userDetailRace is null return it right away
 		if($newUserDetailRace === null) {
 			$this->userDetailRace = null;
@@ -413,7 +413,7 @@ public function getUserDetailReligion() {
 	 *@throws \TypeError if $newUserDetailReligion is not a string
 	 **/
 
-public function setUserDetailReligion(string $newUserDetailReligion); void {
+public function setUserDetailReligion(string $newUserDetailReligion): void {
 	//if $userDetailReligion is null return it right away
 		if($newUserDetailReligion === null) {
 			$this->userDetailReligion = null;
