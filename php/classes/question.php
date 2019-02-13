@@ -39,7 +39,7 @@ class question implements \JsonSerializable {
 	 * @param string|Uuid $newQuestionId id for question set
 	 * @param string $newQuestionUserId id for new user to answer questions
 	 * @param string $newQuestionContent space where question appears
-	 * @param TINYINT $newQuestionValue value that gets calculated from answers to questions
+	 * @param tinyint $newQuestionValue value that gets calculated from answers to questions
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds
 	 * @throws \Exception for when an exception is thrown
@@ -100,17 +100,17 @@ class question implements \JsonSerializable {
 
 	/**
 	 * mutator method for question user id
-	 * @param binary $newQuestionUserId new value question user id
+	 * @param string $newQuestionUserId new value question user id
 	 * @throws \InvalidArgumentException if the question user id is empty
 	 * @throws \RangeException if the question user id is too long
 	 **/
 
-	public function setQuestionUserId(binary $newQuestionUserId) {
+	public function setQuestionUserId(string $newQuestionUserId) {
 		if(empty($newQuestionUserId) == true) {
 			throw(new \InvalidArgumentException("This question is empty."));
 		}
 		//verify the question user id is no longer than 16 characters.
-		if(binary($newQuestionUserId) > 1) {
+		if(string($newQuestionUserId) > 16) {
 			throw(new \RangeException("This question is too long. It must be no longer than 16 characters."));
 		}
 		//Store the question user id
@@ -120,32 +120,61 @@ class question implements \JsonSerializable {
 	/**
 	 * accessor method for question content
 	 *
-	 * @return  value of question content
+	 * @return  question content
 	 **/
 
-	public function getQuestionContent(): binary {
+	public function getQuestionContent(): string {
 		return ($this->questionContent);
 	}
 
 	/**
 	 * mutator method for question content
 	 *
-	 * @param varchar $newQuestionContent new value question content
+	 * @param string $newQuestionContent new value question content
 	 * @throws \InvalidArgumentException if the question content is empty
 	 * @throws \RangeException if the question content is longer than one integer
 	 **/
 
-	public function setQuestionContent(varchar $newQuestionContent) {
+	public function setQuestionContent(string $newQuestionContent) {
 		if(empty($newQuestionContent) == true) {
 			throw(new \InvalidArgumentException("This question content is empty."));
 		}
 		//verify the question content is no longer than 128 characters
-		if(varchar($newQuestionContent) > 1) {
+		if(strlen($newQuestionContent) > 128) {
 			throw(new \RangeException("This question content is too long. It must be no longer than 128 characters."));
 		}
 		//Store the question
 		$this->questionContent = $newQuestionContent;
 	}
+
+	 /** accessor method for question value
+	 *
+	 * @return string value for question value
+	 **/
+
+	public function getQuestionValue(): tinyint {
+		return ($this->questionValue);
+	}
+	/**
+	 * mutator method for question value
+	 *
+	 * @param Uuid|tinyint $newQuestionValue is not positive
+	 * @throws \InvalidArgumentException if the id is not a string or is insecure
+	 * @throws \RangeException if $newAnswerUserId is not positive
+	 * @throws \TypeError if $newAnswerUserId is not a uuid or string
+	 **/
+	public function setQuestionValue($newQuestionValue): void {
+		try {
+			$uuid = self::validateUuid($newQuestionValue);
+		} catch(InvalidArguementException | \RangeException |Exception |\TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType ($exception->getMessage(), 0, $exception));
+		}
+
+		//convert and store question value
+		$this->questionValue = $uuid;
+	}
+	/**
 
 	/**
 	 * insert this question content in mySQL
@@ -206,7 +235,7 @@ class question implements \JsonSerializable {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @param Uuid|string $questionId question id
-	 * @return Author|null Question found or null if not found
+	 * @return Question|null Question found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/

@@ -40,7 +40,7 @@ class answer implements \JsonSerializable {
  *@param string|Uuid $newAnswerUserId id for new answers linked to user
  *@param string $newAnswerQuestionId id for new answers linked to questions
  *@param string $newAnswerResult id for result of answer from user
- *@param TINYINT $newAnswerScore value that gets calculated from answers to questions
+ *@param tinyint $newAnswerScore value that gets calculated from answers to questions
  *@throws \InvalidArgumentException if data types are not valid
  *@throws \RangeException if data values are out of bounds
  *@throws \Exception for when an exception is thrown
@@ -62,7 +62,7 @@ class answer implements \JsonSerializable {
 /**
  * accessor method for answer user id
  *
- * @return string value of answer id (null if new user)
+ * @return tinyint value of answer id (null if new user)
  **/
 public function getAnswerUserId(): string {
 	return ($this->answerUserId);
