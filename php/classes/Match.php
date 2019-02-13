@@ -183,6 +183,28 @@ class Match implements \JsonSerializable {
 		$statement->execute($parameters);
 	}
 // todo write getMatchByMatchUserIdAndMatchToUserId
+	/**
+	 * Gets Match by Match User Id and Match To User Id
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $matchUserId
+	 * @param Uuid|string $matchToUserId
+	 * @return \SplFixedArray Spl Fixed Array of Matches found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public static function getMatchByMatchUserIdAndMatchToUserId(\PDO $pdo, $matchUserId, $matchToUserId) : \SplFixedArray {
+		//sanitize both Uuids
+		try {
+			$matchUserId = self::validateUuid($matchUserId);
+			$matchToUserId = self::validateUuid($matchToUserId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		//create query template
+		$query = "SELECT matchUserId, matchToUserId, matchApproved WHERE matchUserId = :matchUserId";
+
+	}
 
 	/**
 	 * Gets Matches by User Id
@@ -193,7 +215,7 @@ class Match implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public static function getMatchesByMatchUserId(\PDO $pdo, $matchUserId) : \SplFixedArray {
+	public static function getMatchByMatchUserId(\PDO $pdo, $matchUserId) : \SplFixedArray {
 		//sanitize the Uuid
 		try {
 			$matchUserId = self::validateUuid($matchUserId);
@@ -201,7 +223,7 @@ class Match implements \JsonSerializable {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		//create query template
-		$query = "SELECT matchToUserId, matchApprove FROM `match` WHERE macthUserId = :matchUserId";
+		$query = "SELECT matchToUserId, matchApproved FROM `match` WHERE macthUserId = :matchUserId";
 		$statement = $pdo->prepare($query);
 		//bind elements to template
 		$parameters = ["matchUserId" => $matchUserId->getBytes()];
