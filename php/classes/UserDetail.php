@@ -447,7 +447,7 @@ public function insert(\PDO $pdo) : void {
 
 		//bind the member variables to the place holders in the template
 		$parameters = ["userDetailId" => $this->userDetailId->getBytes(), "userDetailUserId" => $this->userDetailUserId, "userDetailAboutMe" => $this->userDetailAboutMe, "userDetailAge" => $this->userDetailAge, "userDetailCareer" => $this->userDetailCareer, "userDetailDisplayEmail" => $this->userDetailDisplayEmail, "userDetailEducation" => $this->userDetailEducation, "userDetailGender" => $this->userDetailGender, "userDetailInterests" => $this->userDetailInterests, "userDetailRace" => $this->userDetailRace, "userDetailReligion" => $this->userDetailReligion];
-		$statement->execute($paramaters);
+		$statement->execute($parameters);
 }
 
 	/**
@@ -484,7 +484,7 @@ public function update(\PDO $pdo) : void {
 }
 
 /**
-	 * gets the userDetail by by userDetailId
+	 * gets the UserDetail by by userDetailId
 	 * @param \PDO $pdo PDO connection object
 	 * @param Uuid|string $userDetailId user detail id to search for
 	 * @return UserDetail|null User detail if found or null if not found
@@ -499,9 +499,7 @@ public static function getUserDetailByUserDetailId(\PDO $pdo, $userDetailId) : ?
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		// create query template
-		$query = "SELECT userDetailId, userDetailUserId, userDetailAboutMe, userDetailAge, userDetailCareer, userDetailDisplayEmail, userDetailEducation, userDetailGender, userDetailInterests, userDetailRace, userDetailReligion 
-					FROM userDetail 
-					WHERE userDetailId = :userDetailId";
+		$query = "SELECT userDetailId, userDetailUserId, userDetailAboutMe, userDetailAge, userDetailCareer, userDetailDisplayEmail, userDetailEducation, userDetailGender, userDetailInterests, userDetailRace, userDetailReligion FROM userDetail WHERE userDetailId = :userDetailId";
 		$statement = $pdo->prepare($query);
 		// bind the user detail id to the place holder in the template
 		$parameters = ["userDetailId" => $userDetailId->getBytes()];
@@ -520,6 +518,80 @@ public static function getUserDetailByUserDetailId(\PDO $pdo, $userDetailId) : ?
 		}
 		return($userDetail);
 	}
+
+	/**
+	 * gets the UserDetail by by userDetailUserId
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $userDetailUserId user detail user id to search for
+	 * @return UserDetail|null User detail if found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variable are not the correct data type
+	 **/
+	public static function getUserDetailByUserDetailUserId(\PDO $pdo, $userDetailUserId) : ?UserDetail {
+		// sanitize the userDetailUserId before searching
+		try {
+			$userDetailUserId = self::validateUuid($userDetailUserId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		// create query template
+		$query = "SELECT userDetailId, userDetailUserId, userDetailAboutMe, userDetailAge, userDetailCareer, userDetailDisplayEmail, userDetailEducation, userDetailGender, userDetailInterests, userDetailRace, userDetailReligion FROM userDetail WHERE userDetailUserId = :userDetailUserId";
+		$statement = $pdo->prepare($query);
+		// bind the user detail id to the place holder in the template
+		$parameters = ["userDetailUserId" => $userDetailUserId->getBytes()];
+		$statement->execute($parameters);
+		// grab the profile from mySQL
+		try {
+			$userDetail = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$userDetail = new UserDetail($row["userDetailId"], $row["userDetailUserId"], $row["userDetailAboutMe"], $row["userDetailAge"], $row["userDetailCareer"], $row["userDetailDisplayEmail"], $row["userDetailEducation"], $row["userDetailGender"], $row['userDetailInterests'], $row["userDetailRace"], $row["userDetailReligion"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($userDetail);
+	}
+
+	/**
+	 * gets the User Detail by user detail display email
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param String $userDetailDisplayEmail user detail email to search for
+	 * @return UserDetail|null User Detail if found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 **/
+	public static function getUserDetailbyUserDetailDisplayEmail(\PDO $pdo, $userDetailDisplayEmail) : ?UserDetail {
+		// sanitize the display email before searching
+		$userDetailDisplayEmail = trim($userDetailDisplayEmail);
+		$userDetailDisplayEmail = filter_var($userDetailDisplayEmail, FILTER_SANITIZE_EMAIL, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($userDetailDisplayEmail) === true) {
+			throw(new \PDOException("Display email content is invalid"));
+		}
+		// create query template
+		$query = "SELECT userDetailId, userDetailUserId, userDetailAboutMe, userDetailAge, userDetailCareer, userDetailDisplayEmail, userDetailEducation, userDetailGender, userDetailInterests, userDetailRace, userDetailReligion FROM userDetail WHERE userDetailDisplayEmail = :userDetailDisplayEmail";
+		$statement = $pdo->prepare($query);
+		// bind the display email to the place holder in the template
+		$parameters = ["userDetailDisplayEmail" => $userDetailDisplayEmail];
+		$statement->execute($parameters);
+		// grab the profile from mySQL
+		try {
+			$userDetail = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$userDetail = new UserDetail($row["userDetailId"], $row["userDetailUserId"], $row["userDetailAboutMe"], $row["userDetailAge"], $row["userDetailCareer"], $row["userDetailDisplayEmail"], $row["userDetailEducation"], $row["userDetailGender"], $row['userDetailInterests'], $row["userDetailRace"], $row["userDetailReligion"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($userDetail);
+	}
+
 	/**
 	 * formats the state variables for JSON serialization
 	 *
