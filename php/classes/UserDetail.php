@@ -121,28 +121,28 @@ public function getUserDetailId(): Uuid {
 **/
 
 public function setUserDetailId($newUserDetailId): void {
-	try{
+		try{
 		$uuid = self::validateUuid($newUserDetailId);
-	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-		$exceptionType = get_class($exception);
-		throw(new $exceptionType($exception->getMessage(), 0, $exception));
-	}
-	//convert and store the user detail id
-	$this->userDetailId = $uuid;
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		//convert and store the user detail id
+		$this->userDetailId = $uuid;
 }
 
 	/******Accessor method for user detail user id***************/
 
-	public function getUserDetailUserId(): Uuid {
+public function getUserDetailUserId(): Uuid {
 		return ($this->userDetailUserId);
-	}
+		}
 
 	/*********Mutator method for user detail user id************
 * @param Uuid| string $newUserDetailUserId value of new user detail user id
 * @throws \RangeException if $newUserDetailUserId is not within range
 * @throws \TypeError if the user detail user id is not correct type
 **/
-	public function setUserDetailUserId($newUserDetailUserId): void {
+public function setUserDetailUserId($newUserDetailUserId): void {
 		try {
 			$uuid = self::validateUuid($newUserDetailUserId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -151,13 +151,13 @@ public function setUserDetailId($newUserDetailId): void {
 		}
 		//convert and store the user detail user id
 		$this->userDetailUserId = $uuid;
-	}
+}
 
 	/************Accessor method for user detail about me **************/
 
-	public function getUserDetailAboutMe(): string {
+public function getUserDetailAboutMe(): string {
 		return ($this->userDetailAboutMe);
-	}
+		}
 
 	/***********Mutator method for user detail about me ****************
 	*
@@ -165,7 +165,7 @@ public function setUserDetailId($newUserDetailId): void {
 	 * @throws \InvalidArgumentException when about me is not a string or insecure
 	 * @throws \RangeException if $newUserDetailAboutMe is > 144 characters
 	 **/
-	public function setUserDetailAboutMe(?string $newUserDetailAboutMe): void {
+public function setUserDetailAboutMe(?string $newUserDetailAboutMe): void {
 		if($newUserDetailAboutMe === null) {
 			$this->userDetailAboutMe = null;
 		}
@@ -205,12 +205,12 @@ public function setUserDetailAge(int $newUserDetailAge): void {
 	throw(new \InvalidArgumentException("Age is empty or insecure"));
 	}
 	//*verify the age will fit in the database
-	if($newUserDetailAge < 18 || $newUserDetailAge > 120 {
+	if($newUserDetailAge < 18 || $newUserDetailAge > 120) {
 	throw(new \RangeException("Age specified is not allowed"));
 	}
 	//store the age
 	$this->userDetailAge = $newUserDetailAge;
-	}
+}
 
 /***********Accessor method for user detail career**********/
 
@@ -254,8 +254,8 @@ public function getUserDetailDisplayEmail() {
  * */
 
 public function setUserDetailDisplayEmail(string $newUserDetailDisplayEmail): void {
-//verify the email is secure//
-		$newUserDetailDisplayEmail = trim($newProfileEmail);
+		//verify the email is secure//
+		$newUserDetailDisplayEmail = trim($newUserDetailDisplayEmail);
 		$newUserDetailDisplayEmail = filter_var($newUserDetailDisplayEmail, FILTER_VALIDATE_EMAIL);
 		if(empty($newUserDetailDisplayEmail) === true) {
 				throw(new \RangeException("Display email is too large"));
@@ -296,13 +296,13 @@ public function setUserDetailEducation(?string $newUserDetailEducation): void {
 		}
 		//store the education
 		$this->userDetailEducation = $newUserDetailEducation;
-	}
+}
 
 	/**************Accessor for user detail gender *********************/
 
 public function getUserDetailGender() {
 		return $this->userDetailGender;
-	}
+		}
 
 	/*************************Mutator for user detail gender**********
 	*
@@ -327,15 +327,15 @@ public function setUserDetailGender(string $newUserDetailGender): void {
 		if(strlen(@$newUserDetailGender) > 32){
 			throw(new \RangeException("Gender is too large"));
 		}
-		//store the gender
+		//*store the gender
 		$this->userDetailGender = $newUserDetailGender;
-	}
+}
 
 	/******************Accessor for User Detail Interests********************/
 
 public function getUserDetailInterests() {
 		return $this->userDetailInterests;
-	}
+		}
 
 	/***************Mutator for User Detail Interests*************************
 	 *
@@ -363,13 +363,13 @@ public function setUserDetailInterests(string $newUserDetailInterests): void {
 		}
 		//store the interests
 		$this->userDetailInterests = $newUserDetailInterests;
-	}
+}
 
 	/******************Accessor for User Detail Race********************/
 
 public function getUserDetailRace() {
 		return $this->userDetailRace;
-	}
+		}
 
 	/***************Mutator for User Detail Race*************************
 	 *
@@ -380,7 +380,7 @@ public function getUserDetailRace() {
 	 **/
 
 public function setUserDetailRace(string $newUserDetailRace): void {
-//if $userDetailRace is null return it right away
+		//if $userDetailRace is null return it right away
 		if($newUserDetailRace === null) {
 			$this->userDetailRace = null;
 			return;
@@ -397,13 +397,13 @@ public function setUserDetailRace(string $newUserDetailRace): void {
 		}
 		//store the race
 		$this->userDetailRace = $newUserDetailRace;
-	}
+}
 
 	/******************Accessor for User Detail Religion********************/
 
 public function getUserDetailReligion() {
 		return $this->userDetailReligion;
-	}
+		}
 
 	/***************Mutator for User Detail Religion*************************
 	 *
@@ -414,7 +414,7 @@ public function getUserDetailReligion() {
 	 **/
 
 public function setUserDetailReligion(string $newUserDetailReligion): void {
-	//if $userDetailReligion is null return it right away
+		//if $userDetailReligion is null return it right away
 		if($newUserDetailReligion === null) {
 			$this->userDetailReligion = null;
 			return;
