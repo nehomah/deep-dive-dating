@@ -146,7 +146,7 @@ class Report implements \JsonSerializable {
 	 * @throws \RangeException if $newReportAgent is > 255 characters
 	 * @throws \TypeError if $newReportAgent is not a string
 	 **/
-	public function setReportAgent( $newReportAgent ) {
+	public function setReportAgent( $newReportAgent ) : void {
 		// verify that agent is secure
 		$newReportAgent = trim($newReportAgent);
 		$newReportAgent = filter_var($newReportAgent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -172,8 +172,13 @@ class Report implements \JsonSerializable {
 
 	/**
 	 * Mutator Method for Report Content
+	 *
+	 * @param string $newReportContent new value of report content
+	 * @throws \InvalidArgumentException if $newReportContent is not a string or insecure
+	 * @throws \RangeException if $newReportContent is > 255 characters
+	 * @throws \TypeError if $newReportContent is not a string
 	 **/
-	public function setReportContent( $newReportContent ) {
+	public function setReportContent( $newReportContent ) : void {
 		//verify that content is secure
 		$newReportContent = trim($newReportContent);
 		$newReportContent = filter_var($newReportContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -198,8 +203,27 @@ class Report implements \JsonSerializable {
 	}
 
 	/**
-	 * Mutator Method for
+	 * Mutator Method for Report Date
+	 *
+	 * @param \DateTime|string|null $newReportDate datetime object, string, or null
+	 * @throws \InvalidArgumentException if $newReportDate is not a valid object or string
+	 * @throws \RangeException if $newReportDate is a date that does not exist
 	 **/
+	public function setReportDate( $newReportDate ) : void {
+		//if date time is null use current date and time
+		if($newReportDate === null) {
+			$this->reportDate = new \DateTime();
+			return;
+		}
+		//use ValidateDate to store new date time
+		try {
+			$newReportDate = self::vaildateDateTime($newReportDate);
+		} catch(\InvalidArgumentException | \RangeException $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		$this->reportDate = $newReportDate;
+	}
 
 	/**
 	 * Accessor Method for Report Ip
