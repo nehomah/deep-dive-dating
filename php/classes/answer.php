@@ -309,4 +309,3 @@ public function jsonSerialize() : array {
 	$fields["answerResult"] = round(floatval($this->answerResult->format("U.u")) * 1000);
 	return($fields);
 }
-}
