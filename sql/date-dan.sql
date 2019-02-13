@@ -33,7 +33,7 @@ CREATE TABLE userDetail (
 	userDetailDisplayEmail VARCHAR(128),
 	userDetailEducation VARCHAR(144),
 	userDetailGender VARCHAR(32) NOT NULL,
-	userDetailInterests VARCHAR(255),
+	userDetailInterests VARCHAR(144),
 	userDetailRace VARCHAR(128),
 	userDetailReligion VARCHAR(128),
 	FOREIGN KEY(userDetailUserId) REFERENCES user(detailUserId),

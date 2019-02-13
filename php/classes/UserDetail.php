@@ -295,3 +295,37 @@ public function getUserDetailGender() {
 	*@throws \RangeException if $newUserDetailGender is > 32 characters
 	*@throws \TypeError if $newUserDetailGender is not a string
 	**/
+public function setUserDetailGender(string $newUserDetailGender); void {
+//if $userDetailGender is null return it right away
+		if($newUserDetailGender === null) {
+			$this->userDetailGender = null;
+			return;
+		}
+		//verify the education is secure
+		$newUserDetailGender = trim($newUserDetailGender);
+		$newUserDetailGender = filter_var($newUserDetailGender, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newUserDetailGender) === true) {
+			throw(new \InvalidArgumentException(("Gender is empty or insecure"));
+		}
+		//verify the gender will fit in the database
+		if(strlen(@$newUserDetailGender) > 32){
+			throw(new \RangeException("Gender is too large"));
+		}
+		//store the education
+		$this->userDetailGender = $newUserDetailGender;
+	}
+
+	/******************Accessor for User Detail Interests********************/
+
+public function getUserDetailInterests() {
+		return $this->userDetailInterests;
+	}
+
+	/***************Mutator for User Detail Interests*************************
+	 *
+	 *@param string $newUserDetailGender for interests of user
+	 *@throws \InvalidArgumentException if $newUserDetailInterests is not a string or insecure
+	 *@throws \RangeException if $newUserDetailInterests is > 32 characters
+	 *@throws \TypeError if $newUserDetailGender is not a string
+	 **/
+
