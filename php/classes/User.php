@@ -329,7 +329,6 @@ class user implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if ip address is empty or insecure
 	 * @throws \TypeError if the ip address is not a string
 	 */
-<<<<<<< Updated upstream
 	public function setUserIpAddress(string $newUserIpAddress) {
 		//detect the Ip's format and assign it in binary mode
 		if(@inet_pton($newUserIpAddress) !== false) {
@@ -397,8 +396,40 @@ class user implements \JsonSerializable {
 		$parameters = ["userId" => $this->userId->getBytes(), "userActivationToken" => $this->userActivationToken->getBytes(), "userAgent" => $this->userAgent, "userAvatarUrl" => $this->userAvatarUrl, "userBlocked" => $this->userBlocked->getBytes(), "userEmail" => $this->userEmail, "userHandle" => $this->userHandle, "userHash" => $this->userHash, "userIpAddress" => $this->userIpAddress->getBytes()];
 		$statement->execute($parameters);
 	}
-}
-=======
-}
+	/**
+	 * gets the user by userId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $userId user id to search for
+	 * @return user|null user found or null if not found
+	 * @throws \PDOException when mySql related errors are found
+	 * @throws \TypeError when a variable is not the correct data type
+	 */
+	public static function getUserByUserId(\PDO $pdo, $userId) : ?User {
+		//sanitize the userId before searching
+		try {
+					$userId = self::validateUuid($userId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+					throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
 
->>>>>>> Stashed changes
+		//create query template
+		$query = "SELECT userId, userActivationToken, userAgent, userAvatarUrl, userBlocked, userEmail, userHandle, userHash, userIpAddress FROM user WHERE userId = :userId";
+		$statement = $pdo->prepare($query);
+
+		// bind the user id  to the placeholder in the template
+		$parameters = ["userId" => $userId->getBytes()];
+		$statement->execute($parameters);
+
+		//grab the user from mySQL
+		try {
+			$user = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+						$user = new User($row["userId"], $row["userActivationToken"], $row["userAgent"], $row["userAvatarUrl"], $row["userBlocked"], $row["userEmail"], $row["userHandle"], $row["userHash"], $row["userIpAddress"]);
+
+			}
+		}
+	}
+}
