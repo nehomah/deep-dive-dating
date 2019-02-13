@@ -165,14 +165,14 @@ class Match implements \JsonSerializable {
 		$query = "SELECT matchToUserId, matchApprove FROM `match` WHERE macthUserId = :matchUserId";
 		$statement = $pdo->prepare($query);
 		//bind elements to template
-		$parameters = ["matchUserId" => $this->matchUserId->getBytes()];
+		$parameters = ["matchUserId" => $matchUserId->getBytes()];
 		$statement->execute($parameters);
 		//build array
 		$matches = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$match = new Match($row["matchUserId"], $row["macthToUserId"], $row["macthApproved"]);
+				$match = new Match($row["matchUserId"], $row["matchToUserId"], $row["matchApproved"]);
 				$matches[$matches->key()] = $match;
 				$matches->next();
 			} catch(\Exception $exception) {
@@ -180,5 +180,19 @@ class Match implements \JsonSerializable {
 			}
 		}
 		return ($matches);
+	}
+
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() : array {
+		$fields = get_object_vars($this);
+
+		$fields["matchUSerId"] = $this->matchUserId->toString();
+		$fields["matchToUserId"] = $this->matchToUserId->toString();
+
+		return($fields);
 	}
 }
