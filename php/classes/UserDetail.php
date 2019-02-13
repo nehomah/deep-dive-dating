@@ -204,7 +204,7 @@ public function setUserDetailAge(int $newUserDetailAge): void {
 	if(empty($newUserDetailAge) === true) {
 	throw(new \InvalidArgumentException(("Age is empty or insecure"));
 	}
-	//verify the age will fit in the database
+	//*verify the age will fit in the database
 	if($newUserDetailAge < 18 || $newUserDetailAge > 120 {
 	throw(new \RangeException("Age specified is not allowed"));
 	}
