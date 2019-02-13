@@ -202,7 +202,7 @@ public function setUserDetailAge(int $newUserDetailAge): void {
 	$newUserDetailAge = trim($newUserDetailAge);
 	$newUserDetailAge = filter_var($newUserDetailAge, FILTER_SANITIZE_NUMBER_INT, FILTER_FLAG_NO_ENCODE_QUOTES);
 	if(empty($newUserDetailAge) === true) {
-	throw(new \InvalidArgumentException(("Age is empty or insecure"));
+	throw(new \InvalidArgumentException("Age is empty or insecure"));
 	}
 	//*verify the age will fit in the database
 	if($newUserDetailAge < 18 || $newUserDetailAge > 120 {
@@ -288,7 +288,7 @@ public function setUserDetailEducation(?string $newUserDetailEducation): void {
 		$newUserDetailEducation = trim($newUserDetailEducation);
 		$newUserDetailEducation = filter_var($newUserDetailEducation, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserDetailEducation) === true) {
-			throw(new \InvalidArgumentException(("Education is empty or insecure"));
+			throw(new \InvalidArgumentException("Education is empty or insecure"));
 		}
 		//verify the education will fit in the database
 		if(strlen(@$newUserDetailEducation) > 256){
@@ -321,7 +321,7 @@ public function setUserDetailGender(string $newUserDetailGender): void {
 		$newUserDetailGender = trim($newUserDetailGender);
 		$newUserDetailGender = filter_var($newUserDetailGender, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserDetailGender) === true) {
-			throw(new \InvalidArgumentException(("Gender is empty or insecure"));
+			throw(new \InvalidArgumentException("Gender is empty or insecure"));
 		}
 		//verify the gender will fit in the database
 		if(strlen(@$newUserDetailGender) > 32){
@@ -355,7 +355,7 @@ public function setUserDetailInterests(string $newUserDetailInterests): void {
 		$newUserDetailInterests = trim($newUserDetailInterests);
 		$newUserDetailInterests = filter_var($newUserDetailInterests, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserDetailInterests) === true) {
-			throw(new \InvalidArgumentException(("Interests is empty or insecure"));
+			throw(new \InvalidArgumentException("Interests is empty or insecure"));
 		}
 		//verify the interests will fit in the database
 		if(strlen(@$newUserDetailInterests) > 1024){
@@ -389,7 +389,7 @@ public function setUserDetailRace(string $newUserDetailRace): void {
 		$newUserDetailRace = trim($newUserDetailRace);
 		$newUserDetailRace = filter_var($newUserDetailRace, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserDetailRace) === true) {
-			throw(new \InvalidArgumentException(("Race is empty or insecure"));
+			throw(new \InvalidArgumentException("Race is empty or insecure"));
 		}
 		//verify the race will fit in the database
 		if(strlen(@$newUserDetailRace) > 32){
@@ -423,12 +423,12 @@ public function setUserDetailReligion(string $newUserDetailReligion): void {
 		$newUserDetailReligion = trim($newUserDetailReligion);
 		$newUserDetailReligion = filter_var($newUserDetailReligion, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserDetailReigion) === true) {
-			throw(new \InvalidArgumentException(("Religion is empty or insecure"));
+			throw(new \InvalidArgumentException("Religion is empty or insecure"));
 		}
 		//verify the religion will fit in the database
-		if(strlen(@$newUserDetailReligion) > 32){
+		if(strlen(@$newUserDetailReligion) > 32) {
 			throw(new \RangeException("Religion is too large"));
 		}
 		//store the religion
 		$this->userDetailReligion = $newUserDetailReligion;
-	}
+}
