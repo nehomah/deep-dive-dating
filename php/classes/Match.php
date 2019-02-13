@@ -44,7 +44,7 @@ class Match implements \JsonSerializable {
 	 * @throws \Exception for other exceptions
 	 **/
 	//todo add type hints
-	public function __construct($newMatchUserId, $newMatchToUserId, $newMatchApproved) {
+	public function __construct( Uuid $newMatchUserId, Uuid $newMatchToUserId, int $newMatchApproved) {
 		try {
 			$this->setMatchUserId($newMatchUserId);
 			$this->setMatchToUserId($newMatchToUserId);
