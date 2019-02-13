@@ -80,7 +80,7 @@ class Report implements \JsonSerializable {
 	/**
 	 * Accessor Method for Report User Id
 	 *
-	 * @return Uuid value of User Id for the person who made the report
+	 * @return string|Uuid value of User Id for the person who made the report
 	 **/
 	public function getReportUserId() : Uuid {
 		return($this->reportUserId);
@@ -106,7 +106,7 @@ class Report implements \JsonSerializable {
 	/**
 	 * Accessor Method for Report Abuser Id
 	 *
-	 * @return Uuid value of User Id for the person who the report is about
+	 * @return string|Uuid value of User Id for the person who the report is about
 	 **/
 	public function getReportAbuserId() : Uuid {
 		return($this->reportAbuserId);
@@ -124,7 +124,7 @@ class Report implements \JsonSerializable {
 			$uuid = self::validateUuid($newReportAbuserId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
-			throw(new $exception($exception->getMessage(), 0, $exception));
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 		$this->reportAbuserId = $uuid;
 	}
@@ -248,11 +248,11 @@ class Report implements \JsonSerializable {
 	public function insert(\PDO $pdo) : void {
 		//query template
 		$query = "INSERT INTO report (reportUserId, reportAbuserId, reportAgent, reportContent, reportDate, reportIp) VALUES (:reportUserId, :reportAbuserId, :reportAgent, :reportContent, :reportDate, :reportIp)";
-		$statment = $pdo->prepare($query);
+		$statement = $pdo->prepare($query);
 		//bind variables to the template
 		$formattedDate = $this->reportDate->format("Y-m-d H:i:s.u");
 		$parameters = ["reportUserId" => $this->reportUserId->getBytes(), "reportAbuserId" => $this->reportAbuserId->getBytes(), "reportAgent" => $this->reportAgent, "reportContent" => $this->reportContent, "reportDate" => $formattedDate, "reportIp" => $this->reportIp];
-		$statment->execute($parameters);
+		$statement->execute($parameters);
 	}
 
 	/**
@@ -286,6 +286,22 @@ class Report implements \JsonSerializable {
 		$formattedDate = $this->reportDate->format("Y-m-d H:i:s.u");
 		$parameters = ["reportUserId" => $this->reportUserId->getBytes(), "reportAbuserId" => $this->reportAbuserId->getBytes(), "reportAgent" => $this->reportAgent, "reportContent" => $this->reportContent, "reportDate" => $formattedDate, "reportIp" => $this->reportIp];
 		$statement->execute($parameters);
+	}
+
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() : array {
+		$fields = get_object_vars($this);
+
+		$fields["reportUserId"] = $this->reportUserId->toString();
+		$fields["reportAbuserId"] = $this->reportAbuserId->toString();
+
+		//format the date so that the front end can consume it
+		$fields["reportDate"] = round(floatval($this->reportDate->format("U.u")) * 1000);
+		return($fields);
 	}
 }
 
