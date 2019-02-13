@@ -171,8 +171,22 @@ class Report implements \JsonSerializable {
 	}
 
 	/**
-	 * Mutator Method for
+	 * Mutator Method for Report Content
 	 **/
+	public function setReportContent( $newReportContent ) {
+		//verify that content is secure
+		$newReportContent = trim($newReportContent);
+		$newReportContent = filter_var($newReportContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newReportContent) === true ) {
+			throw(new \InvalidArgumentException("Content is empty or insecure"));
+		}
+		//check that length will fit in database
+		if(strlen($newReportContent) > 255 ) {
+			throw(new \RangeException("Report Content is too large"));
+		}
+		//store content
+		$this->reportContent = $newReportContent;
+	}
 
 	/**
 	 * Accessor Method for Report Date
