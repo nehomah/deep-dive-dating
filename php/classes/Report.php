@@ -293,7 +293,7 @@ class Report implements \JsonSerializable {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @param Uuid|string $reportUserId User ID to search for
-	 * @return Report|null reports that were found or null if not found
+	 * @return \SplFixedArray reports that were found or null if not found
 	 * @throws \PDOException if mySQL errors occur
 	 * @throws \TypeError if a variable is not of the correct data type
 	 **/
@@ -310,18 +310,19 @@ class Report implements \JsonSerializable {
 		//bind variables to template
 		$parameters = ["reportUserId" => $reportUserId->getBytes()];
 		$statement->execute($parameters);
-		//get report from mySQL
-		try {
-			$report = null;
-			$statement->setFetchMode(\PDO::FETCH_ASSOC);
-			$row = $statement->fetch();
-			if($row !== false) {
+		//build an array of Reports
+		$reports = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while (($row = $statement->fetch()) !== false) {
+			try {
 				$report = new Report($row["reportUserId"], $row["reportAbuserId"], $row["reportAgent"], $row["reportContent"], $row["reportDate"], $row["reportIp"]);
+				$reports[$reports->key] = $report;
+				$reports->next();
+			} catch(\Exception $exception) {
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
-		} catch(\Exception $exception) {
-			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return ($report);
+		return ($reports);
 	}
 
 	/**
