@@ -326,6 +326,41 @@ class user implements \JsonSerializable {
 	 * mutator method for user Ip Address
 	 *
 	 * @param string $newUserIpAddress
-	 * @throws \InvalidArgumentException
+	 * @throws \InvalidArgumentException if ip address is empty or insecure
+	 * @throws \TypeError if the ip address is not a string
 	 */
+	public function setUserIpAddress(string $newUserIpAddress) {
+		//detect the Ip's format and assign it in binary mode
+		if(@inet_pton($newUserIpAddress) !== false) {
+			$this->userIpAddress = inet_pton($newUserIpAddress);
+		} else if (@inet_ntop($newUserIpAddress) !== false) {
+			$this->userIpAddress = $newUserIpAddress;
+		} else {
+			throw(new \InvalidArgumentException("invalid user IP address"));
+		}
+		//store the ip address
+		$this->userIpAddress =$newUserIpAddress;
+	}
+	/**
+	 *inserts this user into mySQL
+	 *
+	 *@param \PDO $pdo PDO connection object
+	 *@throws \PDOException when mySQL related errors occur
+	 *@throws \TypeError if $pdo is not a PDO connection object
+	 */
+	public function insert(\PDO $pdo) : void {
+
+		// create query template
+		$query = "INSERT INTO user(userId, userActivationToken, userAgent, userAvatarUrl, userBlocked, userEmail, userHandle, userHash, userIpAddress) VALUES(:userId, :userActivationToken, :userAgent, :userAvatarUrl, :userBlocked, :userEmail, :userHandle, :userHash, :userIpAddress)";
+		$statement = $pdo->prepare($query);
+
+		//bind the member variables to the placeholders in the template
+		/**
+		 *
+		 *double check which ones need getBytes
+		 *
+		 */
+		$parameters = ["userId" => $this->userId->getBytes(), "userActivationToken" => $this->userActivationToken->getBytes(), "userAgent" => $this->userAgent->getBytes(), "userAvatarUrl" => $this->userAvatarUrl->getBytes(), "userBlocked" => $this->userBlocked->getBytes(), "userEmail" => $this->userEmail->getBytes(), "userHandle" => $this->userHandle->getBytes(), "userHash" => $this->userHash->getBytes(), "userIpAddress" => $this->userIpAddress->getBytes()];
+		$statement->execute($parameters);
+	}
 }
