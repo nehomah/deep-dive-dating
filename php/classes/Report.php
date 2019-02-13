@@ -93,7 +93,7 @@ class Report implements \JsonSerializable {
 	 * @throws \RangeException if $newReportUserId is not positive
 	 * @throws \TypeError if $newReportUserId is not a Uuid or string
 	 **/
-	public function setReportUserId() : void {
+	public function setReportUserId( $newReportUserId ) : void {
 		try {
 			$uuid = self::validateUuid($newReportUserId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -115,13 +115,13 @@ class Report implements \JsonSerializable {
 	/**
 	 * Mutator Method for Report Abuser Id
 	 *
-	 * @param Uuid|string new value of Report Abuser Id
+	 * @param Uuid|string $newReportAbuserId new value of Report Abuser Id
 	 * @throws \RangeException if $newReportAbuserId is not positive
 	 * @throws \TypeError if $newReportAbuserId is not a Uuid or string
 	 **/
-	public function setReportAbuserId() : void {
+	public function setReportAbuserId( $newReportAbuserId ) : void {
 		try {
-			$uuid = self::validateUuid($newReportUserId);
+			$uuid = self::validateUuid($newReportAbuserId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exception($exception->getMessage(), 0, $exception));
@@ -139,8 +139,27 @@ class Report implements \JsonSerializable {
 	}
 
 	/**
-	 * Mutator Method for
+	 * Mutator Method for Report Agent
+	 *
+	 * @param string $newReportAgent user agent info for the person making the report
+	 * @throws \InvalidArgumentException if $newReportAgent is not a string or insecure
+	 * @throws \RangeException if $newReportAgent is > 255 characters
+	 * @throws \TypeError if $newReportAgent is not a string
 	 **/
+	public function setReportAgent( $newReportAgent ) {
+		// verify that agent is secure
+		$newReportAgent = trim($newReportAgent);
+		$newReportAgent = filter_var($newReportAgent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newReportAgent) === true ) {
+			throw(new \InvalidArgumentException("Agent information is empty or insecure"));
+		}
+		// check that length will fit in database
+		if(strlen($newReportAgent) > 255 ) {
+			throw(new \RangeException("Agent Information is to Large"));
+		}
+		// store agent
+		$this->reportAgent = $newReportAgent;
+	}
 
 	/**
 	 * Accessor Method for Report Content
