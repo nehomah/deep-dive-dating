@@ -289,6 +289,54 @@ class Report implements \JsonSerializable {
 	}
 
 	/**
+	 * Gets Reports by User Id
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $reportUserId User ID to search for
+	 * @return Report|null reports that were found or null if not found
+	 * @throws \PDOException if mySQL errors occur
+	 * @throws \TypeError if a variable is not of the correct data type
+	 **/
+	public static function getReportByUserId(\PDO $pdo, $reportUserId) : ?Report {
+		//sanitize user id before search
+		try {
+			$reportUserId = self::validateUuid($reportUserId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0 ,$exception));
+		}
+		//query template
+		$query = "SELECT reportUserId, reportAbuserId, reportAgent, reportContent, reportDate, reportIp FROM report WHERE reportUserId = :reportUserId";
+		$statement = $pdo->prepare($query);
+		//bind variables to template
+		$parameters = ["reportUserId" => $reportUserId->getBytes()];
+		$statement->execute($parameters);
+		//get report from mySQL
+		try {
+			$report = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$report = new Report($row["reportUserId"], $row["reportAbuserId"], $row["reportAgent"], $row["reportContent"], $row["reportDate"], $row["reportIp"]);
+			}
+		} catch(\Exception $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return ($report);
+	}
+
+	/**
+	 * Gets Reports by Abuser Id
+	 **/
+
+	/**
+	 * Gets Reports by Content
+	 **/
+
+	/**
+	 * Gets All Reports
+	 **/
+
+	/**
 	 * formats the state variables for JSON serialization
 	 *
 	 * @return array resulting state variables to serialize
