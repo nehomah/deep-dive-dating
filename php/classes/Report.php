@@ -409,7 +409,31 @@ class Report implements \JsonSerializable {
 
 	/**
 	 * Gets All Reports
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @return \SplFixedArray collection of reports found or null if none
+	 * @throws \PDOException if mySQL errors occur
+	 * @throws \TypeError if a variable is not of the correct data type
 	 **/
+	public static function getAllReports(\PDO $pdo): \SplFixedArray {
+		//query template
+		$query = "SELECT reportUserId, reportAbuserId, reportAgent, reportContent, reportDate, reportIp FROM report";
+		$statement = $pdo->prepare($query);
+		$statement->execute();
+		//build an array of Reports
+		$reports = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$report = new Report($row["reportUserId"], $row["reportAbuserId"], $row["reportAgent"], $row["reportContent"], $row["reportDate"], $row["reportIp"]);
+				$reports[$reports->key()] = $report;
+				$reports->next();
+			} catch(\Exception $exception) {
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($reports);
+	}
 
 	/**
 	 * formats the state variables for JSON serialization
