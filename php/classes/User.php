@@ -303,8 +303,8 @@ class user implements \JsonSerializable {
 					throw(new \InvalidArgumentException("user password hash is empty or insecure"));
 		}
 		//enforce this hash is really an argon hash
-		$userHashInfor = password_get_info($newUserHash);
-		if($authorHashInfo["algoname"] !== "argon2i") {
+		$userHashInfo = password_get_info($newUserHash);
+		if($userHashInfo["algoname"] !== "argon2i") {
 					throw(new \InvalidArgumentException("user hash must be 97 characters"));
 		}
 		//enforce the hash is exactly 97 characters
@@ -360,7 +360,40 @@ class user implements \JsonSerializable {
 		 *double check which ones need getBytes
 		 *
 		 */
-		$parameters = ["userId" => $this->userId->getBytes(), "userActivationToken" => $this->userActivationToken->getBytes(), "userAgent" => $this->userAgent->getBytes(), "userAvatarUrl" => $this->userAvatarUrl->getBytes(), "userBlocked" => $this->userBlocked->getBytes(), "userEmail" => $this->userEmail->getBytes(), "userHandle" => $this->userHandle->getBytes(), "userHash" => $this->userHash->getBytes(), "userIpAddress" => $this->userIpAddress->getBytes()];
+		$parameters = ["userId" => $this->userId->getBytes(), "userActivationToken" => $this->userActivationToken->getBytes(), "userAgent" => $this->userAgent, "userAvatarUrl" => $this->userAvatarUrl, "userBlocked" => $this->userBlocked->getBytes(), "userEmail" => $this->userEmail, "userHandle" => $this->userHandle, "userHash" => $this->userHash, "userIpAddress" => $this->userIpAddress->getBytes()];
+		$statement->execute($parameters);
+	}
+
+	/**
+	 * deletes this user from mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 */
+	public function delete(\PDO $pdo): void {
+
+		//create query template
+		$query = "DELETE FROM user WHERE userId = :userId";
+		$statement = $pdo->prepare($query);
+
+		//bind the member variables to the place holder in the template
+		$parameters = ["userId" =>$this->userId->getBytes()];
+		$statement->execute($parameters);
+	}
+	/**
+	 * updates this user in mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 */
+	public function update(\PDO $pdo) : void {
+		//create query template
+		$query = "UPDATE user SET userAgent = :userAgent, userAvatarUrl = :userAvatarUrl, userEmail = :userEmail, userHandle = :userHandle, userIpAddress = :userIpAddress WHERE userId = :userId";
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["userId" => $this->userId->getBytes(), "userActivationToken" => $this->userActivationToken->getBytes(), "userAgent" => $this->userAgent, "userAvatarUrl" => $this->userAvatarUrl, "userBlocked" => $this->userBlocked->getBytes(), "userEmail" => $this->userEmail, "userHandle" => $this->userHandle, "userHash" => $this->userHash, "userIpAddress" => $this->userIpAddress->getBytes()];
 		$statement->execute($parameters);
 	}
 }
