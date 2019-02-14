@@ -20,19 +20,74 @@ class QuestionTest extends DeepDiveDatingAppTest {
 
 	/**
 	 * valid id to create the question object to own the test
-	 *@var string $VALID_QUESTIONID
+	 *@var string $VALID_QUESTION_ID
 	 **/
 protected $VALID_QUESTION_ID;
 
 	/**
 	 * Content of questions
-	 * @var string $VALID_QUESTIONCONTENT
+	 * @var string $VALID_QUESTION_CONTENT
 	 **/
 	protected $VALID_QUESTION_CONTENT = "PHPUnit test passing";
 
 	/**
 	 * Value applied to questions based on Dan's preferences
-	 * @var int $VALID_QUESTIONVALUE
+	 * @var int $VALID_QUESTION_VALUE
 	 **/
 	protected $VALID_QUESTION_VALUE;
+	/**
+	 * create all dependent objects so that the test can run properly
+	 */
+	/**
+	 * preform the actual insert method and enforce that is meets expectations i.e, corrupted data is worth nothing
+	 **/
+
+	public function testValidQuestionInsert(){
+		$numRows = $this->getConnection()->getRowCount("question");
+
+		//create the question object
+		$question = new Question(generateUuidV4(), $this->VALID_Question, $this->VALID_QUESTION_ID, $this->VALID_QUESTION_CONTENT, $this->VALID_QUESTION_VALUE);
+		//insert the question object
+		$question->insert($this->getPDO());
+
+		//grab the data from MySQL and enforce that it meets expectations
+		$pdoQuestion = Question::getQuestionByQuestionId($this->getPDO(), $question->getQuestionId());
+		$this->assertEquals($numRows +1, $this->getConnection()->getRowCount("question"));
+		$this->assertEquals($pdoQuestion->getQuestionId(), $question->getQuestionId());
+		$this->assertEquals($pdoQuestion->getQuestionContent, $question->getQuestionContent());
+		$this->assertEquals($pdoQuestion->getQuestionValue, $question->getQuestionValue);
+	}
+
+	/**
+	 * create a question object, update it in the database, and then enforce that it meets expectations
+	 **/
+	public function testValidQuestionDelete() {
+		//grab the number of questions and save it for the test
+		$numRows = $this->getConnection()->getRowCount("question");
+
+		//create the question object
+		$question = new Question(generateUuidV4(), $this->VALID_QUESTION_ID, $this->VALID_QUESTION_CONTENT, $this->VALID_QUESTION_CONTENT);
+
+		//insert the question object
+		$question->insert($this->getPDO());
+
+		//delete the question from the database
+		$this->assertSame($numRows +1, $this->getConnection()->getRowCount("question"));
+		$question->delete($this->getPDO);
+
+		//enforce that the deletion was successful
+		$pdoQuestion = Question::getQuestionByQuestionId($this->getPDO(), $question->getQuestionId());
+		$this->assertNull($pdoQuestion);
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount("quote"));
+	}
+
+	/**
+	 * try and grab a question by a primary that does not exist
+	 */
+
+	public function testInvalidGetByQuestionId(){
+		//grab the question by an invalid key
+		$question = Question::getQuestionByQuestionId($this->getPDO(), DeepDiveDatingAppTest::INVALID_KEY);
+		$this->assertEmpty($question);
+	}
 }

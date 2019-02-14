@@ -282,7 +282,7 @@ class Answer implements \JsonSerializable {
 	public static function getAnswerByAnswerQuestionId(\PDO $pdo, $answerQuestionId): ?Answer {
 		// sanitize the answerQuestionId before searching
 		try {
-			$answerUserId = self::validateUuid($answerQuestionId);
+			$answerQuestionId = self::validateUuid($answerQuestionId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
