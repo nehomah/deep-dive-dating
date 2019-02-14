@@ -383,12 +383,12 @@ class Report implements \JsonSerializable {
 	 * Gets Reports by Content
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param Uuid|string $reportContent value of report details
+	 * @param string $reportContent value of report details
 	 * @return \SplFixedArray collection of reports that were found or null if not found
 	 * @throws \PDOException if mySQL errors occur
 	 * @throws \TypeError if a variable is not of the correct data type
 	 **/
-	public static function getReportByContent(\PDO $pdo, $reportContent) : \SplFixedArray {
+	public static function getReportByContent(\PDO $pdo, string $reportContent) : \SplFixedArray {
 		//sanitize string before search
 		$reportContent = trim($reportContent);
 		$reportContent = filter_var($reportContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -425,8 +425,43 @@ class Report implements \JsonSerializable {
 
 	//todo write getReportByReportUserIdAndReportAbuserId
 	/**
+	 * Gets Reports By Report User Id And Report Abuser Id
 	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $reportUserId
+	 * @param Uuid|string $reportAbuserId
+	 * @return \SplFixedArray Spl Fixed Array of Reports found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
+	public static function getReportByReportUserIdAndReportAbuserId(\PDO $pdo, Uuid $reportUserId, Uuid $reportAbuserId) : \SplFixedArray {
+		//sanitize both uuids
+		try {
+			$reportUserId = self::validateUuid($reportUserId);
+			$reportAbuserId = self::validateUuid($reportAbuserId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		//create query
+		$query = "SELECT reportUserId, reportAbuserId, reportAgent, reportContent, reportDate, reportIp FROM report WHERE reportUserId = :reportUserId AND reportAbuserId = :reportAbuserId";
+		$statement = $pdo->prepare($query);
+		//bind variables to query template
+		$parameters = ["reportUserId" => $reportUserId, "reportAbuserId" => $reportAbuserId];
+		$statement->execute($parameters);
+		//build array of reports
+		$reports = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$report = new Report($row["reportAbuserId"], $row["reportAbuserId"], $row["reportAgent"], $row["reportContent"], $row["reportDate"], $row["reportIp"]);
+				$reports[$reports->key()] = $report;
+				$reports->next();
+			} catch( \Exception $exception) {
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($reports);
+	}
 
 	/**
 	 * formats the state variables for JSON serialization
@@ -444,12 +479,3 @@ class Report implements \JsonSerializable {
 		return($fields);
 	}
 }
-
-/**
- * reportUserId BINARY(16) NOT NULL,
- * reportAbuserId BINARY(16) NOT NULL,
- * reportAgent VARCHAR(255) NOT NULL,
- * reportContent VARCHAR(255) NOT NULL,
- * reportDate DATETIME(6) NOT NULL,
- * reportIp BINARY (16) NOT NULL,
- */
