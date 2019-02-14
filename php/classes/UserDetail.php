@@ -24,7 +24,7 @@ class UserDetail implements \JsonSerializable {
 	private $userDetailUserId;
 	/**
 	 * space for user to type in information they choose about themselves
-	 * @var string|Uuid $userDetailAboutMe
+	 * @var string $userDetailAboutMe
 	 **/
 	private $userDetailAboutMe;
 	/**

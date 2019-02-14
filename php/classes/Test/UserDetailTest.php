@@ -23,25 +23,54 @@ require_once(dirname(__DIR__, 2) . "lib/uuid.php");
 
 class UserDetailTest extends DeepDiveDatingAppTest {
 	/**
-	 * User that created the detail; this is for foreign key relations
-	 * @var userDetailId
-	 */
-	protected $userDetailId = null;
-	/**
-	 * Detail from the user detail/ user id relationship ; this is for foreign key relations
-	 * @var userDetailUserId
+	 * valid about me for user
+	 * @var string $VALID_USERDETAILABOUTME
 	 **/
-	protected $userDetailUserId = null;
+	private $VALID_USERDETAILABOUTME = "This section is about me and no one else.";
 	/**
-	 * Detail about the user
-	 * @var Style style
+	 * Valid age of user
+	 * @var int $VALID_USERDETAILAGE
 	 **/
-	protected $userDetailAboutMe = null;
-	protected $userDetailAge;
-	protected $userDetailCareer;
-	protected $userDetailDisplayEmail;
-	protected $userDetailEducation;
-	protected $userDetailGender;
-	protected $userDetailInterests;
-	protected $userDetailRace;
-	protected $userDetailReligion;
+	private $VALID_USERDETAILAGE = 25;
+	/**
+	 * Valid career info
+	 * @var string $VALID_USERDETAILCAREER
+	 **/
+	private $VALID_USERDETAILCAREER = "I have a career I love.";
+	/**
+	 * valid display email
+	 * @var string $VALID_USERDETAILDISPLAYEMAIL
+	 **/
+	private $VALID_USERDETAILDISPLAYEMAIL = "single@ready2mingle.com";
+	/**
+	 * valid education
+	 * @var string $VALID_USEREDUCATION
+	 **/
+	private $VALID_USEREDUCATION = "I've learned stuff about stuff.";
+	/**
+	 * valid gender
+	 * @var string $VALID_USERDETAILGENDER
+	 **/
+	private $VALID_USERDETAILGENDER = "Mixed";
+	/**
+	 * Valid interests
+	 * @var string $VALID_USERDETAILINTERESTS
+	 **/
+	private $VALID_USERDETAILINTERESTS = "I am interested in stuff and things.";
+	/**
+	 * Valid race
+	 * @var string $VALID_USERDETAILRACE
+	 **/
+	private $VALID_USERDETAILRACE = "Many races, mixed.";
+	/**
+	 * Valid religion
+	 * @var string $VALID_USERDETAILRELIGION
+	 **/
+	private $VALID_USERDETAILRELIGION = "I only believe in science.";
+
+/*****************
+ * Run the default setup operation for each test
+ *****************/
+
+
+}
