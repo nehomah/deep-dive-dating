@@ -31,7 +31,7 @@ class answer implements \JsonSerializable {
 	 **/
 	private $answerResult;
 	/**
-	 *Actual score for user based on answers
+	 * Score for user based on answers
 	 **/
 	private $answerScore;
 

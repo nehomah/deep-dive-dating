@@ -4,30 +4,30 @@ require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 
 /**
- * question class is where users answer questions based on Dan's interests. They will be graded on their answers to
+ * Question class is where users answer questions based on Dan's interests. They will be graded on their answers to
  * those questions.
  **/
 
 class question implements \JsonSerializable {
 	use ValidateUuid;
 
-	/**Id for questions user will be graded by, this is the primary key
+	/**Question Id user will be graded by, this is the primary key
 	 * @var string|Uuid $questionId
 	 **/
 	private $questionId;
 	/**
-	 * Space where question content appears
-	 * @var string|Uuid $questionContent
+	 * Space where Question content appears
+	 * @var string $questionContent
 	 **/
 	private $questionContent;
 	/**
-	 *Value assigned to each user by question section
+	 *Value assigned to each user by Question
+	 * @var int $questionValue
 	 **/
 	private $questionValue;
-
 	/**
 	 *
-	 * /**Constructor for question class
+	 * /**Constructor for Question class
 	 *
 	 * @param string|Uuid $newQuestionId id for question set
 	 * @param string $newQuestionContent space where question appears
@@ -38,8 +38,7 @@ class question implements \JsonSerializable {
 	 * @throws \TypeError if data types violate type hints
 	 *
 	 **/
-	// todo add type hints, make sure mutator and accessor doc blocks are correct
-	public function __construct($newQuestionId, $newQuestionContent, $newQuestionValue) {
+	public function __construct(string $newQuestionId, string $newQuestionContent, int $newQuestionValue) {
 		try {
 			$this->setQuestionId($newQuestionId);
 			$this->setQuestionContent($newQuestionContent);
@@ -52,7 +51,7 @@ class question implements \JsonSerializable {
 	}
 
 	/**
-	 * accessor method for question id
+	 * accessor method for Question id
 	 *
 	 * @return string value of question id (null if it is a new question id)
 	 **/
@@ -61,11 +60,12 @@ class question implements \JsonSerializable {
 	}
 
 	/**
-	 * mutator method for question id
+	 * mutator method for Question id
 	 *
 	 * @param Uuid|string $newQuestionId is not positive
 	 * @throws \InvalidArgumentException if the id is not a string or is insecure
 	 * @throws \RangeException if $newQuestionId is not positive
+	 * @throws \Exception for when an exception is thrown
 	 * @throws \TypeError if $newQuestionId is not a uuid or string
 	 **/
 	public function setQuestionId($newQuestionId): void {
@@ -76,14 +76,14 @@ class question implements \JsonSerializable {
 			throw(new $exceptionType ($exception->getMessage(), 0, $exception));
 		}
 
-		//convert and store question id
+		//convert and store Question id
 		$this->questionId = $uuid;
 	}
 
 	/**
-	 * accessor method for question content
+	 * accessor method for Question content
 	 *
-	 * @return  question content
+	 * @return  Question content
 	 **/
 
 	public function getQuestionContent(): string {
@@ -96,23 +96,25 @@ class question implements \JsonSerializable {
 	 * @param string $newQuestionContent new value question content
 	 * @throws \InvalidArgumentException if the question content is empty
 	 * @throws \RangeException if the question content is longer than one integer
+	 * @throws \Exception for when an exception is thrown
+	 * @throws \TypeError if data types violate type hints
 	 **/
 
 	public function setQuestionContent(string $newQuestionContent) {
 		if(empty($newQuestionContent) == true) {
 			throw(new \InvalidArgumentException("This question content is empty."));
 		}
-		//verify the question content is no longer than 128 characters
+		//verify the Question content is no longer than 128 characters
 		if(strlen($newQuestionContent) > 128) {
 			throw(new \RangeException("This question content is too long. It must be no longer than 128 characters."));
 		}
-		//Store the question
+		//Store the Question
 		$this->questionContent = $newQuestionContent;
 	}
 
-	 /** accessor method for question value
+	 /** accessor method for Question value
 	 *
-	 * @return string value for question value
+	 * @return string value for Question value
 	 **/
 
 	public function getQuestionValue(): int {
@@ -123,10 +125,11 @@ class question implements \JsonSerializable {
 	 *
 	 * @param Uuid|int $newQuestionValue is not positive
 	 * @throws \InvalidArgumentException if the id is not a string or is insecure
-	 * @throws \RangeException if $newAnswerUserId is not positive
-	 * @throws \TypeError if $newAnswerUserId is not a uuid or string
+	 * @throws \RangeException if $newQuestionValue is not positive
+	 * @throws \Exception for when an exception is thrown
+	 * @throws \TypeError if $newQuestionValue is not an int
 	 **/
-	public function setQuestionValue($newQuestionValue): void {
+	public function setQuestionValue(int $newQuestionValue): void {
 		try {
 			$uuid = self::validateUuid($newQuestionValue);
 		} catch(\InvalidArgumentException | \RangeException | \Exception |\TypeError $exception) {
@@ -134,17 +137,19 @@ class question implements \JsonSerializable {
 			throw(new $exceptionType ($exception->getMessage(), 0, $exception));
 		}
 
-		//convert and store question value
+		//convert and store Question value
 		$this->questionValue = $uuid;
 	}
 	/**
 
 	/**
-	 * insert this question content in mySQL
+	 * insert this Question content in mySQL
 	 *
 	 * @param \PDO $pdo PDO connection object
+	 * @throws \InvalidArgumentException if the content is not secure
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
+	 * @throws \Exception for when an exception is thrown
 	 **/
 
 	public function insert(\PDO $pdo): void {
@@ -158,11 +163,13 @@ class question implements \JsonSerializable {
 	}
 
 	/**
-	 * deletes this question from mySQL
+	 * deletes this Question from mySQL
 	 *
 	 * @param \PDO $pdo PDO connection object
+	 * @throws \InvalidArgumentException if the question is not secure
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
+	 * @throws \Exception for when an exception is thrown
 	 **/
 	public function delete(\PDO $pdo): void {
 
@@ -171,7 +178,7 @@ class question implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holder in the template
-		$parameters = ["questionContent" => $this->questionContent->getBytes()];
+		$parameters = ["questionContent" => $this->questionContent];
 		$statement->execute($parameters);
 	}
 
@@ -181,8 +188,10 @@ class question implements \JsonSerializable {
 	 * @param \PDO $pdo PDO connection object
 	 * @param Uuid|string $questionId question id
 	 * @return Question|null Question found or null if not found
+	 * @throws \InvalidArgumentException if question is not a string or is insecure
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
+	 * @throws \Exception for when an exception is thrown
 	 **/
 	public static function getQuestionByQuestionId(\PDO $pdo, $questionId): ?Question {
 		// sanitize the questionId before searching
@@ -196,11 +205,11 @@ class question implements \JsonSerializable {
 		$query = "SELECT questionId, questionContent, questionValue FROM question WHERE questionId = :questionId";
 		$statement = $pdo->prepare($query);
 
-		// bind the question id to the place holder in the template
+		// bind the Question id to the place holder in the template
 		$parameters = ["questionId" => $questionId->getBytes()];
 		$statement->execute($parameters);
 
-		// grab the question from mySQL
+		// grab the Question from mySQL
 		try {
 			$question = null;
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
@@ -221,8 +230,10 @@ class question implements \JsonSerializable {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @return \SplFixedArray SplFixedArray of Question found or null if not found
+	 * @throws \InvalidArgumentException if PDO is insecure
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
+	 * @throws \Exception for when an exception is thrown
 	 **/
 	public static function getAllQuestions(\PDO $pdo): \SPLFixedArray {
 		// create query template
@@ -230,20 +241,20 @@ class question implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 		$statement->execute();
 
-		// build an array of authors
-		$question = new \SplFixedArray($statement->rowCount());
+		// build an array of Questions
+		$questions = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
 				$question = new Question($row["questionId"], $row["questionContent"], $row["questionValue"]);
-				$question[$question->key()] = $question;
-				$question->next();
+				$questions[$questions->key()] = $question;
+				$questions->next();
 			} catch(\Exception $exception) {
 				// if the row couldn't be converted, rethrow it
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return ($question);
+		return ($questions);
 	}
 
 	/**
