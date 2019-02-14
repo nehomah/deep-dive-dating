@@ -239,7 +239,7 @@ class Match implements \JsonSerializable {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		//create query template
-		$query = "SELECT matchToUserId, matchApproved FROM `match` WHERE macthUserId = :matchUserId";
+		$query = "SELECT matchUserId, matchToUserId, matchApproved FROM `match` WHERE macthUserId = :matchUserId";
 		$statement = $pdo->prepare($query);
 		//bind elements to template
 		$parameters = ["matchUserId" => $matchUserId->getBytes()];
@@ -260,19 +260,28 @@ class Match implements \JsonSerializable {
 	}
 
 	/**
-	 * Gets All Matches
+	 * Gets Matches By Match To User Id
 	 *
 	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $matchToUserId user Id for person who was matched to
 	 * @return \SplFixedArray collection of reports found or null if none
 	 * @throws \PDOException if mySQL errors occur
 	 * @throws \TypeError if a variable is not of the correct data type
 	 **/
 	//todo recompose getAllMatches to getMatchesByMatchToUserId
-	public static function getMatchByMatchToUserId(\PDO $pdo): \SplFixedArray {
+	public static function getMatchByMatchToUserId(\PDO $pdo, $matchToUserId): \SplFixedArray {
+		//sanitize Uuid
+		try {
+			$matchToUserId = self::validateUuid($matchToUserId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
 		//query template
 		$query = "SELECT matchUserId, matchToUserId, matchApproved FROM `match` WHERE matchToUserId = :matchToUserId";
 		$statement = $pdo->prepare($query);
-		$statement->execute();
+		//bind parameters to the template
+		$parameters = ["matchToUserId" => $matchToUserId->getBytes()];
+		$statement->execute($parameters);
 		//build an array of Matches
 		$matches = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);

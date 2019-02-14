@@ -29,7 +29,7 @@ class MatchTest extends DeepDiveDatingAppTest {
 	protected $VALID_MATCH_APPROVED1 = 0;
 
 	/**
-	 * preform the actual insert method and enforce that is meets expectations I.E corrupted data is worth nothing
+	 * create a match object, insert it in the database, and enforce that is meets expectations
 	 */
 	public function testValidMatchInsert() {
 		//get number of rows and save it for the test
@@ -94,12 +94,49 @@ class MatchTest extends DeepDiveDatingAppTest {
 	/**
 	 * try and get match by a User Id that does not exist
 	 **/
-
 	public function testInvalidGetByMatchUserId() {
 		//get match by invalid key
 		$match = Match::getMatchByMatchUserId($this->getPDO(), DeepDiveDatingAppTest::INVALID_KEY);
 		$this->assertEmpty($match);
 	}
 
+	/**
+	 * insert Match object, grab it by Valid To User Id
+	 **/
+	public function testValidGetByMatchToUserId() {
+		//get number of rows and save it for the test
+		$numRows = $this->getConnection()->getRowCount("match");
 
+		// create the match object
+		$match = new Match(generateUuidV4(), generateUuidV4(), $this->VALID_MATCH_APPROVED);
+		//insert match object
+		$match->insert($this->getPDO());
+
+		//grab data from mySQL and enforce that it meets expectations
+		$pdoMatch = Match::getMatchByMatchToUserId($this->getPDO(), $match->getMatchToUserId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("match"));
+		$this->assertEquals($pdoMatch->getMatchUserId(), $match->getMatchUserId());
+		$this->assertEquals($pdoMatch->getMatchToUserId(), $match->getMatchToUserId());
+		$this->assertEquals($pdoMatch->getMatchApproved(), $match->getMatchApproved());
+	}
+
+   /**
+	 * insert Match object, grab it By MatchUserId And MatchToUserId
+	 **/
+	public function testValidGetMatchByMatchUserIdAndMatchToUserId() {
+		//get number of rows and save it for the test
+		$numRows = $this->getConnection()->getRowCount("match");
+
+		// create the match object
+		$match = new Match(generateUuidV4(), generateUuidV4(), $this->VALID_MATCH_APPROVED);
+		//insert match object
+		$match->insert($this->getPDO());
+
+		//grab data from mySQL and enforce that it meets expectations
+		$pdoMatch = Match::getMatchByMatchUserIdAndMatchToUserId($this->getPDO(), $match->getMatchUserId(), $match->getMatchToUserId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("match"));
+		$this->assertEquals($pdoMatch->getMatchUserId(), $match->getMatchUserId());
+		$this->assertEquals($pdoMatch->getMatchToUserId(), $match->getMatchToUserId());
+		$this->assertEquals($pdoMatch->getMatchApproved(), $match->getMatchApproved());
+	}
 }
