@@ -436,8 +436,16 @@ class user implements \JsonSerializable {
 		}
 		return($user);
 	}
-	//todo getUserByActivationToken
 	/**
+	 * gets the user by activation token
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param string $userActivationToken user activation token to search for
+	 * @return User|null user found or null if not found
+	 * @throws \TypeError when a variable is not the correct data type
+	 */
+	/**
+
 	 * gets the user by handle
 	 *
 	 * @param \PDO $pdo PDO connection object
@@ -518,8 +526,9 @@ class user implements \JsonSerializable {
 			throw(new \PDOException($exception->getMessage(), $exception));
 		}
 		return ($user);
-}
+	}
 /**
  *
  */
 //getUserByActivation getUserByEmail getUserByAtHandle(include innerjoin for userDetail)
+}
