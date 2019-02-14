@@ -235,12 +235,25 @@ class Report implements \JsonSerializable {
 	 * @return string Ip address of the person making the report
 	 **/
 	public function getReportIp() : string {
-		return($this->reportIp);
+		return(@inet_ntop($this->reportIp));
 	}
 
 	/**
-	 * Mutator Method for Report Ip *************************************************
+	 * Mutator Method for Report Ip
+	 *
+	 * @param string $newReportIp new value of user's IP address
+	 * @throws \InvalidArgumentException if $newReportIp is not a valid IP address
 	 **/
+	public function setReportIp(string $newReportIp) {
+		// detect the IP's format and assign it in binary mode
+		if(@inet_pton($newReportIp) !== false) {
+			$this->reportIp = inet_pton($newReportIp);
+		} else if(@inet_ntop($newReportIp) !== false) {
+			$this->reportIp = $newReportIp;
+		} else {
+			throw(new \InvalidArgumentException("Invalid Report IP Address"));
+		}
+	}
 
 	/**
 	 * Inserts report into mySQL
