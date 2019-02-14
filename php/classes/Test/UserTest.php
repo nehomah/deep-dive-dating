@@ -79,7 +79,7 @@ class UserTest extends UserTestSetup {
 			 * preform the actual insert method and enforce that it meets expectations I.E corrupted data is worth nothing
 			 */
 
-			public function testValidQuoteInsert() {
+			public function testValidUserInsert() {
 				$numRows = $this->getConnection()->getRowCount("user");
 
 				//create the user object
@@ -131,7 +131,7 @@ class UserTest extends UserTestSetup {
 			}
 
 			/**
-			 * create a quote object, delete it, then enforce that it was deleted
+			 * create a user object, delete it, then enforce that it was deleted
 			 */
 			public function testValidUserDelete() {
 				//grab the numbers of rows and save it for the test
@@ -141,10 +141,10 @@ class UserTest extends UserTestSetup {
 				$user = new User(generateUuidV4(), $this->VALID_USERID, $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
 
 				//insert the user object
-				$user->insert->($this->getPDO());
+				$user->insert($this->getPDO());
 
-				//delete the quote from the database
-				$this->assertSame($numRows + 1, $this->getConnection()->("user"));
+				//delete the user from the database
+				$this->assertSame($numRows + 1, $this->getConnection()->getRowCount("user"));
 				$user->delete($this->getPDO());
 
 				//enforce that the deletion was successful
@@ -163,11 +163,111 @@ class UserTest extends UserTestSetup {
 			}
 
 			/**
-			 * insert a quote object, grab it by the user handle and enforce that it meets expectations
+			 * insert a user object, grab it by the user handle and enforce that it meets expectations
 			 */
 			public function testValidGetUserByHandle() {
 
 				$numRows = $this->getConnection()->getRowCount("user");
+				//create a user object and insert it into the database
+				$user = new User(generateUuidV4(), $this->VALID_USERID, $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
+
+				//insert the user into the database
+				$user->insert($this->getPDO());
+
+				//grab the user from the database
+				$results = User::getUserByHandle($this->getPDO(), $user->getUserHandle());
+				$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
+
+				$pdoUser = $results[1];
+
+				$this->assertEquals($pdoUser->getUserId(), $user->getUserId());
+				$this->assertEquals($pdoUser->getUser(), $user->getUser());
+				$this->assertEquals($pdoUser->getUserActivationToken(), $user->getUserActivationToken());
+				$this->assertEquals($pdoUser->getUserAgent(), $user->getUserAgent());
+				$this->assertEquals($pdoUser->getUserAvatarUrl(), $user->getUserAvatarUrl());
+				$this->assertEquals($pdoUser->getUserBlocked(), $user->getUserBlocked());
+				$this->assertEquals($pdoUser->getUserEmail(), $user->getUserEmail());
+				$this->assertEquals($pdoUser->getUserHandle(), $user->getUserHandle());
+				$this->assertEquals($pdoUser->getUserHash(), $user->getUserHash());
+				$this->assertEquals($pdoUser->getUserIpAddress(), $user->getUserIpAddress());
 			}
 
+			/**
+			 * try and grab the user by a handle that does not exist
+			 */
+			public function testInvalidGetByHandle() {
+				$user = User::getUserByHandle($this->getPDO(), "notLonelyPerson");
+				$this->assertEmpty($user);
+			}
+
+			/**
+			 * insert a user object, grab it by the email address, and enforce it meets expectations
+			 */
+			public function testValidGetUserByEmail() {
+
+				$numRows = $this->getConnection()->getRowCount("user");
+
+				//create a user object and insert it into the database
+				$user = User(generateUuidV4(), $this->VALID_USERID, $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
+
+				//insert the user into the database
+				$user->insert($this->getPDO());
+
+				//grab the user from the database
+				$results = User::getUserByEmail($this->getPDO(), $user->getUserEmail());
+				$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
+
+				$pdoUser = $results[1];
+
+				$this->assertEquals($pdoUser->getUserId(), $user->getUserId());
+				$this->assertEquals($pdoUser->getUser(), $user->getUser());
+				$this->assertEquals($pdoUser->getUserActivationToken(), $user->getUserActivationToken());
+				$this->assertEquals($pdoUser->getUserAgent(), $user->getUserAgent());
+				$this->assertEquals($pdoUser->getUserAvatarUrl(), $user->getUserAvatarUrl());
+				$this->assertEquals($pdoUser->getUserBlocked(), $user->getUserBlocked());
+				$this->assertEquals($pdoUser->getUserEmail(), $user->getUserEmail());
+				$this->assertEquals($pdoUser->getUserHandle(), $user->getUserHandle());
+				$this->assertEquals($pdoUser->getUserHash(), $user->getUserHash());
+				$this->assertEquals($pdoUser->getUserIpAddress(), $user->getUserIpAddress());
+			}
+
+			/**
+			 * try to grab a user by an email that does not exist
+			 */
+			public function testInvalidGetByEmail() {
+				$user = User::getUserByEmail($this->getPDO(), "liarlairpantsonfire@email.com");
+				$this->assertEmpty($user);
+			}
+
+			/**
+			 * insert a user, use getAll method, then enforce it meets expectations
+			 */
+			public function testGetAllUsers() {
+				$numRows = $this->getConnection()->getRowCount("user");
+
+				//insert the user into the database
+				$user = new User(generateUuidV4(), $this->VALID_USERID, $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
+
+				//insert the user into the database
+				$user->insert($this->getPDO());
+
+				//grab the results from mySQL and enforce they meet expectations
+				$results = User::getAllUsers($this->getPDO());
+				$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
+				$this->assertCount(1, $results);
+				//$this->assertContainsOnlyInstancesOf()
+
+				//grab the results from the array and make sure it meets expectations
+				$pdoUser = $results[0];
+				//$this->assertEquals($pdoUser->getUserId(), $user->getUserId());
+				$this->assertEquals($pdoUser->getUser(), $user->getUser());
+				$this->assertEquals($pdoUser->getUserActivationToken(), $user->getUserActivationToken());
+				$this->assertEquals($pdoUser->getUserAgent(), $user->getUserAgent());
+				$this->assertEquals($pdoUser->getUserAvatarUrl(), $user->getUserAvatarUrl());
+				$this->assertEquals($pdoUser->getUserBlocked(), $user->getUserBlocked());
+				$this->assertEquals($pdoUser->getUserEmail(), $user->getUserEmail());
+				$this->assertEquals($pdoUser->getUserHandle(), $user->getUserHandle());
+				$this->assertEquals($pdoUser->getUserHash(), $user->getUserHash());
+				$this->assertEquals($pdoUser->getUserIpAddress(), $user->getUserIpAddress());
+			}
 }
