@@ -176,11 +176,11 @@ class question implements \JsonSerializable {
 	public function delete(\PDO $pdo): void {
 
 		// create query template
-		$query = "DELETE FROM question WHERE questionContent = :questionContent";
+		$query = "DELETE FROM question WHERE questionId = :questionId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holder in the template
-		$parameters = ["questionContent" => $this->questionContent];
+		$parameters = ["questionId" => $this->questionId->getBytes()];
 		$statement->execute($parameters);
 	}
 

@@ -96,7 +96,7 @@ class Answer implements \JsonSerializable {
 	/**
 	 * accessor method for answer question id
 	 *
-	 * @return string value for answer question id
+	 * @return uuid for answer question id
 	 **/
 
 	public function getAnswerQuestionId(): Uuid {
@@ -113,16 +113,15 @@ class Answer implements \JsonSerializable {
 	 * @throws \TypeError if data types violate type hints
 	 **/
 
-	public function setAnswerQuestionId(Uuid $newAnswerQuestionId) {
-		if(empty($newAnswerQuestionId) == true) {
-			throw(new \InvalidArgumentException("This answer question id is empty."));
-		}
-		//verify the answer question id is no longer than 16 characters
-		if(strlen($newAnswerQuestionId) > 16) {
-			throw(new \RangeException("This answer question id is too long. It must be no longer than 16 characters."));
+	public function setAnswerQuestionId($newAnswerQuestionId) {
+		// sanitize the answerQuestionId before searching
+		try {
+			$uuid = self::validateUuid($newAnswerQuestionId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		//Store the answer question id
-		$this->answerQuestionId = $newAnswerQuestionId;
+		$this->answerQuestionId = $uuid;
 	}
 
 	/**
