@@ -90,4 +90,29 @@ protected $VALID_QUESTION_ID;
 		$question = Question::getQuestionByQuestionId($this->getPDO(), DeepDiveDatingAppTest::INVALID_KEY);
 		$this->assertEmpty($question);
 	}
+
+	/**
+	 * insert a question object, grab it by the content, and enforce that it meets expectations
+	 */
+	public function testValidGetQuestionByContent() {
+		$numRows = $this->getConnection()->getRowCount("question");
+
+		//create a question object and insert it into the database
+		$question = new Question(generateUuidV4(), $this->VALID_QUESTION_ID, $this->VALID_QUESTION_CONTENT, $this->VALID_QUESTION_VALUE);
+
+		//insert the question into the database
+		$question->insert($this->getPDO());
+
+		//grab the question from the database
+		$results = Question::getQuestionByContent($this->getPDO(), $question->getQuestionContent());
+		$this->assertEquals($numRows +1, $this->getConnection()->getRowCount("question"));
+
+		$pdoQuestion = $results[1];
+
+		$this->assertEquals($pdoQuestion->getQuestionId());
+		$this->assertEquals($pdoQuestion->getQuestion(), $question->getQuestion());
+		$this->assertEquals($pdoQuestion->getQuestionContent());
+		$this->assertEquals($pdoQuestion->getQuestionValue());
+
+	}
 }
