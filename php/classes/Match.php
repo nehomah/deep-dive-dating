@@ -268,9 +268,9 @@ class Match implements \JsonSerializable {
 	 * @throws \TypeError if a variable is not of the correct data type
 	 **/
 	//todo recompose getAllMatches to getMatchesByMatchToUserId
-	public static function getAllMatches(\PDO $pdo): \SplFixedArray {
+	public static function getMatchByMatchToUserId(\PDO $pdo): \SplFixedArray {
 		//query template
-		$query = "SELECT matchUserId, matchToUserId, matchApproved FROM `match`";
+		$query = "SELECT matchUserId, matchToUserId, matchApproved FROM `match` WHERE matchToUserId = :matchToUserId";
 		$statement = $pdo->prepare($query);
 		$statement->execute();
 		//build an array of Matches
