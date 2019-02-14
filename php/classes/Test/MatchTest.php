@@ -101,7 +101,16 @@ class MatchTest extends DeepDiveDatingAppTest {
 	}
 
 	/**
-	 * insert Match object, grab it by Valid To User Id
+	 * try and get match by a To User Id that does not exist
+	 **/
+	public function testInvalidGetByMatchToUserId() {
+		//get match by invalid key
+		$match = Match::getMatchByMatchToUserId($this->getPDO(), DeepDiveDatingAppTest::INVALID_KEY);
+		$this->assertEmpty($match);
+	}
+
+	/**
+	 * insert Match object, grab it by Valid Match ToUserId
 	 **/
 	public function testValidGetByMatchToUserId() {
 		//get number of rows and save it for the test
@@ -121,7 +130,7 @@ class MatchTest extends DeepDiveDatingAppTest {
 	}
 
    /**
-	 * insert Match object, grab it By MatchUserId And MatchToUserId
+	 * insert Match object, grab it By Match UserId And Match ToUserId
 	 **/
 	public function testValidGetMatchByMatchUserIdAndMatchToUserId() {
 		//get number of rows and save it for the test
