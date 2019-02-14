@@ -88,7 +88,7 @@ class UserDetail implements \JsonSerializable {
 	 *
 	 ************************************************************/
 //todo add type hints
-	public function __construct($newUserDetailId, $newUserDetailUserId, $newUserDetailAboutMe, $newUserDetailAge, $newUserDetailCareer, $newUserDetailDisplayEmail, $newUserDetailEducation, $newUserDetailGender, $newUserDetailInterests, $newUserDetailRace, $newUserDetailReligion) {
+	public function __construct(string $newUserDetailId, string $newUserDetailUserId, string $newUserDetailAboutMe, int $newUserDetailAge, string $newUserDetailCareer, string $newUserDetailDisplayEmail, string $newUserDetailEducation, string $newUserDetailGender, string $newUserDetailInterests, string $newUserDetailRace, string $newUserDetailReligion) {
 		try {
 			$this->setUserDetailId($newUserDetailId);
 			$this->setUserDetailUserId($newUserDetailUserId);
@@ -108,7 +108,10 @@ class UserDetail implements \JsonSerializable {
 		}
 	}
 
-	/******Accessor method for user detail id`***************/
+	/******Accessor method for user detail id`***************
+	 *
+	 * @return Uuid $userDetailId value of user detail id (or null if new user)
+	 **/
 
 	public function getUserDetailId(): Uuid {
 		return ($this->userDetailId);
@@ -116,8 +119,9 @@ class UserDetail implements \JsonSerializable {
 
 	/**********Mutator method for user detail id***************
 	 * @param Uuid| string $newUserDetailId value of new user detail id
+	 * @throws \InvalidArgumentException if $newUserDetailId is not valid
 	 * @throws \RangeException if $newUserDetailId is not positive
-	 * @throws \TypeError if the user detail id is not correct type
+	 * @throws \TypeError if the $newUserDetailId is not correct type
 	 **/
 //todo make sure all at throws are in doc blocks
 	public function setUserDetailId($newUserDetailId): void {
@@ -131,7 +135,10 @@ class UserDetail implements \JsonSerializable {
 		$this->userDetailId = $uuid;
 	}
 
-	/******Accessor method for user detail user id***************/
+	/******Accessor method for user detail user id***************
+	 *
+	 * @return Uuid $userDetailUserId value of user detail user id
+	 **/
 
 	public function getUserDetailUserId(): Uuid {
 		return ($this->userDetailUserId);
@@ -140,7 +147,8 @@ class UserDetail implements \JsonSerializable {
 	/*********Mutator method for user detail user id************
 	 * @param Uuid| string $newUserDetailUserId value of new user detail user id
 	 * @throws \RangeException if $newUserDetailUserId is not within range
-	 * @throws \TypeError if the user detail user id is not correct type
+	 * @throws \TypeError if the $newUserDetailUserId is not correct type
+	 * @throws \InvalidArgumentException if $newUserDetailUserId is not secure
 	 **/
 	public function setUserDetailUserId($newUserDetailUserId): void {
 		try {
@@ -153,7 +161,10 @@ class UserDetail implements \JsonSerializable {
 		$this->userDetailUserId = $uuid;
 	}
 
-	/************Accessor method for user detail about me **************/
+	/************Accessor method for user detail about me **************
+	 *
+	 * @return string $userDetailUserId value of user detail about me
+	 **/
 
 	public function getUserDetailAboutMe(): string {
 		return ($this->userDetailAboutMe);
@@ -161,9 +172,10 @@ class UserDetail implements \JsonSerializable {
 
 	/***********Mutator method for user detail about me ****************
 	 *
-	 ** @param string $newUserDetailAboutMe value of new user detail about me
+	 **@param string $newUserDetailAboutMe value of new user detail about me
 	 * @throws \InvalidArgumentException when about me is not a string or insecure
 	 * @throws \RangeException if $newUserDetailAboutMe is > 144 characters
+	 * @throws \TypeError if $newUserDetailAboutMe is not a string
 	 **/
 	public function setUserDetailAboutMe(?string $newUserDetailAboutMe): void {
 		if($newUserDetailAboutMe === null) {
@@ -171,14 +183,19 @@ class UserDetail implements \JsonSerializable {
 		}
 		$newUserDetailAboutMe = trim($newUserDetailAboutMe);
 		$newUserDetailAboutMe = filter_var($newUserDetailAboutMe, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-
+		if(empty($newUserDetailAboutMe) === true) {
+			throw(new \InvalidArgumentException("About me is empty or insecure"));
+		}
+		//verify the education will fit in the database
 		if(strlen($newUserDetailAboutMe) > 1024) {
-			throw(new \InvalidArgumentException("About Me is too large"));
+			throw(new \InvalidRangeException("About Me is too large"));
 		}
 		//convert and store the about me section
 		$this->userDetailAboutMe = $newUserDetailAboutMe;
 	}
-	/************Accessor method for user detail age*******************/
+	/************Accessor method for user detail age*****************
+	 * @return int $userDetailAge value for users age
+	 **/
 //todo make sure all accessors are doc blocked
 	public function getUserDetailAge(): int {
 		return $this->userDetailAge;
@@ -212,7 +229,9 @@ class UserDetail implements \JsonSerializable {
 		$this->userDetailAge = $newUserDetailAge;
 	}
 
-	/***********Accessor method for user detail career**********/
+	/***********Accessor method for user detail career**********
+	 * @return string userDetailCareer
+	***/
 
 	public function getUserDetailCareer(): string {
 		return $this->userDetailCareer;
@@ -223,7 +242,9 @@ class UserDetail implements \JsonSerializable {
 	 *
 	 * @param string $newUserDetailCareer can be various characters
 	 * @throws \RangeException when input is out of range
-	 **/
+	 * @throws \InvalidArgumentException when input is unsecure
+	 * @throws \TypeError when input is wrong type
+	 */
 
 	public function setUserDetailCareer(string $newUserDetailCareer): void {
 		if($newUserDetailCareer === null) {
@@ -233,13 +254,19 @@ class UserDetail implements \JsonSerializable {
 		$newUserDetailCareer = filter_var($newUserDetailCareer, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 		if(strlen($newUserDetailCareer) > 1024) {
-			throw(new \InvalidArgumentException("Career is too large"));
+			throw(new \RangeException("Career is too large"));
 		}
+		if(empty($newUserDetailCareer) === true) {
+			throw(new \InvalidArgumentException("Career is empty or insecure"));
+		}
+
 		//convert and store the career section
 		$this->userDetailAboutMe = $newUserDetailCareer;
 	}
 
-	/*************Accessor method for user detail display email**************/
+	/*************Accessor method for user detail display email**************
+	* @return string $userDetailDisplayEmail value for user
+	**/
 
 	public function getUserDetailDisplayEmail() {
 		return $this->userDetailDisplayEmail;
@@ -258,13 +285,19 @@ class UserDetail implements \JsonSerializable {
 		$newUserDetailDisplayEmail = trim($newUserDetailDisplayEmail);
 		$newUserDetailDisplayEmail = filter_var($newUserDetailDisplayEmail, FILTER_VALIDATE_EMAIL);
 		if(empty($newUserDetailDisplayEmail) === true) {
-			throw(new \RangeException("Display email is too large"));
+			throw(new \InvalidArgumentException("Display email is empty or insecure"));
+		}
+		//verify the email will fit in the database
+		if(strlen(@$newUserDetailDisplayEmail) > 128) {
+			throw(new \RangeException("Email is too large"));
 		}
 		//store the email
 		$this->userDetailDisplayEmail = $newUserDetailDisplayEmail;
 	}
 
-	/************Accessor method for user detail education****************/
+	/************Accessor method for user detail education****************
+	* @return string $getUserDetailEducaton value for users education
+	**/
 
 	public function getUserDetailEducation() {
 		return $this->userDetailEducation;
@@ -298,7 +331,9 @@ class UserDetail implements \JsonSerializable {
 		$this->userDetailEducation = $newUserDetailEducation;
 	}
 
-	/**************Accessor for user detail gender *********************/
+	/**************Accessor for user detail gender *********************
+	*@return string $userDetailGender value for users gender
+	**/
 
 	public function getUserDetailGender() {
 		return $this->userDetailGender;
@@ -307,7 +342,7 @@ class UserDetail implements \JsonSerializable {
 	/*************************Mutator for user detail gender**********
 	 *
 	 * @param string $newUserDetailGender for gender of user
-	 * @throws \InvalidArgumentException if $newUserDetailGender is not a string or insecure
+	 * @throws \InvalidArgumentException if $newUserDetailGender is not valid or insecure
 	 * @throws \RangeException if $newUserDetailGender is > 32 characters
 	 * @throws \TypeError if $newUserDetailGender is not a string
 	 **/
@@ -331,7 +366,9 @@ class UserDetail implements \JsonSerializable {
 		$this->userDetailGender = $newUserDetailGender;
 	}
 
-	/******************Accessor for User Detail Interests********************/
+	/******************Accessor for User Detail Interests********************
+	* @return string $userDetailInterests value for users interests
+	**/
 
 	public function getUserDetailInterests() {
 		return $this->userDetailInterests;
@@ -365,7 +402,9 @@ class UserDetail implements \JsonSerializable {
 		$this->userDetailInterests = $newUserDetailInterests;
 	}
 
-	/******************Accessor for User Detail Race********************/
+	/******************Accessor for User Detail Race********************
+	* @return string $userDetailRace value for users race
+	**/
 
 	public function getUserDetailRace() {
 		return $this->userDetailRace;
@@ -374,7 +413,7 @@ class UserDetail implements \JsonSerializable {
 	/***************Mutator for User Detail Race*************************
 	 *
 	 * @param string $newUserDetailRace for interests of user
-	 * @throws \InvalidArgumentException if $newUserDetailRace is not a string or insecure
+	 * @throws \InvalidArgumentException if $newUserDetailRace is invalid or insecure
 	 * @throws \RangeException if $newUserDetailRace is > 32 characters
 	 * @throws \TypeError if $newUserDetailRace is not a string
 	 **/
@@ -399,7 +438,9 @@ class UserDetail implements \JsonSerializable {
 		$this->userDetailRace = $newUserDetailRace;
 	}
 
-	/******************Accessor for User Detail Religion********************/
+	/******************Accessor for User Detail Religion********************
+	* @return string $userDetailReligion value for users religion
+	**/
 
 	public function getUserDetailReligion() {
 		return $this->userDetailReligion;
