@@ -17,13 +17,13 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
 class MatchTest extends DeepDiveDatingAppTest {
 	/**
-	 * protected constant for the actual match approved value being used to test Match Class
+	 * protect constant for the actual match approved value being used to test Match Class
 	 * @var int $VALID_MATCH_APPROVED
 	 **/
 	protected $VALID_MATCH_APPROVED = 1;
 
 	/**
-	 * protected constant for the actual match approved value being used to test Match Class
+	 * protect constant for the actual match approved value being used to test Match Class
 	 * @var int $VALID_MATCH_APPROVED1
 	 **/
 	protected $VALID_MATCH_APPROVED1 = 0;
