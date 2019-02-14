@@ -547,7 +547,7 @@ class UserDetail implements \JsonSerializable {
 		// bind the user detail id to the place holder in the template
 		$parameters = ["userDetailId" => $userDetailId->getBytes()];
 		$statement->execute($parameters);
-		// grab the profile from mySQL
+		// grab the userDetail from mySQL
 		try {
 			$userDetail = null;
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
@@ -562,6 +562,43 @@ class UserDetail implements \JsonSerializable {
 		return ($userDetail);
 	}
 	//todo add getUserDetailByUserId
+	/**
+	 * gets the userDetail by by UserId
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $userDetailUserId user id to search for
+	 * @return UserDetail|null User detail if found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variable are not the correct data type
+	 **/
+	public static function getUserDetailByUserDetailUserId(\PDO $pdo, $userDetailUserId): ?UserDetail {
+		// sanitize the userDetailUserId before searching
+		try {
+			$userDetailUserId = self::validateUuid($userDetailUserId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		// create query template
+		$query = "SELECT userDetailId, userDetailUserId, userDetailAboutMe, userDetailAge, userDetailCareer, userDetailDisplayEmail, userDetailEducation, userDetailGender, userDetailInterests, userDetailRace, userDetailReligion 
+					FROM userDetail 
+					WHERE userDetailUserId = :userDetailUserId";
+		$statement = $pdo->prepare($query);
+		// bind the user detail id to the place holder in the template
+		$parameters = ["userDetailUserId" => $userDetailUserId->getBytes()];
+		$statement->execute($parameters);
+		// grab the userDetail from mySQL
+		try {
+			$userDetail = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$userDetail = new UserDetail($row["userDetailId"], $row["userDetailUserId"], $row["userDetailAboutMe"], $row["userDetailAge"], $row["userDetailCareer"], $row["userDetailDisplayEmail"], $row["userDetailEducation"], $row["userDetailGender"], $row['userDetailInterests'], $row["userDetailRace"], $row["userDetailReligion"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return ($userDetail);
+	}
 
 	/**
 	 * formats the state variables for JSON serialization
