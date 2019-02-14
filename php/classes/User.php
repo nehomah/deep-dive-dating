@@ -442,10 +442,39 @@ class user implements \JsonSerializable {
 	 * @param \PDO $pdo PDO connection object
 	 * @param string $userActivationToken user activation token to search for
 	 * @return User|null user found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable is not the correct data type
 	 */
-	/**
+	public static function getUserByUserActivationToken(\PDO $pdo, string $userActivationToken): ?User {
+		//verify activation token is in the correct format and a string representation of hexidecimal
+		$userActivationToken = trim($userActivationToken);
+		if(ctype_xdigit($userActivationToken) === false) {
+				throw(new \InvalidArgumentException("activation token is empty or incorrect format"));
+		}
 
+		//create query template
+		$query = "SELECT userId, userActivationToken, userAgent, userAvatarUrl, userBlocked, userEmail, userHandle, userHash, userIpAddress FROM user WHERE userActivationToken = :userActivationToken";
+		$statement = $pdo->prepare($query);
+
+		//bind activation token to placeholder in template
+		$parameters = ["userActivationToken" => $userActivationToken];
+		$statement->execute($parameters);
+
+		//grab user from the database
+		try {
+				$user = null;
+				$statement->setFetchMode(\PDO::FETCH_ASSOC);
+				$row = $statement->fetch();
+				if($row !== false) {
+						$user = new User($row["userId"], $row["userActivationToken"], $row["userAgent"], $row["userAvatarUrl"], $row["userBlocked"], $row["userEmail"], $row["userHandle"], $row["userHash"], $row["userIpAddress"]);
+				}
+		} catch(\Exception $exception) {
+			//if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return ($user);
+	}
+	/**
 	 * gets the user by handle
 	 *
 	 * @param \PDO $pdo PDO connection object
@@ -519,7 +548,7 @@ class user implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-					$user = new User($row["userId"], $row["userActivationToken"], $row["userAgent"], $row["userAvatarUrl"], $row["userBlocked"], $row["userEmail"], $row["userHandle"], $row["userHash"])
+					$user = new User($row["userId"], $row["userActivationToken"], $row["userAgent"], $row["userAvatarUrl"], $row["userBlocked"], $row["userEmail"], $row["userHandle"], $row["userHash"]);
 			}
 		} catch(\Exception $exception) {
 			//if the row couldn't be converted, rethrow it.
@@ -527,8 +556,5 @@ class user implements \JsonSerializable {
 		}
 		return ($user);
 	}
-/**
- *
- */
 //getUserByActivation getUserByEmail getUserByAtHandle(include innerjoin for userDetail)
 }
