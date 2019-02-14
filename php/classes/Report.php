@@ -1,5 +1,5 @@
 <?php
-namespace DeepDiveDatingApp\DeepDiveDating;
+namespace DeepDiveDatingApp\DeepDiveDating\Report;
 require_once("autoload.php");
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
@@ -435,7 +435,7 @@ class Report implements \JsonSerializable {
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public static function getReportByReportUserIdAndReportAbuserId(\PDO $pdo, Uuid $reportUserId, Uuid $reportAbuserId) : \SplFixedArray {
-		//sanitize both uuids
+		//sanitize both Uuids
 		try {
 			$reportUserId = self::validateUuid($reportUserId);
 			$reportAbuserId = self::validateUuid($reportAbuserId);
