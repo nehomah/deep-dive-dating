@@ -202,8 +202,24 @@ class Match implements \JsonSerializable {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		//create query template
-		$query = "SELECT matchUserId, matchToUserId, matchApproved WHERE matchUserId = :matchUserId";
-
+		$query = "SELECT matchUserId, matchToUserId, matchApproved FROM `match` WHERE matchUserId = :matchUserId AND matchToUserId = :matchToUserId";
+		$statement = $pdo->prepare($query);
+		//bind variables to the template
+		$parameters = ["matchUserId" => $matchUserId->getBytes(), "matchToUserId" => $matchToUserId->getBytes()];
+		$statement->execute($parameters);
+		//build array
+		$matches = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false ) {
+			try {
+				$match = new Match($row["matchUserId"], $row["matchToUserId"], $row["matchApproved"]);
+				$matches[$matches->key()] = $match;
+				$matches->next();
+			} catch(\Exception $exception) {
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($matches);
 	}
 
 	/**
