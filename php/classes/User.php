@@ -209,16 +209,9 @@ class user implements \JsonSerializable {
 		$this->userAvatarUrl = $newUserAvatarUrl;
 	}
 	/**
+	 * accessor method for user blocked
 	 *
-	 *
-	 *
-	 *
-	 *
-	 * userBlocked
-	 *
-	 *
-	 *
-	 *
+	 * @return
 	 */
 	/**
 	 * accessor method for user email
@@ -555,6 +548,16 @@ class user implements \JsonSerializable {
 			throw(new \PDOException($exception->getMessage(), $exception));
 		}
 		return ($user);
+	}
+	/**
+	 * formats the state variables for the JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 */
+	public function jsonSerialize() {
+		$fields = get_object_vars($this);
+		$fields["userId"] = $this->userId->toString();
+		return ($fields);
 	}
 //getUserByActivation getUserByEmail getUserByAtHandle(include innerjoin for userDetail)
 }

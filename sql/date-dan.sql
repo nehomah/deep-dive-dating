@@ -12,7 +12,7 @@ CREATE TABLE user (
 	userActivationToken CHAR(32),
 	userAgent VARCHAR(255),
 	userAvatarUrl VARCHAR(255),
-	userBlocked TINYINT,
+	userBlocked TINYINT() NOT NULL,
 	userEmail VARCHAR(128) NOT NULL,
 	userHandle VARCHAR(32) NOT NULL,
 	userHash CHAR(97) NOT NULL,
