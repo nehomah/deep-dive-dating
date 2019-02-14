@@ -49,12 +49,12 @@ abstract class DeepDiveDatingAppTest extends TestCase {
 
 		// add all the tables for the project here
 		//These TABLES *MUST* BE LISTED IN THE SAME ORDER THEY WERE CREATED!!!!!
-		$dataset->addTable(user);
-		$dataset->addTable(userDetail);
-		$dataset->addTable(question);
-		$dataset->addTable(answer);
-		$dataset->addTable(match);
-		$dataset->addTable(report);
+		$dataset->addTable("user");
+		$dataset->addTable("userDetail");
+		$dataset->addTable("question");
+		$dataset->addTable("answer");
+		$dataset->addTable("match");
+		$dataset->addTable("report");
 		return ($dataset);
 	}
 		/**
