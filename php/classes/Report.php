@@ -209,6 +209,8 @@ class Report implements \JsonSerializable {
 	 * @param \DateTime|string|null $newReportDate datetime object, string, or null
 	 * @throws \InvalidArgumentException if $newReportDate is not a valid object or string
 	 * @throws \RangeException if $newReportDate is a date that does not exist
+	 * @throws \TypeError if $newReportDate is not a \DateTime object
+	 * @throws \Exception if some other exception occurs
 	 **/
 	//todo add all exceptions and throws in doc block and in mutator
 	public function setReportDate( $newReportDate ) : void {
@@ -220,7 +222,7 @@ class Report implements \JsonSerializable {
 		//use ValidateDate to store new date time
 		try {
 			$newReportDate = self::vaildateDateTime($newReportDate);
-		} catch(\InvalidArgumentException | \RangeException $exception) {
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -409,6 +411,9 @@ class Report implements \JsonSerializable {
 	}
 
 	//todo write getReportByReportUserIdAndReportAbuserId
+	/**
+	 *
+	 **/
 
 	/**
 	 * formats the state variables for JSON serialization
