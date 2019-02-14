@@ -64,15 +64,16 @@ class user implements \JsonSerializable {
 	 * @param string $newUserAvatarUrl string url to the user's avatar image
 	 * @param string $newUserBlocked tinyint info on the blocked status of the user
 	 * @param string $newUserEmail string containing the user email
-	 * @param string $newUserHandle string conatining the handle/username of the user
+	 * @param string $newUserHandle string containing the handle/username of the user
 	 * @param string $newUserHash string containing the password hash
 	 * @param string $newUserIpAddress binary, requiring some conversion of the ip address
-	 * @throws \InvalidArguementException if the data types are not valid
+	 * @throws \InvalidArgumentException if the data types are not valid
 	 * @throws \RangeException if the data values are out of bounds (e.g. strings too long, negative integers)
 	 * @throws \TypeError if the data type violates the data hint
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
+	//todo type hints
 	public function __construct($newUserId, $newUserActivationToken, $newUserAgent, $newUserAvatarUrl, $newUserBlocked, $newUserEmail, $newUserHandle, $newUserHash, $newUserIpAddress) {
 		try {
 			$this->setUserId($newUserId);
@@ -193,7 +194,7 @@ class user implements \JsonSerializable {
 	 */
 	public function setUserAvatarUrl (string $newUserAvatarUrl) : void {
 		//verify the user Avatar url is secure
-		$newAuthorAvatarUrl = trim($newUserAvatarUrl);
+		$newUserAvatarUrl = trim($newUserAvatarUrl);
 		$newUserAvatarUrl = filter_var($newUserAvatarUrl, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserAvatarUrl) === true) {
 					throw(new \InvalidArgumentException("user avatar url is empty or insecure"));
@@ -272,7 +273,7 @@ class user implements \JsonSerializable {
 		if(empty($newUserHandle) === true) {
 					throw(new \InvalidArgumentException("user handle is empty or insecure"));
 		}
-		//verify the author username will fit in the database
+		//verify the user handle will fit in the database
 		if(strlen($newUserHandle) > 32) {
 					throw(new \InvalidArgumentException("user handle is too large"));
 		}
@@ -329,7 +330,6 @@ class user implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if ip address is empty or insecure
 	 * @throws \TypeError if the ip address is not a string
 	 */
-
 	public function setUserIpAddress(string $newUserIpAddress) {
 		//detect the Ip's format and assign it in binary mode
 		if(@inet_pton($newUserIpAddress) !== false) {
@@ -361,7 +361,7 @@ class user implements \JsonSerializable {
 		 *double check which ones need getBytes
 		 *
 		 */
-		$parameters = ["userId" => $this->userId->getBytes(), "userActivationToken" => $this->userActivationToken->getBytes(), "userAgent" => $this->userAgent, "userAvatarUrl" => $this->userAvatarUrl, "userBlocked" => $this->userBlocked->getBytes(), "userEmail" => $this->userEmail, "userHandle" => $this->userHandle, "userHash" => $this->userHash, "userIpAddress" => $this->userIpAddress->getBytes()];
+		$parameters = ["userId" => $this->userId->getBytes(), "userActivationToken" => $this->userActivationToken, "userAgent" => $this->userAgent, "userAvatarUrl" => $this->userAvatarUrl, "userBlocked" => $this->userBlocked, "userEmail" => $this->userEmail, "userHandle" => $this->userHandle, "userHash" => $this->userHash, "userIpAddress" => $this->userIpAddress];
 		$statement->execute($parameters);
 	}
 
@@ -394,7 +394,7 @@ class user implements \JsonSerializable {
 		$query = "UPDATE user SET userAgent = :userAgent, userAvatarUrl = :userAvatarUrl, userEmail = :userEmail, userHandle = :userHandle, userIpAddress = :userIpAddress WHERE userId = :userId";
 		$statement = $pdo->prepare($query);
 
-		$parameters = ["userId" => $this->userId->getBytes(), "userActivationToken" => $this->userActivationToken->getBytes(), "userAgent" => $this->userAgent, "userAvatarUrl" => $this->userAvatarUrl, "userBlocked" => $this->userBlocked->getBytes(), "userEmail" => $this->userEmail, "userHandle" => $this->userHandle, "userHash" => $this->userHash, "userIpAddress" => $this->userIpAddress->getBytes()];
+		$parameters = ["userId" => $this->userId->getBytes(), "userActivationToken" => $this->userActivationToken, "userAgent" => $this->userAgent, "userAvatarUrl" => $this->userAvatarUrl, "userBlocked" => $this->userBlocked, "userEmail" => $this->userEmail, "userHandle" => $this->userHandle, "userHash" => $this->userHash, "userIpAddress" => $this->userIpAddress];
 		$statement->execute($parameters);
 	}
 	/**
@@ -424,13 +424,63 @@ class user implements \JsonSerializable {
 
 		//grab the user from mySQL
 		try {
-			$user = null;
-			$statement->setFetchMode(\PDO::FETCH_ASSOC);
-			$row = $statement->fetch();
-			if($row !== false) {
-						$user = new User($row["userId"], $row["userActivationToken"], $row["userAgent"], $row["userAvatarUrl"], $row["userBlocked"], $row["userEmail"], $row["userHandle"], $row["userHash"], $row["userIpAddress"]);
-
+				$user = null;
+				$statement->setFetchMode(\PDO::FETCH_ASSOC);
+				$row = $statement->fetch();
+				if($row !== false) {
+							$user = new User($row["userId"], $row["userActivationToken"], $row["userAgent"], $row["userAvatarUrl"], $row["userBlocked"], $row["userEmail"], $row["userHandle"], $row["userHash"], $row["userIpAddress"]);
 			}
+		} catch(\Exception $exception) {
+			//if the row can't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
+		return($user);
+	}
+	//todo getUserByActivationToken
+	/**
+	 * gets the user by handle
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param string $userHandle user handle to search for
+	 * @return \SplFixedArray SplFixedArray of users found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when the variables are not the correct data type
+	 */
+	public static function getUserByUserHandle(\PDO $pdo, string $userHandle) : \SplFixedArray {
+		//sanitize the description before searching
+		$userHandle = trim($userHandle);
+		$userHandle = filter_var($userHandle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($userHandle) === true) {
+					throw(new \PDOException("user handle is invalid"));
+		}
+
+		//escape any mySQL wildcards
+		$userHandle = str_replace("_", "\\_", str_replace("%", "\\%", $userHandle));
+
+		//create query template
+		$query = "SELECT userId, userActivationToken, userAgent, userAvatarUrl, userBlocked, userEmail, userHandle, userHash, userIpAddress FROM user WHERE userHandle LIKE :userHandle";
+		$statement = $pdo->prepare($query);
+
+		//bind the user handle to the placeholder in the template
+		$userHandle = "%$userHandle%";
+		$parameters = ["userHandle" => $userHandle];
+		$statement->execute($parameters);
+
+		//build an array of users
+		$users = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+					try {
+						$user = new User($row["userId"], $row["userActivationToken"], $row["userAgent"], $row["userAvatarUrl"], $row["userBlocked"], $row["userEmail"], $row["userEmail"], $row["userHandle"], $row["userHash"], $row["userIpAddress"]);
+						$users[$users->key()] = $user;
+						$users->next();
+					} catch(\Exception $exception) {
+						// if the row couldn't be converted, rethrow it
+						throw(new \PDOException($exception->getMessage(), 0, $exception));
+					}
+		}
+		return($users);
 	}
 }
+
+//getUserByActivation getUserByEmail getUserByAtHandle(include innerjoin for userDetail)
