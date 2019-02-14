@@ -34,43 +34,68 @@ class UserTest extends UserTestSetup {
 			 * placeholder for user agent
 			 * @var string $VALID_USERAGENT
 			 */
-			protected $VALID_USERAGENT = "";
+			protected $VALID_USERAGENT = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0.";
+			/**
+			 * 2nd placeholder for user agent
+			 * @var string $VALID_USERAGENT1
+			 */
+			protected $VALID_USERAGENT1 = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36.";
 
 			/**
 			 * valid url for the user avatar
 			 * @var string $VALID_USERAVATARURL
 			 */
 			protected $VALID_USERAVATARURL = "avatarSAREUS.com";
+			/**
+			 * valid url for the user avatar
+			 * @var string $VALID_USERAVATARURL1
+			 */
+			protected $VALID_USERAVATARURL1 = "allTheAvatars.com";
 
 			/**
 			 * valid int to tell if a user is blocked or not
 			 * @var int $VALID_USERBLOCKED
 			 */
-			protected $VALID_USERBLOCKED = "";
+			protected $VALID_USERBLOCKED = "0";
+			/**
+			 * valid int to tell if a user is blocked or not
+			 * @var int $VALID_USERBLOCKED1
+			 */
+			protected $VALID_USERBLOCKED1 = "1";
 
 			/**
 			 * valid email address for user
 			 * @var string $VALID_USEREMAIL
 			 */
 			protected $VALID_USEREMAIL = "exampleemail@test.com";
+			/**
+			 * valid email address for user
+			 * @var string $VALID_USEREMAIL1
+			 */
+			protected $VALID_USEREMAIL1 = "anotherEmail@test.com";
 
 			/**
 			 * valid handle for user account
 			 * @var string $VALID_USERHANDLE
 			 */
 			protected $VALID_USERHANDLE = "lonelyBoy";
+			/**
+			 * valid handle for user account
+			 * @var string $VALID_USERHANDLE1
+			 */
+			protected $VALID_USERHANDLE1 = "lonelyGirl";
 
 			/**
 			 * valid hash for user password
 			 * @var string $VALID_USERHASH
 			 */
-			protected $VALID_USERHASH = "";
+			protected $VALID_USERHASH = "weakpassword";
 
 			/**
 			 * valid binary of the user ip address
 			 * @var string $VALID_USERIPADDRESS
 			 */
-			protected $VALID_USERIPADDRESS = "";
+			protected $VALID_USERIPADDRESS = "192.0.2.0/24";
 
 			/**
 			 * create all dependent objects so that the test can run properly
@@ -114,7 +139,7 @@ class UserTest extends UserTestSetup {
 				$user->insert($this->getPDO());
 
 				//edit the user object then insert it back into the database
-				$user->setUserHandle($this->VALID_USERHANDLE);
+				$user->setUserHandle($this->VALID_USERHANDLE1);
 				$user->update($this->getPDO());
 				$pdoUser = User::getUserByUserId($this->getPDO(), $user->getUserId());
 
