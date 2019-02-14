@@ -481,6 +481,45 @@ class user implements \JsonSerializable {
 		}
 		return($users);
 	}
-}
+	/**
+	 * gets user by email
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param string $userEmail user email to search for
+	 * @return User|null user found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable is not the correct data type
+	 */
+	public static function getUserByEmail(\PDO $pdo, string $userEmail): ?User {
+		// sanitize the userEmail before searching
+		$userEmail = trim($userEmail);
+		$userEmail = filter_var($userEmail, FILTER_VALIDATE_EMAIL);
+		if(empty($userEmail) === true) {
+					throw(new \PDOException("not a valid email"));
+		}
+		//create query template
+		$query = "SELECT userId, userActiavtionToken, userAgent, userAvatarUrl, userBlocked, userEmail, userHandle, userHash, userIpAddress FROM user WHERE userEmail = :userEmail";
+		$statement = $pdo->prepare($query);
 
+		//bind the user email to the placeholder in the template
+		$parameters = ["userEmail" => $userEmail];
+		$statement->execute($parameters);
+
+		//grab user from the database
+		try {
+			$user = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+					$user = new User($row["userId"], $row["userActivationToken"], $row["userAgent"], $row["userAvatarUrl"], $row["userBlocked"], $row["userEmail"], $row["userHandle"], $row["userHash"])
+			}
+		} catch(\Exception $exception) {
+			//if the row couldn't be converted, rethrow it.
+			throw(new \PDOException($exception->getMessage(), $exception));
+		}
+		return ($user);
+}
+/**
+ *
+ */
 //getUserByActivation getUserByEmail getUserByAtHandle(include innerjoin for userDetail)
