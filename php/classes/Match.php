@@ -114,7 +114,7 @@ class Match implements \JsonSerializable {
 	 *
 	 * @return INT value 1 or 0 representing if a match is mutual or not
 	 **/
-	public function getMatchApproved() : INT {
+	public function getMatchApproved() : int {
 		return ($this->matchApproved);
 	}
 
@@ -128,7 +128,7 @@ class Match implements \JsonSerializable {
 
 	public function setMatchApproved(int $newMatchApproved) : void {
 		// check if input is valid
-		if ($newMatchApproved !== 1 | $newMatchApproved !==0) {
+		if ($newMatchApproved !== 1 || $newMatchApproved !==0) {
 			throw(new \RangeException("Match Approved Value is invalid"));
 		}
 		//store new value on server
