@@ -2,7 +2,7 @@
 namespace DeepDiveDatingApp\DeepDiveDating\Test;
 
 
-use DeepDiveDatingApp\DeepDiveDating\Report;
+use DeepDiveDatingApp\DeepDiveDating\Report\Report;
 
 require_once(dirname(__DIR__) . "/autoload.php");
 
@@ -64,5 +64,29 @@ class ReportTest extends DeepDiveDatingAppTest {
 	 **/
 	protected $VALID_REPORT_IP1 = "192.0.2.7";
 
+	/**
+	 * Create Report Object, insert into database, enforce the expectations
+	 **/
+	public function testValidReportInsert() {
+		//get number of rows and save it for the test
+		$numRows = $this->getConnection()->getRowCount("report");
 
+		//create report object
+		$report = new Report(generateUuidV4(), generateUuidV4(), $this->VALID_REPORT_AGENT, $this->VALID_REPORT_CONTENT, $this->VALID_REPORT_DATE, $this->VALID_REPORT_IP);
+		//insert report into database
+		$report->insert($this->getPDO());
+		//grab data my database and enforce expectations
+		$pdoReport = Report::getReportByUserId($this->getPDO(), $report->getReportUserId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("report"));
+		$this->assertEquals($pdoReport->getReportUserId(), $report->getReportUserId());
+		$this->assertEquals($pdoReport->getReportAbuserId(), $report->getReportAbuserId());
+		$this->assertEquals($pdoReport->getReportAgent(), $report->getReportAgent());
+		$this->assertEquals($pdoReport->getReportContent(), $report->getReportContent());
+		$this->assertEquals($pdoReport->getReportDate(), $report->getReportDate());
+		$this->assertEquals($pdoReport->getReportIp(), $report->getReportIp());
+	}
+
+	/**
+	 * create Report object, update it in the database, enforce expectations
+	 **/
 }
