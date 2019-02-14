@@ -5,14 +5,14 @@ require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 
 /**
- * answer class is where the answers to users questions based on Dan's interests appear. They will be graded on their
+ * Answer class is where the answers to users questions based on Dan's interests appear. They will be graded on their
  * answers to those questions.
  *
  * @author Natalie Woodard
  * @version 1
  **/
 
-class answer implements \JsonSerializable {
+class Answer implements \JsonSerializable {
 	use ValidateUuid;
 
 	/**Id for answers user will be graded by, this is the primary key
@@ -27,11 +27,12 @@ class answer implements \JsonSerializable {
 	private $answerQuestionId;
 	/**
 	 * Space where the answer to the question appears
-	 * @var string|Uuid $answerResult
+	 * @var string $answerResult
 	 **/
 	private $answerResult;
 	/**
 	 * Score for user based on answers
+	 * @var int $answerScore
 	 **/
 	private $answerScore;
 
@@ -41,22 +42,22 @@ class answer implements \JsonSerializable {
 	 * /*******Constructor for answer class************
 	 *
 	 * @param string|Uuid $newAnswerUserId id for new answers linked to user
-	 * @param string $newAnswerQuestionId id for new answers linked to questions
-	 * @param int $newAnswerResult id for result of answer from user
+	 * @param string|Uuid $newAnswerQuestionId id for new answers linked to questions
+	 * @param string $newAnswerResult id for result of answer from user
 	 * @param int $newAnswerScore value that gets calculated from answers to questions
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds
 	 * @throws \Exception for when an exception is thrown
 	 * @throws \TypeError if data types violate type hints
 	 **/
-	public function __construct($newAnswerUserId, $newAnswerQuestionId, $newAnswerResult, $newAnswerScore) {
+	public function __construct(string $newAnswerUserId, string $newAnswerQuestionId, string $newAnswerResult, int $newAnswerScore) {
 		try {
 			$this->setAnswerUserId($newAnswerUserId);
 			$this->setAnswerQuestionId($newAnswerQuestionId);
 			$this->setAnswerResult($newAnswerResult);
 			$this->setAnswerScore($newAnswerScore);
 			//determine what exception type was thrown
-		} catch(\InvalidArgumentException | \RangeException | \TypeError $exception) {
+		} catch(\InvalidArgumentException | \RangeException |\Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType ($exception->getMessage(), 0, $exception));
 		}
@@ -65,24 +66,25 @@ class answer implements \JsonSerializable {
 	/**
 	 * accessor method for answer user id
 	 *
-	 * @return int value of answer id (null if new user)
+	 * @return Uuid value of answer id (null if new user)
 	 **/
-	public function getAnswerUserId(): string {
+	public function getAnswerUserId(): uuid {
 		return ($this->answerUserId);
 	}
 
 	/**
-	 * mutator method for question id
+	 * mutator method for answer user id
 	 *
 	 * @param Uuid|string $newAnswerUserId is not positive
 	 * @throws \InvalidArgumentException if the id is not a string or is insecure
 	 * @throws \RangeException if $newAnswerUserId is not positive
 	 * @throws \TypeError if $newAnswerUserId is not a uuid or string
+	 * @throws \Exception for when an exception is thrown
 	 **/
 	public function setAnswerUserId($newAnswerUserId): void {
 		try {
 			$uuid = self::validateUuid($newAnswerUserId);
-		} catch(InvalidArguementException | \RangeException |Exception |\TypeError $exception) {
+		} catch( \InvalidArgumentException | \RangeException |\Exception |\TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType ($exception->getMessage(), 0, $exception));
 		}
@@ -97,19 +99,21 @@ class answer implements \JsonSerializable {
 	 * @return string value for answer question id
 	 **/
 
-	public function getAnswerQuestionId(): string {
+	public function getAnswerQuestionId(): Uuid {
 		return ($this->answerQuestionId);
 	}
 
 	/**
 	 * mutator method for answer question id
 	 *
-	 * @param string $newAnswerQuestionId new value answer question id
+	 * @param Uuid $newAnswerQuestionId new value answer question id
 	 * @throws \InvalidArgumentException if the answer question id is empty
 	 * @throws \RangeException if the answer question id is longer than 16 characters
+	 * @throws \Exception for when an exception is thrown
+	 * @throws \TypeError if data types violate type hints
 	 **/
 
-	public function setAnswerQuestionId(string $newAnswerQuestionId) {
+	public function setAnswerQuestionId(Uuid $newAnswerQuestionId) {
 		if(empty($newAnswerQuestionId) == true) {
 			throw(new \InvalidArgumentException("This answer question id is empty."));
 		}
@@ -124,22 +128,24 @@ class answer implements \JsonSerializable {
 	/**
 	 * accessor method for answer result
 	 *
-	 * @return int value of answer result
+	 * @return string value of answer result
 	 **/
 
-	public function getAnswerResult(): int {
+	public function getAnswerResult(): string {
 		return ($this->answerResult);
 	}
 
 	/**
 	 * mutator method for answer result
 	 *
-	 * @param int $newAnswerResult new value answer result
+	 * @param string $newAnswerResult new value answer result
 	 * @throws \InvalidArgumentException if the answer result is empty
 	 * @throws \RangeException if the answer is result is longer than 1
+	 * @throws \Exception for when an exception is thrown
+	 * @throws \TypeError if data types violate type hints
 	 **/
 
-	public function setAnswerResult(int $newAnswerResult) {
+	public function setAnswerResult(string $newAnswerResult) {
 		if(empty($newAnswerResult) == true) {
 			throw(new \InvalidArgumentException("This answer result is empty."));
 		}
@@ -167,13 +173,15 @@ class answer implements \JsonSerializable {
 	 * @param int $newAnswerScore new value answer score
 	 * @throws \InvalidArgumentException if the answer score is empty
 	 * @throws \RangeException if the answer score is longer than one integer
+	 * @throws \Exception for when an exception is thrown
+	 * @throws \TypeError if data types violate type hints
 	 **/
 
 	public function setAnswerScore(int $newAnswerScore) {
 		if(empty($newAnswerScore) == true) {
 			throw(new \InvalidArgumentException("This score is empty."));
 		}
-		//verify the answer score is no longer than one integer
+		//verify the answer score is correct or incorrect
 		if(($newAnswerScore) !=="c" || ($newAnswerScore !== "i")) {
 			throw(new \RangeException("This answer score is too long. It must be no longer than 1 character."));
 		}
@@ -187,6 +195,9 @@ class answer implements \JsonSerializable {
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
+	 * @throws \InvalidArgumentException if data types are not valid
+	 * @throws \RangeException if data values are out of bounds
+	 * @throws \Exception for when an exception is thrown
 	 **/
 
 	public function insert(\PDO $pdo): void {
@@ -200,41 +211,25 @@ class answer implements \JsonSerializable {
 	}
 
 	/**
-	 * deletes this answer from mySQL
+	 * deletes this Answer from mySQL
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
+	 * @throws \InvalidArgumentException if data types are not valid
+	 * @throws \RangeException if data values are out of bounds
+	 * @throws \Exception for when an exception is thrown
 	 **/
 	public function delete(\PDO $pdo): void {
 
 		// create query template
-		$query = "DELETE FROM answer WHERE answerUserId = :answerUserId";
+		$query = "DELETE FROM answer WHERE answerUserId = :answerUserId AND answerQuestionId = :answerQuestionId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holder in the template
 		$parameters = ["answerUserId" => $this->answerUserId->getBytes()];
 		$statement->execute($parameters);
 	}
-
-	/**
-	 * /**
-	 * updates this answer in MySQL
-	 *
-	 * @param \PDO $pdo connection object
-	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError if $pdo is not a PDO connection object
-	 */
-	public function update(\PDO $pdo): void {
-
-		//create query template
-		$query = "UPDATE answer SET answerUserId = :answerUserId, answerQuestionId = :answerQuestionId, answerResult = :answerResult, answerScore = :answerScore";
-		$statement = $pdo->prepare($query);
-
-		$parameters = ["answerUserId" => $this->answerUserId->getBytes(), "answerQuestionId" => $this->answerQuestionId, "answerResult" => $this->answerResult, "answerScore" => $this->answerScore];
-		$statement->execute($parameters);
-	}
-
 	/**
 	 * gets the Answer by answerUserId
 	 *
@@ -243,6 +238,7 @@ class answer implements \JsonSerializable {
 	 * @return Answer|null Answer found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
+	 * @throws \RangeException if answer user id is not positive
 	 **/
 	public static function getAnswerByAnswerUserId(\PDO $pdo, $answerUserId): ?Answer {
 		// sanitize the answerUserId before searching
@@ -260,7 +256,7 @@ class answer implements \JsonSerializable {
 		$parameters = ["answerUserId" => $answerUserId->getBytes()];
 		$statement->execute($parameters);
 
-		// grab the answer from mySQL
+		// grab the Answer from mySQL
 		try {
 			$answer = null;
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
@@ -276,37 +272,6 @@ class answer implements \JsonSerializable {
 	}
 
 	/**
-	 *
-	 * gets all Answers
-	 *
-	 * @param \PDO $pdo PDO connection object
-	 * @return \SplFixedArray SplFixedArray of Answer found or null if not found
-	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError when variables are not the correct data type
-	 **/
-	public static function getAllAnswers(\PDO $pdo): \SPLFixedArray {
-		// create query template
-		$query = "SELECT answerUserId, answerQuestionId, answerResult, answerScore FROM answer";
-		$statement = $pdo->prepare($query);
-		$statement->execute();
-
-		// build an array of answers
-		$answer = new \SplFixedArray($statement->rowCount());
-		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		while(($row = $statement->fetch()) !== false) {
-			try {
-				$answer = new Answer($row["answerUserId"], $row["answerQuestionId"], $row["answerResult"], $row["answerScore"]);
-				$answer[$answer->key()] = $answer;
-				$answer->next();
-			} catch(\Exception $exception) {
-				// if the row couldn't be converted, rethrow it
-				throw(new \PDOException($exception->getMessage(), 0, $exception));
-			}
-		}
-		return ($answer);
-	}
-
-	/**
 	 * formats the state variables for JSON serialization
 	 *
 	 * @return array resulting state variables to serialize
@@ -317,8 +282,6 @@ class answer implements \JsonSerializable {
 		$fields["answerUserId"] = $this->answerUserId->toString();
 		$fields["answerQuestionId"] = $this->answerQuestionId->toString();
 
-		//format the date so that the front end can consume it
-		$fields["answerResult"] = round(floatval($this->answerResult->format("U.u")) * 1000);
 		return ($fields);
 	}
 }

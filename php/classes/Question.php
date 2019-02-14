@@ -44,7 +44,7 @@ class question implements \JsonSerializable {
 			$this->setQuestionContent($newQuestionContent);
 			$this->setQuestionValue($newQuestionValue);
 			//determine what exception type was thrown
-		} catch(\InvalidArgumentException | \RangeException | \TypeError $exception) {
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType ($exception->getMessage(), 0, $exception));
 		}
@@ -114,7 +114,7 @@ class question implements \JsonSerializable {
 
 	 /** accessor method for Question value
 	 *
-	 * @return string value for Question value
+	 * @return string for Question value
 	 **/
 
 	public function getQuestionValue(): int {
@@ -150,6 +150,7 @@ class question implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 * @throws \Exception for when an exception is thrown
+	*	@throws \RangeException if content is not positive
 	 **/
 
 	public function insert(\PDO $pdo): void {
@@ -170,6 +171,7 @@ class question implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 * @throws \Exception for when an exception is thrown
+	 * @throws \RangeException if $newQuestionValue is not positive
 	 **/
 	public function delete(\PDO $pdo): void {
 
@@ -192,6 +194,7 @@ class question implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 * @throws \Exception for when an exception is thrown
+	 * @throws \RangeException if question id is not positive
 	 **/
 	public static function getQuestionByQuestionId(\PDO $pdo, $questionId): ?Question {
 		// sanitize the questionId before searching
