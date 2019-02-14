@@ -62,7 +62,7 @@ class user implements \JsonSerializable {
 	 * @param string $newUserActivationToken activation token to safe guard against malicious accounts
 	 * @param string $newUserAgent string recorded info about the browser and system to assist with blocking/reporting
 	 * @param string $newUserAvatarUrl string url to the user's avatar image
-	 * @param string $newUserBlocked tinyint info on the blocked status of the user
+	 * @param int $newUserBlocked int info on the blocked status of the user
 	 * @param string $newUserEmail string containing the user email
 	 * @param string $newUserHandle string containing the handle/username of the user
 	 * @param string $newUserHash string containing the password hash
@@ -73,8 +73,8 @@ class user implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
-	//todo type hints
-	public function __construct($newUserId, $newUserActivationToken, $newUserAgent, $newUserAvatarUrl, $newUserBlocked, $newUserEmail, $newUserHandle, $newUserHash, $newUserIpAddress) {
+
+	public function __construct( string $newUserId, string $newUserActivationToken, string $newUserAgent, string $newUserAvatarUrl, int $newUserBlocked, string $newUserEmail, string $newUserHandle, string $newUserHash, string $newUserIpAddress) {
 		try {
 			$this->setUserId($newUserId);
 			$this->setUserActivationToken($newUserActivationToken);
@@ -211,8 +211,27 @@ class user implements \JsonSerializable {
 	/**
 	 * accessor method for user blocked
 	 *
-	 * @return
+	 * @return INT value 1 or 0 representing if the user is blocked
 	 */
+	public function getUserBlocked(): int {
+		return ($this->userBlocked);
+	}
+
+	/**
+	 * mutator method for userBlocked
+	 *
+	 * @param INT user blocked value
+	 * @throws \InvalidArgumentException if input is not a valid type
+	 * @throws \RangeException if integer is not a 0 or 1
+	 */
+	public function setUserBlocked(int $newUserBlocked) : void {
+		//check if input is valid
+		if ($newUserBlocked !== 1 || $newUserBlocked !== 0) {
+				throw(new \RangeException("user blocked value is invalid"));
+		}
+		//store new value on the server
+		$this->userBlocked = $newUserBlocked;
+	}
 	/**
 	 * accessor method for user email
 	 *
@@ -408,7 +427,7 @@ class user implements \JsonSerializable {
 		}
 
 		//create query template
-		$query = "SELECT userId, userActivationToken, userAgent, userAvatarUrl, userBlocked, userEmail, userHandle, userHash, userIpAddress FROM user WHERE userId = :userId";
+		$query = "SELECT user.userId, user.userActivationToken, user.userAgent, user.userAvatarUrl, user.userBlocked, user.userEmail, user.userHandle, user.userHash, user.userIpAddress FROM `user` INNER JOIN userDetail ON user.userId = userDetail.userDetailUserId WHERE userId = :userId";
 		$statement = $pdo->prepare($query);
 
 		// bind the user id  to the placeholder in the template
@@ -446,7 +465,7 @@ class user implements \JsonSerializable {
 		}
 
 		//create query template
-		$query = "SELECT userId, userActivationToken, userAgent, userAvatarUrl, userBlocked, userEmail, userHandle, userHash, userIpAddress FROM user WHERE userActivationToken = :userActivationToken";
+		$query = "SELECT user.userId, user.userActivationToken, user.userAgent, user.userAvatarUrl, user.userBlocked, user.userEmail, user.userHandle, user.userHash, user.userIpAddress FROM `user` INNER JOIN userDetail ON user.userId = userDetail.userDetailUserId WHERE userActivationToken = :userActivationToken";
 		$statement = $pdo->prepare($query);
 
 		//bind activation token to placeholder in template
@@ -488,7 +507,7 @@ class user implements \JsonSerializable {
 		$userHandle = str_replace("_", "\\_", str_replace("%", "\\%", $userHandle));
 
 		//create query template
-		$query = "SELECT userId, userActivationToken, userAgent, userAvatarUrl, userBlocked, userEmail, userHandle, userHash, userIpAddress FROM user WHERE userHandle LIKE :userHandle";
+		$query = "SELECT user.userId, user.userActivationToken, user.userAgent, user.userAvatarUrl, user.userBlocked, user.userEmail, user.userHandle, user.userHash, user.userIpAddress FROM `user` INNER JOIN userDetail ON user.userId = userDetail.userDetailUserId WHERE userHandle LIKE :userHandle";
 		$statement = $pdo->prepare($query);
 
 		//bind the user handle to the placeholder in the template
@@ -528,7 +547,7 @@ class user implements \JsonSerializable {
 					throw(new \PDOException("not a valid email"));
 		}
 		//create query template
-		$query = "SELECT userId, userActiavtionToken, userAgent, userAvatarUrl, userBlocked, userEmail, userHandle, userHash, userIpAddress FROM user WHERE userEmail = :userEmail";
+		$query = "SELECT user.userId, user.userActivationToken, user.userAgent, user.userAvatarUrl, user.userBlocked, user.userEmail, user.userHandle, user.userHash, user.userIpAddress FROM `user` INNER JOIN userDetail ON user.userId = userDetail.userDetailUserId WHERE userEmail = :userEmail";
 		$statement = $pdo->prepare($query);
 
 		//bind the user email to the placeholder in the template
@@ -559,5 +578,4 @@ class user implements \JsonSerializable {
 		$fields["userId"] = $this->userId->toString();
 		return ($fields);
 	}
-//getUserByActivation getUserByEmail getUserByAtHandle(include innerjoin for userDetail)
 }
