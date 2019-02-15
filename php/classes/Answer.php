@@ -319,10 +319,11 @@ class Answer implements \JsonSerializable {
 	 * @throws \TypeError when a variable are not the correct data type
 	 * @throws \RangeException if answer user id is not positive
 	 **/
-	public static function getAnswerByAnswerQuestionIdAndUserId(\PDO $pdo, $getAnswerByAnswerQuestionIdAndUserId): ?Answer {
+	public static function getAnswerByAnswerQuestionIdAndUserId(\PDO $pdo, $answerQuestionId, $answerByUserId): ?Answer {
 		// sanitize the getAnswerByAnswerQuestionIdAndUserId before searching
 		try {
-			$getAnswerByAnswerQuestionIdAndUserId = self::validateUuid($getAnswerByAnswerQuestionIdAndUserId);
+			$getAnswerByAnswerQuestionIdAndUserId = self::validateUuid($answerQuestionId);
+			$getAnswerByAnswerQuestionIdAndUserId = self::validateUuid($answerByUserId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
