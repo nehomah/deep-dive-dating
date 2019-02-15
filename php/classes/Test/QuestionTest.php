@@ -113,6 +113,36 @@ protected $VALID_QUESTION_ID;
 		$this->assertEquals($pdoQuestion->getQuestion(), $question->getQuestion());
 		$this->assertEquals($pdoQuestion->getQuestionContent());
 		$this->assertEquals($pdoQuestion->getQuestionValue());
+	}
+ 	/**
+	 * try and grab the quote by a question that does not exist
+	 */
+	public function testInvalidGetByQuestionContent(){
+		$question = Question::getQuestionByQuestionContent($this->getPDO());
+		$this->assertEmpty($question);
+	}
 
+	/**
+	 * insert a question use getAll method, then enforce it meets expectation
+	 */
+	public function testGetAllQuestions(){
+		$numRows = $this->getConnection()->getRowCount("question");
+
+		//insert the question into the database
+		$question = new Question(generateUuidV4(), $this->VALID_QUESTION_ID, $this->VALID_QUESTION_CONTENT,$this->VALID_QUESTION_VALUE);
+
+		//insert the question into the database
+		$question->insert($this->getPDO());
+
+		//grab the results from mySQL and enforce it meets expectations
+		$results = Question::getAllQuestions($this->getPDO());
+		$this->assertEquals($numRows +1, $this->getConnection()->getRowCount("question"));
+		$this->assertCount(1, $results);
+		//$this->assertContainsOnlyInstancesOf()
+
+		//grab the results from the array and make sure it meets expectations
+		$pdoQuestion = $results[0];
+		//$this->assertEquals($pdoQuestion->getQuestionId(), $question->getQuestionId());
+		$this->assertEquals($pdoQuestion->getQuestion(), $question->getQuestion());
 	}
 }
