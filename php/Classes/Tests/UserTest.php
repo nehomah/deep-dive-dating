@@ -1,11 +1,14 @@
 <?php
 
 namespace DeepDiveDatingApp\DeepDiveDating\Test;
-require_once ("autoload.php");
-require_once (dirname(__DIR__, 2) . "/vendor/autoload.php");
 
-use DeepDiveDatingApp\DeepDiveDating\user;
-use Ramsey\Uuid\Uuid;
+use DeepDiveDatingApp\DeepDiveDating\{User};
+
+require_once "DeepDiveDatingAppTest.php";
+require_once (dirname(__DIR__) . "/autoload.php");
+require_once (dirname(__DIR__, 2) . "/lib/uuid.php");
+
+
 /**
  * unit test for the User Class
  * PDO methods are located in the User Class
