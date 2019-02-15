@@ -39,7 +39,7 @@ protected $VALID_QUESTION_ID;
 	 * create all dependent objects so that the test can run properly
 	 */
 	/**
-	 * preform the actual insert method and enforce that is meets expectations i.e, corrupted data is worth nothing
+	 * perform the actual insert method and enforce that is meets expectations i.e, corrupted data is worth nothing
 	 **/
 
 	public function testValidQuestionInsert(){
@@ -54,8 +54,8 @@ protected $VALID_QUESTION_ID;
 		$pdoQuestion = Question::getQuestionByQuestionId($this->getPDO(), $question->getQuestionId());
 		$this->assertEquals($numRows +1, $this->getConnection()->getRowCount("question"));
 		$this->assertEquals($pdoQuestion->getQuestionId(), $question->getQuestionId());
-		$this->assertEquals($pdoQuestion->getQuestionContent, $question->getQuestionContent());
-		$this->assertEquals($pdoQuestion->getQuestionValue, $question->getQuestionValue);
+		$this->assertEquals($pdoQuestion->getQuestionContent(), $question->getQuestionContent());
+		$this->assertEquals($pdoQuestion->getQuestionValue(), $question->getQuestionValue);
 	}
 
 	/**
@@ -78,7 +78,7 @@ protected $VALID_QUESTION_ID;
 		//enforce that the deletion was successful
 		$pdoQuestion = Question::getQuestionByQuestionId($this->getPDO(), $question->getQuestionId());
 		$this->assertNull($pdoQuestion);
-		$this->assertEquals($numRows, $this->getConnection()->getRowCount("quote"));
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount("question"));
 	}
 
 	/**
@@ -115,7 +115,7 @@ protected $VALID_QUESTION_ID;
 		$this->assertEquals($pdoQuestion->getQuestionValue());
 	}
  	/**
-	 * try and grab the quote by a question that does not exist
+	 * try and grab the question by a question that does not exist
 	 */
 	public function testInvalidGetByQuestionContent(){
 		$question = Question::getQuestionByQuestionContent($this->getPDO());

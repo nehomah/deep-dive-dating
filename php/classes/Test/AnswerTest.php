@@ -11,7 +11,7 @@ use DeepDiveDatingApp\DeepDiveDating\Answer\Answer;
 * @ see php/classes/AnswerTest.php
 * @author Natalie Woodard
 */
-class QuestionTest extends DeepDiveDatingAppTest {
+class AnswerTest extends DeepDiveDatingAppTest {
 /**
 * Answer from users
 * @var Answer answer
@@ -26,125 +26,133 @@ protected $VALID_ANSWER_QUESTION_ID;
 
 /**
 * valid id to create the object to own the test
-* @var uuid $ANSWER_USER_ID
+* @var string $VALID_ANSWER_USER_ID
 **/
 protected $VALID_ANSWER_USER_ID = "PHPUnit test passing";
 
 /**
-* Value applied to questions based on Dan's preferences
-* @var int $VALID_QUESTION_VALUE
+* Result of the answer input from user
+* @var string $VALID_ANSWER_RESULT
 **/
-protected $VALID_QUESTION_VALUE;
+protected $VALID_ANSWER_RESULT;
+
+/**
+ *Score of the answers compared to Dan's preferred answers
+ *@var int $VALID_ANSWER_SCORE
+ */
+protected $VALID_ANSWER_SCORE;
 /**
 * create all dependent objects so that the test can run properly
 */
 /**
-* preform the actual insert method and enforce that is meets expectations i.e, corrupted data is worth nothing
+* perform the actual insert method and enforce that is meets expectations i.e, corrupted data is worth nothing
 **/
 
-public function testValidQuestionInsert(){
-$numRows = $this->getConnection()->getRowCount("question");
+public function testValidAnswerInsert(){
+$numRows = $this->getConnection()->getRowCount("answer");
 
-//create the question object
-$question = new Question(generateUuidV4(), $this->VALID_Question, $this->VALID_QUESTION_ID, $this->VALID_QUESTION_CONTENT, $this->VALID_QUESTION_VALUE);
-//insert the question object
-$question->insert($this->getPDO());
+//create the answer object
+$answer = new Answer(generateUuidV4(), $this->VALID_ANSWER_QUESTION_ID, $this->VALID_ANSWER_USER_ID, $this->VALID_ANSWER_RESULT, $this->VALID_ANSWER_SCORE);
+//insert the answer object
+$answer->insert($this->getPDO());
 
 //grab the data from MySQL and enforce that it meets expectations
-$pdoQuestion = Question::getQuestionByQuestionId($this->getPDO(), $question->getQuestionId());
-$this->assertEquals($numRows +1, $this->getConnection()->getRowCount("question"));
-$this->assertEquals($pdoQuestion->getQuestionId(), $question->getQuestionId());
-$this->assertEquals($pdoQuestion->getQuestionContent, $question->getQuestionContent());
-$this->assertEquals($pdoQuestion->getQuestionValue, $question->getQuestionValue);
+$pdoAnswer = Answer::getAnswerByAnsweranswerId($this->getPDO(), $answer->getAnswerQuestionId());
+$this->assertEquals($numRows +1, $this->getConnection()->getRowCount("answer"));
+$this->assertEquals($pdoAnswer->getAnswerQuestionId(), $answer->getAnswerQuestionId());
+$this->assertEquals($pdoAnswer->getAnswerUserId(), $answer->getAnswerUserId());
+$this->assertEquals($pdoAnswer->getAnswerResult(), $answer->getAnswerResult());
+$this->assertEquals($pdoAnswer->getAnswerScore(), $answer->getAnswerScore());
 }
 
 /**
-* create a question object, update it in the database, and then enforce that it meets expectations
+* create a answer object, update it in the database, and then enforce that it meets expectations
 **/
-public function testValidQuestionDelete() {
-//grab the number of questions and save it for the test
-$numRows = $this->getConnection()->getRowCount("question");
+public function testValidAnswerDelete() {
+//grab the number of answers and save it for the test
+$numRows = $this->getConnection()->getRowCount("answer");
 
-//create the question object
-$question = new Question(generateUuidV4(), $this->VALID_QUESTION_ID, $this->VALID_QUESTION_CONTENT, $this->VALID_QUESTION_CONTENT);
+//create the answer object
+$answer = new Answer(generateUuidV4(), $this->VALID_ANSWER_QUESTION_ID, $this->VALID_ANSWER_USER_ID, $this->VALID_ANSWER_RESULT, $this->VALID_ANSWER_SCORE);
 
-//insert the question object
-$question->insert($this->getPDO());
+//insert the answer object
+$answer->insert($this->getPDO());
 
-//delete the question from the database
-$this->assertSame($numRows +1, $this->getConnection()->getRowCount("question"));
-$question->delete($this->getPDO);
+//delete the answer from the database
+$this->assertSame($numRows +1, $this->getConnection()->getRowCount("answer"));
+$answer->delete($this->getPDO);
 
 //enforce that the deletion was successful
-$pdoQuestion = Question::getQuestionByQuestionId($this->getPDO(), $question->getQuestionId());
-$this->assertNull($pdoQuestion);
-$this->assertEquals($numRows, $this->getConnection()->getRowCount("quote"));
+$pdoAnswer = Answer::getAnswerByAnswerQuestionId($this->getPDO(), $answer->getAnswerQuestionId());
+$this->assertNull($pdoAnswer);
+$this->assertEquals($numRows, $this->getConnection()->getRowCount("answer"));
 }
 
 /**
-* try and grab a question by a primary that does not exist
+* try and grab an answer by a primary that does not exist
 */
 
-public function testInvalidGetByQuestionId(){
-//grab the question by an invalid key
-$question = Question::getQuestionByQuestionId($this->getPDO(), DeepDiveDatingAppTest::INVALID_KEY);
-$this->assertEmpty($question);
+public function testInvalidGetByAnswerQuestionId(){
+//grab the answer by an invalid key
+$answer = Answer::getAnswerByAnswerQuestionId($this->getPDO(), DeepDiveDatingAppTest::INVALID_KEY);
+$this->assertEmpty($answer);
 }
 
 /**
-* insert a question object, grab it by the content, and enforce that it meets expectations
+* insert an answer object, grab it by the content, and enforce that it meets expectations
 */
-public function testValidGetQuestionByContent() {
-$numRows = $this->getConnection()->getRowCount("question");
+public function testValidGetAnswerByAnswerUserId() {
+$numRows = $this->getConnection()->getRowCount("answer");
 
-//create a question object and insert it into the database
-$question = new Question(generateUuidV4(), $this->VALID_QUESTION_ID, $this->VALID_QUESTION_CONTENT, $this->VALID_QUESTION_VALUE);
+//create a answer object and insert it into the database
+$answer = new Answer(generateUuidV4(), $this->VALID_ANSWER_QUESTION_ID, $this->VALID_ANSWER_USER_ID, $this->VALID_ANSWER_RESULT, $this->VALID_ANSWER_SCORE);
 
-//insert the question into the database
-$question->insert($this->getPDO());
+//insert the answer into the database
+$answer->insert($this->getPDO());
 
-//grab the question from the database
-$results = Question::getQuestionByContent($this->getPDO(), $question->getQuestionContent());
-$this->assertEquals($numRows +1, $this->getConnection()->getRowCount("question"));
+//grab the answer from the database
+$results = Answer::getAnswerByAnswerUserId($this->getPDO(), $answer->getAnswerUserId());
+$this->assertEquals($numRows +1, $this->getConnection()->getRowCount("answer"));
 
-$pdoQuestion = $results[1];
+$pdoAnswer = $results[1];
 
-$this->assertEquals($pdoQuestion->getQuestionId());
-$this->assertEquals($pdoQuestion->getQuestion(), $question->getQuestion());
-$this->assertEquals($pdoQuestion->getQuestionContent());
-$this->assertEquals($pdoQuestion->getQuestionValue());
+	$this->assertEquals($pdoAnswer->getAnswerQuestionId(), $answer->getAnswerQuestionId());
+	$this->assertEquals($pdoAnswer->getAnswerUserId(), $answer->getAnswerUserId());
+	$this->assertEquals($pdoAnswer->getAnswerResult(), $answer->getAnswerResult());
+	$this->assertEquals($pdoAnswer->getAnswerScore(), $answer->getAnswerScore());
 }
 /**
-* try and grab the quote by a question that does not exist
+* try and grab the answer by an answer that does not exist
 */
-public function testInvalidGetByQuestionContent(){
-$question = Question::getQuestionByQuestionContent($this->getPDO());
-$this->assertEmpty($question);
+public function testInvalidGetByAnswerUserId(){
+$answer = Answer::getAnswerByAnswerUserId($this->getPDO());
+$this->assertEmpty($answer);
 }
 
 /**
-* insert a question use getAll method, then enforce it meets expectation
+* insert an answer use getAll method, then enforce it meets expectation
 */
-public function testGetAllQuestions(){
-$numRows = $this->getConnection()->getRowCount("question");
+public function testGetAllAnswers() {
+	$numRows = $this->getConnection()->getRowCount("answer");
 
-//insert the question into the database
-$question = new Question(generateUuidV4(), $this->VALID_QUESTION_ID, $this->VALID_QUESTION_CONTENT,$this->VALID_QUESTION_VALUE);
+//insert the answer into the database
+	$answer = new Answer(generateUuidV4(), $this->VALID_ANSWER_QUESTION_ID, $this->VALID_ANSWER_USER_ID, $this->VALID_ANSWER_RESULT, $this->VALID_ANSWER_SCORE);
 
-//insert the question into the database
-$question->insert($this->getPDO());
+//insert the answer into the database
+	$answer->insert($this->getPDO());
 
 //grab the results from mySQL and enforce it meets expectations
-$results = Question::getAllQuestions($this->getPDO());
-$this->assertEquals($numRows +1, $this->getConnection()->getRowCount("question"));
-$this->assertCount(1, $results);
+	$results = Answer::getAllAnswers($this->getPDO());
+	$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("answer"));
+	$this->assertCount(1, $results);
 //$this->assertContainsOnlyInstancesOf()
 
 //grab the results from the array and make sure it meets expectations
-$pdoQuestion = $results[0];
-//$this->assertEquals($pdoQuestion->getQuestionId(), $question->getQuestionId());
-$this->assertEquals($pdoQuestion->getQuestion(), $question->getQuestion());
-$this->assertEquals($pdoQuestion->getQuestionId(), $question->getQuestionId());
-$this->assertEquals($pdoQuestion->getQuestionContent(), $question->getQuestionContent());
-$this->assertEquals($pdoQuestion->getQuestionValue(), $question->getQuestionValue());
+	$pdoAnswer = $results[0];
+//$this->assertEquals($pdoAnswer->getAnswerQuestionId(), $answer->getAnswerQuestionId());
+	$this->assertEquals($pdoAnswer->getAnswerQuestionId(), $answer->getAnswerQuestionId());
+	$this->assertEquals($pdoAnswer->getAnswerUserId(), $answer->getAnswerUserId());
+	$this->assertEquals($pdoAnswer->getAnswerResult(), $answer->getAnswerResult());
+	$this->assertEquals($pdoAnswer->getAnswerScore(), $answer->getAnswerScore());
+}
 }
