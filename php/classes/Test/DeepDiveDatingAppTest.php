@@ -10,6 +10,7 @@ use PHPUnit\DbUnit\Operation\{Composite, Factory, Operation};
 // grab the encrypted properties file
 require_once("/etc/apache2/capstone-mysql/Secret.php");
 
+// autoload Composer packages
 require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
 
 /**
@@ -44,7 +45,7 @@ abstract class DeepDiveDatingAppTest extends TestCase {
 	 *
 	 * @return QueryDataSet assembled schema for PHPUnit
 	 **/
-	public final function getDataSet() : QueryDataSet {
+	public final function getDataSet() {
 		$dataset = new QueryDataSet($this->getConnection());
 
 		// add all the tables for the project here
@@ -88,9 +89,9 @@ abstract class DeepDiveDatingAppTest extends TestCase {
 			// if the connection hasn't been established, create it
 			if($this->connection === null) {
 				// connect to mySQL and provide the interface to PHPUnit
-				$secrets = new Secrets("/etc/apache2/capstone-mysql/UNKNOWN.ini");
-				$pdo = $secrets->getPdoObject();
-				$this->connection = $this->createDefaultDBConnection($pdo, $secrets->getDatabase());
+				$config = readConfig("/etc/apache2/capstone-mysql/deepdivedating.ini");
+				$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/deepdivedating.ini");
+				$this->connection = $this->createDefaultDBConnection($pdo, $config["database"]);
 			}
 			return ($this->connection);
 	}
