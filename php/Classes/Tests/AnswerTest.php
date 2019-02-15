@@ -8,7 +8,7 @@ use DeepDiveDatingApp\DeepDiveDating\Answer\Test;
 /**
 * unit test for the Answer class
 * PDO methods are located in the Answer class
-* @ see php/classes/Answer.php
+* @ see php/Classes/Answer.php
 * @author Natalie Woodard
 */
 class AnswerTest extends DeepDiveDatingAppTest {

@@ -11,7 +11,7 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 /**
  * unit test for the Match Class
  * PDO methods are located in the Match Class
- * @ see php/classes/Match.php
+ * @ see php/Classes/Match.php
  * @author Taylor Smith
  */
 

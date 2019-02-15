@@ -9,7 +9,7 @@ use Ramsey\Uuid\Uuid;
 /**
  * unit test for the User Class
  * PDO methods are located in the User Class
- * @ see php/classes/User.php
+ * @ see php/Classes/User.php
  * @author Kathleen Mattos
  */
 class UserTest extends DeepDiveDatingAppTest {
