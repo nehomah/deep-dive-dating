@@ -89,4 +89,25 @@ class ReportTest extends DeepDiveDatingAppTest {
 	/**
 	 * create Report object, update it in the database, enforce expectations
 	 **/
+	public function testValidReportUpdate() {
+		//get number of rows and save it for the test
+		$numRows = $this->getConnection()->getRowCount("report");
+
+		//create report object
+		$report = new Report(generateUuidV4(), generateUuidV4(), $this->VALID_REPORT_AGENT, $this->VALID_REPORT_CONTENT, $this->VALID_REPORT_DATE, $this->VALID_REPORT_IP);
+		//insert report into database
+		$report->insert($this->getPDO());
+
+		//edit the report object and insert back into the database
+		$report->setReportContent($this->VALID_REPORT_CONTENT1);
+		$report->update($this->getPDO());
+		$pdoReport = Report::getReportByUserId($this->getPDO(), $report->getReportUserId());
+
+		$this->assertEquals($pdoReport->getReportUserId(), $report->getReportUserId());
+		$this->assertEquals($pdoReport->getReportAbuserId(), $report->getReportAbuserId());
+		$this->assertEquals($pdoReport->getReportAgent(), $report->getReportAgent());
+		$this->assertEquals($pdoReport->getReportContent(), $report->getReportContent());
+		$this->assertEquals($pdoReport->getReportDate(), $report->getReportDate());
+		$this->assertEquals($pdoReport->getReportIp(), $report->getReportIp());
+	}
 }
