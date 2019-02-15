@@ -1,4 +1,4 @@
-ALTER	DATABASE dating CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+ALTER	DATABASE dateadan CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS userDetail;

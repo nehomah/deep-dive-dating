@@ -1,7 +1,9 @@
 <?php
-namespace DeepDiveDatingApp\DeepDiveDating\Test;
+namespace DeepDiveDatingApp\DeepDiveDating;
 
-use DeepDiveDatingApp\DeepDiveDating\UserDetail;
+use DeepDiveDatingApp{
+	User, UserDetail, Question, Answer, Match, Report
+};
 
 //grab the class under scrutiny
 require_once(dirname(__DIR__)) . "/autoload.php";
@@ -71,7 +73,7 @@ class UserDetailTest extends DeepDiveDatingAppTest {
 	 *****************/
 	public final function setUp(): void {
 		parent::setUp();
-		//not sure if I need this function
+		//
 		$password = "pimpinaintez";
 		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
 		$this->VALID_ACTIVATION = bin2hex(random_bytes(16));
