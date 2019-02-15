@@ -144,5 +144,8 @@ protected $VALID_QUESTION_ID;
 		$pdoQuestion = $results[0];
 		//$this->assertEquals($pdoQuestion->getQuestionId(), $question->getQuestionId());
 		$this->assertEquals($pdoQuestion->getQuestion(), $question->getQuestion());
+		$this->assertEquals($pdoQuestion->getQuestionId(), $question->getQuestionId());
+		$this->assertEquals($pdoQuestion->getQuestionContent(), $question->getQuestionContent());
+		$this->assertEquals($pdoQuestion->getQuestionValue(), $question->getQuestionValue());
 	}
 }
