@@ -4,6 +4,7 @@ namespace DeepDiveDatingApp\DeepDiveDating\Test;
 require_once ("autoload.php");
 require_once (dirname(__DIR__, 2) . "/vendor/autoload.php");
 
+use DeepDiveDatingApp\DeepDiveDating\user;
 use Ramsey\Uuid\Uuid;
 /**
  * unit test for the User Class
@@ -11,7 +12,7 @@ use Ramsey\Uuid\Uuid;
  * @ see php/classes/User.php
  * @author Kathleen Mattos
  */
-class UserTest extends UserTestSetup {
+class UserTest extends DeepDiveDatingAppTest {
 			/**
 			 * valid user profile
 			 * @var User user
