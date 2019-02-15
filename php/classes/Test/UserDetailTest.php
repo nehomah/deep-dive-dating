@@ -168,7 +168,6 @@ public function testGetValidUserDetailByUserDetailId() : void {
 			$userDetail = new UserDetail($userDetailId, $userDetailUserId, $this->VALID_ABOUT_ME, $this->VALID_AGE, $this->VALID_CAREER, $this->VALID_DISPLAY_EMAIL, $this->VALID_EDUCATION, $this->VALID_GENDER, $this->VALID_INTERESTS, $this->VALID_RACE, $this->VALID_RELIGION);
 			$userDetail->insert($this->getPDO());
 			// grab the data from mySQL and enforce the fields match our expectations
-			// grab the data from mySQL and enforce the fields match our expectations
 			$pdoUserDetail = UserDetail::getUserDetailByUserDetailId($this->getPDO(),$userDetail->getUserDetailId());
 			$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("userDetail"));
 			$this->assertEquals($pdoUserDetail->getUserDetailId(), $userDetailId);
@@ -194,4 +193,16 @@ public function testGetInvalidUserDetailbyUserDetailId() : void {
 			$this->assertNull($userDetail);
 }
 
-/** Test grabbing a UserDetail by userId */
+/**
+ * Test grabbing a userDetail by userId
+**/
+public function testGetValidUserDetailByUserId() {
+			// count the number of rows and save it for later
+			$numRows = $this->getConnection()->getRowCount("userDetail");
+			// create a new UserDetail and insert into mySQL
+			$userDetailId = generateUuidV4();
+			$userDetail = new UserDetail($userDetailId, $userDetailUserId, $this->VALID_ABOUT_ME, $this->VALID_AGE, $this->VALID_CAREER, $this->VALID_DISPLAY_EMAIL, $this->VALID_EDUCATION, $this->VALID_GENDER, $this->VALID_INTERESTS, $this->VALID_RACE, $this->VALID_RELIGION);
+			$userDetail->insert($this->getPDO());
+			// grab the data from mySQL
+			$results = UserDetail::getUserDetailByUserDetailUserId
+}
