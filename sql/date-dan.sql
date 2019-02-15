@@ -12,11 +12,11 @@ CREATE TABLE user (
 	userActivationToken CHAR(32),
 	userAgent VARCHAR(255),
 	userAvatarUrl VARCHAR(255),
-	userBlocked TINYINT() NOT NULL,
+	userBlocked TINYINT(1) NOT NULL,
 	userEmail VARCHAR(128) NOT NULL,
 	userHandle VARCHAR(32) NOT NULL,
 	userHash CHAR(97) NOT NULL,
-	userIpAddress BINARY(16) NOT NULL,
+	userIpAddress VARBINARY(16) NOT NULL,
 	UNIQUE (userHandle),
 	UNIQUE (userEmail),
 	PRIMARY KEY(userId)
