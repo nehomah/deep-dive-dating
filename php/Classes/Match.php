@@ -128,7 +128,7 @@ class Match implements \JsonSerializable {
 
 	public function setMatchApproved(int $newMatchApproved) : void {
 		// check if input is valid
-		if ($newMatchApproved !== 1 || $newMatchApproved !==0) {
+		if ($newMatchApproved !== 1 || $newMatchApproved !== 0) {
 			throw(new \RangeException("Match Approved Value is invalid"));
 		}
 		//store new value on server

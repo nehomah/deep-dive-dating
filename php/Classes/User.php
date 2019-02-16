@@ -31,7 +31,7 @@ class user implements \JsonSerializable {
 	private $userAvatarUrl;
 	/**
 	 *info on the blocked status on the account
-	 * @var string $userBlocked
+	 * @var int $userBlocked
 	 */
 	private $userBlocked;
 	/**
@@ -211,7 +211,7 @@ class user implements \JsonSerializable {
 	/**
 	 * accessor method for user blocked
 	 *
-	 * @return INT value 1 or 0 representing if the user is blocked
+	 * @return int value 1 or 0 representing if the user is blocked
 	 */
 	public function getUserBlocked(): int {
 		return ($this->userBlocked);
@@ -224,14 +224,15 @@ class user implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if input is not a valid type
 	 * @throws \RangeException if integer is not a 0 or 1
 	 */
-	public function setUserBlocked(int $newUserBlocked) : void {
+	public function setUserBlocked($newUserBlocked) {
 		//check if input is valid
-		if ($newUserBlocked !== "1" || $newUserBlocked !== "0") {
-				throw(new \RangeException("user blocked value is invalid"));
+		if (($newUserBlocked > 1) || ($newUserBlocked < 0)) {
+			throw(new \RangeException("user blocked value is invalid"));
 		}
 		//store new value on the server
 		$this->userBlocked = $newUserBlocked;
 	}
+
 	/**
 	 * accessor method for user email
 	 *
@@ -297,7 +298,7 @@ class user implements \JsonSerializable {
 	 *
 	 * @return string value of hash
 	 */
-	public function getUserhash(): string {
+	public function getUserHash(): string {
 				return $this->userHash;
 	}
 
@@ -455,7 +456,7 @@ class user implements \JsonSerializable {
 	 * @param string $userActivationToken user activation token to search for
 	 * @return User|null user found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError when a variable is not the correct data type
+	 * @throws \InvalidArgumentException when a variable is not the correct data type
 	 */
 	public static function getUserByUserActivationToken(\PDO $pdo, string $userActivationToken): ?User {
 		//verify activation token is in the correct format and a string representation of hexidecimal
@@ -520,7 +521,7 @@ class user implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 					try {
-						$user = new User($row["userId"], $row["userActivationToken"], $row["userAgent"], $row["userAvatarUrl"], $row["userBlocked"], $row["userEmail"], $row["userEmail"], $row["userHandle"], $row["userHash"], $row["userIpAddress"]);
+						$user = new User($row["userId"], $row["userActivationToken"], $row["userAgent"], $row["userAvatarUrl"], $row["userBlocked"], $row["userEmail"], $row["userHandle"], $row["userHash"], $row["userIpAddress"]);
 						$users[$users->key()] = $user;
 						$users->next();
 					} catch(\Exception $exception) {
@@ -568,6 +569,7 @@ class user implements \JsonSerializable {
 		}
 		return ($user);
 	}
+	//todo write getAllUsers
 	/**
 	 * formats the state variables for the JSON serialization
 	 *

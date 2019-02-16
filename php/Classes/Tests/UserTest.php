@@ -60,16 +60,16 @@ class UserTest extends DeepDiveDatingAppTest {
 			 * valid int to tell if a user is blocked or not
 			 * @var int $VALID_USERBLOCKED
 			 */
-			protected $VALID_USERBLOCKED = "0";
+			protected $VALID_USERBLOCKED = 0;
 			/**
 			 * valid int to tell if a user is blocked or not
 			 * @var int $VALID_USERBLOCKED1
 			 */
-			protected $VALID_USERBLOCKED1 = "1";
+			protected $VALID_USERBLOCKED1 = 1;
 
 			/**
 			 * valid email address for user
-			 * @var string $VALID_USEREMAIL
+			 * @var int $VALID_USEREMAIL
 			 */
 			protected $VALID_USEREMAIL = "exampleemail@test.com";
 			/**
@@ -205,7 +205,7 @@ class UserTest extends DeepDiveDatingAppTest {
 				$results = User::getUserByUserHandle($this->getPDO(), $user->getUserHandle());
 				$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
 
-				$pdoUser = $results[1];
+				$pdoUser = $results[0];
 
 				$this->assertEquals($pdoUser->getUserId(), $user->getUserId());
 				$this->assertEquals($pdoUser->getUserActivationToken(), $user->getUserActivationToken());
@@ -243,7 +243,7 @@ class UserTest extends DeepDiveDatingAppTest {
 				$results = User::getUserByEmail($this->getPDO(), $user->getUserEmail());
 				$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
 
-				$pdoUser = $results[1];
+				$pdoUser = $results[0];
 
 				$this->assertEquals($pdoUser->getUserId(), $user->getUserId());
 				$this->assertEquals($pdoUser->getUser(), $user->getUser());
