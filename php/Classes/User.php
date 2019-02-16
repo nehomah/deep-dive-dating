@@ -69,12 +69,12 @@ class user implements \JsonSerializable {
 	 * @param string $newUserIpAddress binary, requiring some conversion of the ip address
 	 * @throws \InvalidArgumentException if the data types are not valid
 	 * @throws \RangeException if the data values are out of bounds (e.g. strings too long, negative integers)
-	 * @throws \TypeError if the data type violates the data hint
 	 * @throws \Exception if some other exception occurs
+	 * @throws \TypeError if the data type violates the data hint
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
 
-	public function __construct( string $newUserId, string $newUserActivationToken, string $newUserAgent, string $newUserAvatarUrl, int $newUserBlocked, string $newUserEmail, string $newUserHandle, string $newUserHash, string $newUserIpAddress) {
+	public function __construct( Uuid $newUserId, string $newUserActivationToken, string $newUserAgent, string $newUserAvatarUrl, int $newUserBlocked, string $newUserEmail, string $newUserHandle, string $newUserHash, string $newUserIpAddress) {
 		try {
 			$this->setUserId($newUserId);
 			$this->setUserActivationToken($newUserActivationToken);
@@ -94,16 +94,16 @@ class user implements \JsonSerializable {
 	/**
 	 * accessor method for user id
 	 *
-	 * @return string value of user id
+	 * @return Uuid value of user id
 	 */
-	public function getUserId(): string {
+	public function getUserId(): ?Uuid {
 		return($this->userId);
 	}
 
 	/**
 	 * Mutator method for user Id
 	 *
-	 * @param string | string $newUserId new value of user id
+	 * @param string | Uuid $newUserId new value of user id
 	 * @throws \RangeException if $newUserId is not positive
 	 * @throws \TypeError if the user id is not the correct type
 	 */

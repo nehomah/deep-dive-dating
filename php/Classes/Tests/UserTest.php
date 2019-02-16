@@ -32,7 +32,7 @@ class UserTest extends DeepDiveDatingAppTest {
 			 * placeholder activation token for the initial profile creation
 			 * @var string $VALID_USERACTIVATIONTOKEN
 			 */
-			protected $VALID_USERACTIVATIONTOKEN;
+			protected $VALID_USERACTIVATIONTOKEN = "10101010101010101010101010101010";
 
 			/**
 			 * placeholder for user agent
@@ -112,7 +112,7 @@ class UserTest extends DeepDiveDatingAppTest {
 				$numRows = $this->getConnection()->getRowCount("user");
 
 				//create the user object
-				$user = new User(generateUuidV4(), $this->VALID_USERID, $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
+				$user = new User (generateUuidV4(), $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
 				//insert the user object
 				$user->insert($this->getPDO());
 
@@ -120,7 +120,6 @@ class UserTest extends DeepDiveDatingAppTest {
 				$pdoUser = User::getUserByUserId($this->getPDO(), $user->getUserId());
 				$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
 				$this->assertEquals($pdoUser->getUserId(), $user->getUserId());
-				$this->assertEquals($pdoUser->getUser(), $user->getUser());
 				$this->assertEquals($pdoUser->getUserActivationToken(), $user->getUserActivationToken());
 				$this->assertEquals($pdoUser->getUserAgent(), $user->getUserAgent());
 				$this->assertEquals($pdoUser->getUserAvatarUrl(), $user->getUserAvatarUrl());
@@ -139,7 +138,7 @@ class UserTest extends DeepDiveDatingAppTest {
 				$numRows = $this->getConnection()->getRowCount("user");
 
 				//create the user object and then insert it
-				$user = new User(generateUuidV4(), $this->VALID_USERID, $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
+				$user = new User(generateUuidV4(), $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
 				$user->insert($this->getPDO());
 
 				//edit the user object then insert it back into the database
@@ -148,7 +147,6 @@ class UserTest extends DeepDiveDatingAppTest {
 				$pdoUser = User::getUserByUserId($this->getPDO(), $user->getUserId());
 
 				$this->assertEquals($pdoUser->getUserId(), $user->getUserId());
-				$this->assertEquals($pdoUser->getUser(), $user->getUser());
 				$this->assertEquals($pdoUser->getUserActivationToken(), $user->getUserActivationToken());
 				$this->assertEquals($pdoUser->getUserAgent(), $user->getUserAgent());
 				$this->assertEquals($pdoUser->getUserAvatarUrl(), $user->getUserAvatarUrl());
@@ -167,7 +165,7 @@ class UserTest extends DeepDiveDatingAppTest {
 				$numRows = $this->getConnection()->getRowCount("user");
 
 				//create the User object
-				$user = new User(generateUuidV4(), $this->VALID_USERID, $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
+				$user = new User(generateUuidV4(), $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
 
 				//insert the user object
 				$user->insert($this->getPDO());
@@ -187,7 +185,7 @@ class UserTest extends DeepDiveDatingAppTest {
 			 */
 			public function testInvalidGetByUserId() {
 				//grab the user by an invalid key
-				$user = User::getUserByUserId($this->getPDO(), UserTestSetup::INVALID_KEY);
+				$user = User::getUserByUserId($this->getPDO(), DeepDiveDatingAppTest::INVALID_KEY);
 				$this->assertEmpty($user);
 			}
 
@@ -198,19 +196,18 @@ class UserTest extends DeepDiveDatingAppTest {
 
 				$numRows = $this->getConnection()->getRowCount("user");
 				//create a user object and insert it into the database
-				$user = new User(generateUuidV4(), $this->VALID_USERID, $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
+				$user = new User(generateUuidV4(), $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
 
 				//insert the user into the database
 				$user->insert($this->getPDO());
 
 				//grab the user from the database
-				$results = User::getUserByHandle($this->getPDO(), $user->getUserHandle());
+				$results = User::getUserByUserHandle($this->getPDO(), $user->getUserHandle());
 				$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
 
 				$pdoUser = $results[1];
 
 				$this->assertEquals($pdoUser->getUserId(), $user->getUserId());
-				$this->assertEquals($pdoUser->getUser(), $user->getUser());
 				$this->assertEquals($pdoUser->getUserActivationToken(), $user->getUserActivationToken());
 				$this->assertEquals($pdoUser->getUserAgent(), $user->getUserAgent());
 				$this->assertEquals($pdoUser->getUserAvatarUrl(), $user->getUserAvatarUrl());
@@ -225,7 +222,7 @@ class UserTest extends DeepDiveDatingAppTest {
 			 * try and grab the user by a handle that does not exist
 			 */
 			public function testInvalidGetByHandle() {
-				$user = User::getUserByHandle($this->getPDO(), "notLonelyPerson");
+				$user = User::getUserByUserHandle($this->getPDO(), "notLonelyPerson");
 				$this->assertEmpty($user);
 			}
 
@@ -237,7 +234,7 @@ class UserTest extends DeepDiveDatingAppTest {
 				$numRows = $this->getConnection()->getRowCount("user");
 
 				//create a user object and insert it into the database
-				$user = User(generateUuidV4(), $this->VALID_USERID, $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
+				$user = User(generateUuidV4(), $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
 
 				//insert the user into the database
 				$user->insert($this->getPDO());
@@ -275,7 +272,7 @@ class UserTest extends DeepDiveDatingAppTest {
 				$numRows = $this->getConnection()->getRowCount("user");
 
 				//insert the user into the database
-				$user = new User(generateUuidV4(), $this->VALID_USERID, $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
+				$user = new User(generateUuidV4(), $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
 
 				//insert the user into the database
 				$user->insert($this->getPDO());
