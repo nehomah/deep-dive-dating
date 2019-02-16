@@ -45,6 +45,19 @@ abstract class DeepDiveDatingAppTest extends TestCase {
 	 *
 	 * @return QueryDataSet assembled schema for PHPUnit
 	 **/
+
+	/**
+	 * invalid id to use for an INT UNSIGNED field (maximum allowed INT UNSIGTNED in mySQL) + 1
+	 * @see https://dev.mysql.com/doc/refman/5.6/en/integer-types.html mySQL Integer Types
+	 * @var string INVALID_KEY
+	 **/
+	const INVALID_KEY = "0b402f14-8271-4ae2-8074-84c78799c70a";
+
+	/**
+	 * assembles the table from the schema and provides it to PHPUnit
+	 *
+	 * @return QueryDataSet assembled schema for PHPUnit
+	 **/
 	public final function getDataSet() : QueryDataSet {
 		$dataset = new QueryDataSet($this->getConnection());
 

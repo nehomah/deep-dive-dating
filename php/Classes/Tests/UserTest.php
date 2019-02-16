@@ -234,7 +234,7 @@ class UserTest extends DeepDiveDatingAppTest {
 				$numRows = $this->getConnection()->getRowCount("user");
 
 				//create a user object and insert it into the database
-				$user = User(generateUuidV4(), $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
+				$user = new User(generateUuidV4(), $this->VALID_USERACTIVATIONTOKEN, $this->VALID_USERAGENT, $this->VALID_USERAVATARURL, $this->VALID_USERBLOCKED, $this->VALID_USEREMAIL, $this->VALID_USERHANDLE, $this->VALID_USERHASH, $this->VALID_USERIPADDRESS);
 
 				//insert the user into the database
 				$user->insert($this->getPDO());

@@ -201,7 +201,7 @@ class user implements \JsonSerializable {
 		}
 		//verify the user avatar url is secure
 		$newUserAvatarUrl = trim($newUserAvatarUrl);
-		$newUserAvatarUrl = filter_var($newUserAvatarUrl, FILTER_SANITIZE_STRING, FILTER_NO_ENCODE_QUOTES);
+		$newUserAvatarUrl = filter_var($newUserAvatarUrl, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserAvatarUrl) === true) {
 					throw (new \InvalidArgumentException("user avatar url is empty or insecure"));
 		}
@@ -220,13 +220,13 @@ class user implements \JsonSerializable {
 	/**
 	 * mutator method for userBlocked
 	 *
-	 * @param INT user blocked value
+	 * @param int $newUserBlocked blocked value
 	 * @throws \InvalidArgumentException if input is not a valid type
 	 * @throws \RangeException if integer is not a 0 or 1
 	 */
 	public function setUserBlocked(int $newUserBlocked) : void {
 		//check if input is valid
-		if ($newUserBlocked !== 1 || $newUserBlocked !== 0) {
+		if ($newUserBlocked !== "1" || $newUserBlocked !== "0") {
 				throw(new \RangeException("user blocked value is invalid"));
 		}
 		//store new value on the server
@@ -560,7 +560,7 @@ class user implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-					$user = new User($row["userId"], $row["userActivationToken"], $row["userAgent"], $row["userAvatarUrl"], $row["userBlocked"], $row["userEmail"], $row["userHandle"], $row["userHash"]);
+					$user = new User($row["userId"], $row["userActivationToken"], $row["userAgent"], $row["userAvatarUrl"], $row["userBlocked"], $row["userEmail"], $row["userHandle"], $row["userHash"], $row["userIpAddress"]);
 			}
 		} catch(\Exception $exception) {
 			//if the row couldn't be converted, rethrow it.
