@@ -23,27 +23,27 @@ protected $answer = null;
 
 /**
 * valid id to create the answer object to own the test
-*@var uuid $VALID_ANSWER_QUESTION_ID
+*@var uuid $VALID_ANSWERQUESTIONID
 **/
-protected $VALID_ANSWER_QUESTION_ID;
+protected $VALID_ANSWERQUESTIONID;
 
 /**
 * valid id to create the object to own the test
-* @var string $VALID_ANSWER_USER_ID
+* @var string $VALID_ANSWERUSERID
 **/
-protected $VALID_ANSWER_USER_ID = "PHPUnit test passing";
+protected $VALID_ANSWERUSERID = "PHPUnit test passing";
 
 /**
 * Result of the answer input from user
-* @var string $VALID_ANSWER_RESULT
+* @var string $VALID_ANSWERRESULT
 **/
-protected $VALID_ANSWER_RESULT;
+protected $VALID_ANSWERRESULT;
 
 /**
  *Score of the answers compared to Dan's preferred answers
  *@var int $VALID_ANSWER_SCORE
  */
-protected $VALID_ANSWER_SCORE;
+protected $VALID_ANSWERSCORE;
 /**
 * create all dependent objects so that the test can run properly
 */
@@ -55,12 +55,12 @@ public function testValidAnswerInsert(){
 $numRows = $this->getConnection()->getRowCount("answer");
 
 //create the answer object
-$answer = new Answer(generateUuidV4(), $this->VALID_ANSWER_QUESTION_ID, $this->VALID_ANSWER_USER_ID, $this->VALID_ANSWER_RESULT, $this->VALID_ANSWER_SCORE);
+$answer = new Answer(generateUuidV4(), $this->VALID_ANSWERQUESTIONID, $this->VALID_ANSWERUSERID, $this->VALID_ANSWERRESULT, $this->VALID_ANSWERSCORE);
 //insert the answer object
 $answer->insert($this->getPDO());
 
 //grab the data from MySQL and enforce that it meets expectations
-$pdoAnswer = Answer::getAnswerByAnsweranswerId($this->getPDO(), $answer->getAnswerQuestionId());
+$pdoAnswer = Answer::getAnswerByAnswerQuestionId($this->getPDO(), $answer->getAnswerQuestionId());
 $this->assertEquals($numRows +1, $this->getConnection()->getRowCount("answer"));
 $this->assertEquals($pdoAnswer->getAnswerQuestionId(), $answer->getAnswerQuestionId());
 $this->assertEquals($pdoAnswer->getAnswerUserId(), $answer->getAnswerUserId());
@@ -76,7 +76,7 @@ public function testValidAnswerDelete() {
 $numRows = $this->getConnection()->getRowCount("answer");
 
 //create the answer object
-$answer = new Answer(generateUuidV4(), $this->VALID_ANSWER_QUESTION_ID, $this->VALID_ANSWER_USER_ID, $this->VALID_ANSWER_RESULT, $this->VALID_ANSWER_SCORE);
+$answer = new Answer(generateUuidV4(), $this->VALID_ANSWERQUESTIONID, $this->VALID_ANSWERUSERID, $this->VALID_ANSWERRESULT, $this->VALID_ANSWERSCORE);
 
 //insert the answer object
 $answer->insert($this->getPDO());
@@ -108,7 +108,7 @@ public function testValidGetAnswerByAnswerUserId() {
 $numRows = $this->getConnection()->getRowCount("answer");
 
 //create a answer object and insert it into the database
-$answer = new Answer(generateUuidV4(), $this->VALID_ANSWER_QUESTION_ID, $this->VALID_ANSWER_USER_ID, $this->VALID_ANSWER_RESULT, $this->VALID_ANSWER_SCORE);
+$answer = new Answer(generateUuidV4(), $this->VALID_ANSWERQUESTIONID, $this->VALID_ANSWERUSERID, $this->VALID_ANSWERRESULT, $this->VALID_ANSWERSCORE);
 
 //insert the answer into the database
 $answer->insert($this->getPDO());
@@ -139,7 +139,7 @@ public function testGetAllAnswers() {
 	$numRows = $this->getConnection()->getRowCount("answer");
 
 //insert the answer into the database
-	$answer = new Answer(generateUuidV4(), $this->VALID_ANSWER_QUESTION_ID, $this->VALID_ANSWER_USER_ID, $this->VALID_ANSWER_RESULT, $this->VALID_ANSWER_SCORE);
+	$answer = new Answer(generateUuidV4(), $this->VALID_ANSWERQUESTIONID, $this->VALID_ANSWERUSERID, $this->VALID_ANSWERRESULT, $this->VALID_ANSWERSCORE);
 
 //insert the answer into the database
 	$answer->insert($this->getPDO());

@@ -8,7 +8,7 @@ use Ramsey\Uuid\Uuid;
  * those questions.
  **/
 
-class question implements \JsonSerializable {
+class Question implements \JsonSerializable {
 	use ValidateUuid;
 
 	/**Question Id user will be graded by, this is the primary key
