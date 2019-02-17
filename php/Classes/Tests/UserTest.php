@@ -240,13 +240,10 @@ class UserTest extends DeepDiveDatingAppTest {
 				$user->insert($this->getPDO());
 
 				//grab the user from the database
-				$results = User::getUserByEmail($this->getPDO(), $user->getUserEmail());
-				$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
+				$pdoUser = User::getUserByEmail($this->getPDO(), $user->getUserEmail());
 
-				$pdoUser = $results[0];
 
 				$this->assertEquals($pdoUser->getUserId(), $user->getUserId());
-				$this->assertEquals($pdoUser->getUser(), $user->getUser());
 				$this->assertEquals($pdoUser->getUserActivationToken(), $user->getUserActivationToken());
 				$this->assertEquals($pdoUser->getUserAgent(), $user->getUserAgent());
 				$this->assertEquals($pdoUser->getUserAvatarUrl(), $user->getUserAvatarUrl());

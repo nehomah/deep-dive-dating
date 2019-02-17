@@ -7,7 +7,7 @@ use Ramsey\Uuid\Uuid;
 /**
  * The user class will contain the identifying info for the account.
  */
-class user implements \JsonSerializable {
+class User implements \JsonSerializable {
 	use ValidateUuid;
 	/**
 	 * Id for the user's account, this is the primary key
@@ -85,10 +85,11 @@ class user implements \JsonSerializable {
 			$this->setUserHandle($newUserHandle);
 			$this->setUserHash($newUserHash);
 			$this->setUserIpAddress($newUserIpAddress);
- 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-					// determine what type of error was thrown
-					$exceptionType = get_class($exception);
-					throw(new $exceptionType($exception->getMessage(), 0, $exception));
+ 		}
+
+		catch (\InvalidArgumentException | \TypeError | \RangeException | \Exception $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 	}
 	/**
@@ -104,8 +105,10 @@ class user implements \JsonSerializable {
 	 * Mutator method for user Id
 	 *
 	 * @param string | Uuid $newUserId new value of user id
-	 * @throws \RangeException if $newUserId is not positive
-	 * @throws \TypeError if the user id is not the correct type
+	 * @throws \InvalidArgumentException if the data types are not valid
+	 * @throws \RangeException if the data values are out of bounds (e.g. strings too long, negative integers)
+	 * @throws \Exception if some other exception occurs
+	 * @throws \TypeError if the data type violates the data hint
 	 */
 	public function setUserId($newUserId): void {
 		try{
@@ -130,6 +133,7 @@ class user implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if the url is not a string or is insecure
 	 * @throws \RangeException if the url is over 255 characters
 	 * @throws \TypeError if the url is not a string
+	 * @throws \Exception if other errors occur
 	 */
 	public function setUserActivationToken(?string $newUserActivationToken): void {
 		if($newUserActivationToken === null) {
@@ -161,6 +165,7 @@ class user implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if $newUserAgent is not a string or insecure
 	 * @throws \RangeException if $newUserAgent is > 255 characters
 	 * @throws \TypeError if $newUserAgent is not a string
+	 * @throws \Exception
 	 */
 	public function setUserAgent (string $newUserAgent) : void {
 		//verify the the user agent is secure
@@ -191,6 +196,7 @@ class user implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if $newUserAvatarUrl is not a string or is insecure
 	 * @throws \RangeException if $newUserAvatarUrl is > 255 characters
 	 * @throws \TypeError if the $newUserAvatarUrl is not a string
+	 * @throws \Exception
 	 */
 	public function setUserAvatarUrl (string $newUserAvatarUrl) : void {
 		//verify the user Avatar url is secure
@@ -223,6 +229,8 @@ class user implements \JsonSerializable {
 	 * @param int $newUserBlocked blocked value
 	 * @throws \InvalidArgumentException if input is not a valid type
 	 * @throws \RangeException if integer is not a 0 or 1
+	 * @throws \TypeError if values do not match type hint
+	 * @throws \Exception if other errors occur
 	 */
 	public function setUserBlocked($newUserBlocked) {
 		//check if input is valid
