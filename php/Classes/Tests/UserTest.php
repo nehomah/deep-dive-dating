@@ -49,7 +49,7 @@ class UserTest extends DeepDiveDatingAppTest {
 			 * valid url for the user avatar
 			 * @var string $VALID_USERAVATARURL
 			 */
-			protected $VALID_USERAVATARURL = "avatarSAREUS.com";
+			protected $VALID_USERAVATARURL = "avatarSAREUS.com"; test
 			/**
 			 * valid url for the user avatar
 			 * @var string $VALID_USERAVATARURL1
